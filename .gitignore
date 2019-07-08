@@ -20,7 +20,6 @@ dspic/src/
 dspic/build/
 dspic/debug/
 dspic/disassembly/
-dspic/dist/
 dspic/nbproject/
 dspic/nbproject/*.*
 pic24/h/
@@ -28,11 +27,12 @@ pic24/src/
 pic24/build/
 pic24/debug/
 pic24/disassembly/
-pic24/dist/
 pic24/nbproject/
 pic24/nbproject/*.*
 
 # include build-folders, HEX files and Executables
+!dspic/dist/
+!pic24/dist/
 !*/dist/
 !*.map
 !*.xml
