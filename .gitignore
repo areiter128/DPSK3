@@ -10,6 +10,8 @@
 
 # Exclude all project files and folders
 *.*
+*.c
+*.h
 common/
 src/
 h/
@@ -21,7 +23,6 @@ dspic/disassembly/
 dspic/dist/
 dspic/nbproject/
 dspic/nbproject/*.*
-
 pic24/h/
 pic24/src/
 pic24/build/
@@ -50,3 +51,6 @@ dspic/dist/MA330048_R30/production/memoryfile.xml
 dspic/dist/MA330048_R30/production/dspic.production.map
 dspic/dist/MA330048_R30/production/dspic.production.hex
 dspic/dist/MA330048_R30/production/dspic.production.elf
+dspic/dist/DPSK3_R30/debug/memoryfile.xml
+dspic/dist/DPSK3_R30/debug/dspic.debug.map
+dspic/dist/DPSK3_R30/debug/dspic.debug.elf
