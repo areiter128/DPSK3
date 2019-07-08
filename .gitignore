@@ -40,3 +40,10 @@ pic24/src/
 dcdt_project.xml
 dspic/Makefile
 pic24/Makefile
+dspic/dist/MA330048_R30/debug/memoryfile.xml
+dspic/dist/MA330048_R30/debug/dspic.debug.map
+dspic/dist/MA330048_R30/debug/dspic.debug.elf
+dspic/dist/MA330048_R30/production/memoryfile.xml
+dspic/dist/MA330048_R30/production/dspic.production.map
+dspic/dist/MA330048_R30/production/dspic.production.hex
+dspic/dist/MA330048_R30/production/dspic.production.elf
