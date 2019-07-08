@@ -13,20 +13,23 @@
 common/
 src/
 h/
-dspic/debug
+dspic/h/
+dspic/src/
+dspic/build/
+dspic/debug/
 dspic/disassembly/
 dspic/dist/
 dspic/nbproject/
 dspic/nbproject/*.*
-dspic/h/
-dspic/src/
-PIC24/debug
-PIC24/disassembly/
-PIC24/dist/
-pic24/nbproject/
-pic24/nbproject/*.*
+
 pic24/h/
 pic24/src/
+pic24/build/
+pic24/debug/
+pic24/disassembly/
+pic24/dist/
+pic24/nbproject/
+pic24/nbproject/*.*
 
 # include build-folders, HEX files and Executables
 !*/dist/
