@@ -9,7 +9,7 @@
 #include <xc.h>
 #include <stdint.h>
 #include <stdbool.h>
-
+#include "device/dev_lcd.h"
 #include "main.h"
 
 
@@ -17,17 +17,22 @@ volatile uint16_t tgl_cnt = 0; // local counter of LED toggle loops
 #define TGL_INTERVAL    999     // LED toggle interval of (999 + 1) x 100usec = 100ms
 #define TMR1_TIMEOUT    30000   // Timeout protection for Timer1 interrupt flag bit
 
-int main(void) {
-
+int main(void)
+{
     volatile uint16_t timeout = 0;
 
     init_fosc();
     init_timer1();
     init_gpio();
+
+    Dev_Lcd_Init();
     
-
-    while (1) {
-
+    //Dev_Lcd_WriteString("\vMICROCHIP  dsPIC  33CK256MP505  ");    //would works too without XY
+    Dev_Lcd_WriteStringXY(0,0,"MICROCHIP  dsPIC");
+    Dev_Lcd_WriteStringXY(0,1,"  33CK256MP505  ");
+    
+    while (1)
+    {
         // wait for timer1 to overrun
         while ((!_T1IF) && (timeout++ < TMR1_TIMEOUT));
         timeout = 0;    // Reset timeout counter
