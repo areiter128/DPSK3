@@ -240,6 +240,19 @@ volatile uint16_t init_buck_pwm(void) {
     return(1);
 }
 
+volatile uint16_t launch_buck_pwm(void) {
+    
+    PG1CONLbits.ON = 1; // PWM Generator #1 Enable: PWM Generator is not enabled
+    PG1IOCONHbits.PENH = 1; // PWMxH Output Port Enable: PWM generator controls the PWMxH output pin
+    PG1IOCONHbits.PENL = 1; // PWMxL Output Port Enable: PWM generator controls the PWMxL output pin
+    PG1IOCONLbits.OVRENH = 0;  // User Override Enable for PWMxH Pin: OVRDAT1 provides data for output on the PWMxH pin
+    PG1IOCONLbits.OVRENL = 0;  // User Override Enable for PWMxL Pin: OVRDAT0 provides data for output on the PWMxL pin
+
+    PG1STATbits.UPDREQ = 1; // Update all PWM registers
+
+    return(1);
+}
+
 volatile uint16_t init_boost_pwm(void) {
 
 // Initialize PWM1 GPIOs
