@@ -41,6 +41,7 @@ extern "C" {
 #endif /* __cplusplus */
 
 extern volatile uint16_t init_pwm_module(void);
+extern volatile uint16_t init_buck_pwm(void);
 
 #ifdef	__cplusplus
 }
