@@ -78,24 +78,27 @@ volatile uint16_t init_adc_module(void) {
     ADCON5Hbits.C0CIE = 0; // C1CIE: Dedicated ADC Core 0 Ready Common Interrupt Enable: Common interrupt is disabled
     ADCON5Hbits.C1CIE = 0; // C1CIE: Dedicated ADC Core 1 Ready Common Interrupt Enable: Common interrupt is disabled
     
+    ADCORE0Hbits.RES = 0b11; // ADC Core x Resolution Selection: 12 bit
+    ADCORE0Hbits.ADCS = 0b0000000; // ADC Core x Input Clock Divider: 2 Source Clock Periods
+    ADCORE0Hbits.EISEL = 0b111; // Early interrupt is set and an interrupt is generated 8 TADCORE clocks prior
+
+    ADCORE1Hbits.RES = 0b11; // ADC Core x Resolution Selection: 12 bit
+    ADCORE1Hbits.ADCS = 0b0000000; // ADC Core x Input Clock Divider: 2 Source Clock Periods
+    ADCORE1Hbits.EISEL = 0b111; // Early interrupt is set and an interrupt is generated 8 TADCORE clocks prior
+    
     return(1);
 }
 
 volatile uint16_t init_buck_adc(void) {
 
-/*    
-    ANSELA
-
-    ADCON5Lbits.SHRPWR = ADCON5_CxPWR_OFF; // Power off Shared Core => will be turned on later
-
-    ADCON5Hbits.SHRCIE = ADCON5L_CxCIE_DISABLED; // disable shared core to generate common interrupts
-    ADCON5Hbits.WARMTIME = ADCON5H_WARMTIME_CLK_32768; // Set warm-up time of ADC module
+    // ANSELx: ANALOG SELECT FOR PORTx REGISTER
+    ANSELCbits.ANSELC1 = 1; // Analog input is enabled and digital input is disabled for RC1 (Buck converter output voltage feedback)
     
-    ADCORE1Hbits.RES = ADCON1_SHRRES_12BIT;
-    ADCORE1Hbits.ADCS = ADCON2_SHRADCS_DIV_MIN; // shared core clock divider = 2:1 (minimum)
-    ADCORE1Hbits.EISEL = ADCON2_SHREISEL_8TAD;
+    // ADLVLTRGL: ADC LEVEL-SENSITIVE TRIGGER CONTROL REGISTER LOW
+    ADLVLTRGLbits.LVLEN13 = 0; // Input trigger is edge-sensitive
     
-  */  
+    // ADEIEL: ADC EARLY INTERRUPT ENABLE REGISTER LOW
+    ADEIELbits.EIEN13 = 1; // Early interrupt is enabled for the channel
     
     return(1);
 }

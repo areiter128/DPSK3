@@ -114,14 +114,16 @@ volatile uint16_t init_buck_pwm(void) {
     PG1CONLbits.ON = 0; // PWM Generator #1 Enable: PWM Generator is not enabled
     PG1CONLbits.TRGCNT = 0b000; // Trigger Count Select: PWM Generator produces one PWM cycle after triggered
     PG1CONLbits.HREN = 0; // High-Resolution mode is not enabled for PWM Generator 1
-    PG1CONLbits.CLKSEL = 0b00; // Clock Selection: PWM Generator uses Master clock selected by the MCLKSEL[1:0] (PCLKCON[1:0]) control bits
+    PG1CONLbits.CLKSEL = 0b01; // Clock Selection: PWM Generator uses Master clock selected by the MCLKSEL[1:0] (PCLKCON[1:0]) control bits
     PG1CONLbits.MODSEL = 0b000; // PWM Mode Selection: Independent Edge PWM mode
     
     PG1CONHbits.MDCSEL = 0; // Master Duty Cycle Register Selection: PWM Generator uses PGxDC register
     PG1CONHbits.MPERSEL = 1; // Master Period Register Selection: PWM Generator uses MPER register
     PG1CONHbits.MPHSEL = 0; // Master Phase Register Selection: PWM Generator uses PGxPHASE register
     PG1CONHbits.MSTEN = 0; // Master Update Enable: PWM Generator does not broadcast the UPDREQ status bit state or EOC signal
-
+    PG1CONHbits.UPDMOD = 0b000; // PWM Buffer Update Mode Selection: Immediate update
+    PG1CONHbits.TRGMOD = 0; // PWM Generator Trigger Mode Selection: PWM Generator operates in single trigger mode
+    PG1CONHbits.SOCS = 0b0000; // Start-of-Cycle Selection: Local EOC PWM Generator is self-triggered
 
     // ************************
     // ToDo: CHECK IF THIS SETTING IS CORRET AND DEAD TIMES ARE STILL INSERTED CORRECTLY
@@ -176,7 +178,7 @@ volatile uint16_t init_buck_pwm(void) {
     PG1CLPCIHbits.ACP       = 0b011;        // PCI Acceptance Mode: Latched
     PG1CLPCIHbits.SWPCI     = 0b0;          // Drives a '0' to PCI logic assigned to by the SWPCIM<1:0> control bits
     PG1CLPCIHbits.SWPCIM    = 0b00;         // SWPCI bit is assigned to PCI acceptance logic
-    PG1CLPCIHbits.PCIGT    = 0b0;           // SR latch is Set-dominant in Latched Acceptance modes
+    PG1CLPCIHbits.PCIGT     = 0b0;          // SR latch is Set-dominant in Latched Acceptance modes
     PG1CLPCIHbits.TQPS      = 0b0;          // Termination Qualifier not inverted
     PG1CLPCIHbits.TQSS      = 0b000;        // No termination qualifier used so terminator will work straight away without any qualifier
     
@@ -242,13 +244,17 @@ volatile uint16_t init_buck_pwm(void) {
 
 volatile uint16_t launch_buck_pwm(void) {
     
+    Nop();
+    Nop();
+    Nop();
+    
     PG1CONLbits.ON = 1; // PWM Generator #1 Enable: PWM Generator is not enabled
+    PG1STATbits.UPDREQ = 1; // Update all PWM registers
+
     PG1IOCONHbits.PENH = 1; // PWMxH Output Port Enable: PWM generator controls the PWMxH output pin
     PG1IOCONHbits.PENL = 1; // PWMxL Output Port Enable: PWM generator controls the PWMxL output pin
     PG1IOCONLbits.OVRENH = 0;  // User Override Enable for PWMxH Pin: OVRDAT1 provides data for output on the PWMxH pin
     PG1IOCONLbits.OVRENL = 0;  // User Override Enable for PWMxL Pin: OVRDAT0 provides data for output on the PWMxL pin
-
-    PG1STATbits.UPDREQ = 1; // Update all PWM registers
 
     return(1);
 }

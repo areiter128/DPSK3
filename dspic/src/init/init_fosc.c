@@ -84,13 +84,14 @@ volatile uint16_t init_aclk(void) {
 
     // Select clock input source (either primary oscillator or internal FRC)
     ACLKCON1bits.FRCSEL = 1;        // FRC is the clock source for APLL
+//    ACLKCON1bits.ASRCSEL = 0;       // ?? unknown bit from device header file
 	
     // Set Enable-bit of Auxiliary PLL 
     ACLKCON1bits.APLLEN = 1;
 
     // if user has not enabled the APLL module, exit here
     if(!ACLKCON1bits.APLLEN)
-    { return(1); }
+    { return(0); }
         
     // Wait 5000 while loops for APLL to Lock
     while((ACLKCON1bits.APLLCK != 1) && (timeout++<TIMEOUT_LIMIT));		
