@@ -274,7 +274,7 @@ volatile uint16_t init_boost_pwm(void) {
     PG2CONLbits.ON = 0; // PWM Generator #2 Enable: PWM Generator is not enabled
     PG2CONLbits.TRGCNT = 0b000; // Trigger Count Select: PWM Generator produces one PWM cycle after triggered
     PG2CONLbits.HREN = 0; // High-Resolution mode is not enabled for PWM Generator 2 
-    PG2CONLbits.CLKSEL = 0b00; // Clock Selection: PWM Generator uses Master clock selected by the MCLKSEL[1:0] (PCLKCON[1:0]) control bits
+    PG2CONLbits.CLKSEL = 0b01; // Clock Selection: PWM Generator uses Master clock selected by the MCLKSEL[1:0] (PCLKCON[1:0]) control bits
     PG2CONLbits.MODSEL = 0b000; // PWM Mode Selection: Independent Edge PWM mode
     
     PG2CONHbits.MDCSEL = 0; // Master Duty Cycle Register Selection: PWM Generator uses PGxDC register
