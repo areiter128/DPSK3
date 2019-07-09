@@ -104,9 +104,11 @@ volatile uint16_t init_buck_pwm(void) {
     // Initialize PWM1 GPIOs
     LATBbits.LATB14 = 0;    // Set GPIO RB14 LOW (PWM1H)
     TRISBbits.TRISB14 = 0;  // Make GPIO RB14 an output (PWM1H)
+    CNPDBbits.CNPDB14 = 1;  // Enable intern pull down register (PWM1H)
     
     LATBbits.LATB15 = 0;    // Set GPIO RB15 LOW (PWM1L)
     TRISBbits.TRISB15 = 0;  // Make GPIO RB15 an output (PWM1L)
+    CNPDBbits.CNPDB15 = 1;  // Enable intern pull down register (PWM1L)
 
     // PWM GENERATOR 1 CONTROL REGISTERS
     PG1CONLbits.ON = 0; // PWM Generator #1 Enable: PWM Generator is not enabled
@@ -119,6 +121,8 @@ volatile uint16_t init_buck_pwm(void) {
     PG1CONHbits.MPERSEL = 0; // Master Period Register Selection: PWM Generator uses PGxPER register
     PG1CONHbits.MPHSEL = 0; // Master Phase Register Selection: PWM Generator uses PGxPHASE register
     PG1CONHbits.MSTEN = 0; // Master Update Enable: PWM Generator does not broadcast the UPDREQ status bit state or EOC signal
+    
+    
     
     return(1);
 }

@@ -12,8 +12,7 @@
 
 #include "main.h"
 
-
-volatile uint16_t tgl_cnt = 0; // local counter of LED toggle loops
+volatile uint16_t tgl_cnt = 0;  // local counter of LED toggle loops
 #define TGL_INTERVAL    999     // LED toggle interval of (999 + 1) x 100usec = 100ms
 #define TMR1_TIMEOUT    30000   // Timeout protection for Timer1 interrupt flag bit
 
