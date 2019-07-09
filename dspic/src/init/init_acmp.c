@@ -10,6 +10,8 @@
 #include <stdint.h>
 #include <stdbool.h>
 
+#include "init_acmp.h"
+
 volatile uint16_t init_acmp_module(void) {
 
     // Make sure power is turned on to comparator module #1
