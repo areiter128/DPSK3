@@ -26,8 +26,11 @@ int main(void) {
     
     init_aclk();        // Set up Auxiliary PLL for 500 MHz (source clock to PWM module)
     init_pwm_module();  // Set up PWM module (basic module configuration)
-    init_buck_pwm();    // 
+    init_acmp_module(); // Set up analog comparator/DAC module
 
+    init_buck_pwm();    // Set up buck converter PWM
+    init_buck_acmp();   // Set up buck converter peak current comparator/DAC
+    
     while (1) {
 
         // wait for timer1 to overrun

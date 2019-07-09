@@ -9,6 +9,7 @@
         <itemPath>h/init/init_timer1.h</itemPath>
         <itemPath>h/init/init_gpio.h</itemPath>
         <itemPath>h/init/init_pwm.h</itemPath>
+        <itemPath>h/init/init_acmp.h</itemPath>
       </logicalFolder>
       <itemPath>h/main.h</itemPath>
     </logicalFolder>
@@ -24,6 +25,7 @@
         <itemPath>src/init/init_timer1.c</itemPath>
         <itemPath>src/init/init_gpio.c</itemPath>
         <itemPath>src/init/init_pwm.c</itemPath>
+        <itemPath>src/init/init_acmp.c</itemPath>
       </logicalFolder>
       <itemPath>src/main.c</itemPath>
       <itemPath>src/config_bits.c</itemPath>
