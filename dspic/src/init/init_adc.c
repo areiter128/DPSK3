@@ -78,9 +78,14 @@ volatile uint16_t init_adc_module(void) {
     ADCON5Hbits.C0CIE = 0; // C1CIE: Dedicated ADC Core 0 Ready Common Interrupt Enable: Common interrupt is disabled
     ADCON5Hbits.C1CIE = 0; // C1CIE: Dedicated ADC Core 1 Ready Common Interrupt Enable: Common interrupt is disabled
     
-    
+    return(1);
+}
+
+volatile uint16_t init_buck_adc(void) {
+
 /*    
-    
+    ANSELA
+
     ADCON5Lbits.SHRPWR = ADCON5_CxPWR_OFF; // Power off Shared Core => will be turned on later
 
     ADCON5Hbits.SHRCIE = ADCON5L_CxCIE_DISABLED; // disable shared core to generate common interrupts
@@ -91,13 +96,6 @@ volatile uint16_t init_adc_module(void) {
     ADCORE1Hbits.EISEL = ADCON2_SHREISEL_8TAD;
     
   */  
-    
-    return(1);
-}
-
-volatile uint16_t init_buck_adc(void) {
-    
-    
     
     return(1);
 }

@@ -26,6 +26,7 @@ volatile uint16_t launch_buck_pwr_control(void) {
 //    volatile uint16_t _i = 0;
 
     // Run enable-sequence of all peripherals used by this power controller
+    launch_buck_acmp();
     launch_buck_pwm();
     
     return(1);

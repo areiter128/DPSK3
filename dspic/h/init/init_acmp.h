@@ -41,6 +41,7 @@ extern "C" {
 
 extern volatile uint16_t init_acmp_module(void);
 extern volatile uint16_t init_buck_acmp(void);
+extern volatile uint16_t launch_buck_acmp(void);
 extern volatile uint16_t init_boost_acmp(void);
 
 #ifdef	__cplusplus

@@ -93,6 +93,14 @@ volatile uint16_t init_buck_acmp(void) {
     return(1);
 }
 
+volatile uint16_t launch_buck_acmp(void) {
+    
+    DAC1CONLbits.DACEN = 1; // Individual DACx Module Enable: Enables DAC1 module 
+    DACCTRL1Lbits.DACON = 1; // Common DAC Module Enable: Enables all enabled DAC modules
+    
+    return(1);
+}
+
 volatile uint16_t init_boost_acmp(void) {
     
 
