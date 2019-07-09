@@ -26,6 +26,7 @@ int main(void) {
     
     init_aclk();        // Set up Auxiliary PLL for 500 MHz (source clock to PWM module)
     init_pwm_module();  // Set up PWM module (basic module configuration)
+    init_buck_pwm();    // 
 
     while (1) {
 
