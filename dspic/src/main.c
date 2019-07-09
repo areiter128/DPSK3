@@ -25,6 +25,8 @@ int main(void) {
     init_timer1();
     init_gpio();
     
+    init_aclk();        // Set up Auxiliary PLL for 500 MHz (source clock to PWM module)
+    init_pwm_module();  // Set up PWM module (basic module configuration)
 
     while (1) {
 
