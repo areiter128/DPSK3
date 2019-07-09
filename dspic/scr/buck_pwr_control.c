@@ -10,7 +10,7 @@
 #include <stdint.h>
 #include <stdbool.h>
 
-#include "buck_pwr_control.h"
+#include "main.h"
 
 volatile uint16_t init_buck_pwr_control(void) {
     
