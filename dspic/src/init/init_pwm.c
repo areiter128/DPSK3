@@ -121,8 +121,29 @@ volatile uint16_t init_buck_pwm(void) {
     PG1CONHbits.MPERSEL = 0; // Master Period Register Selection: PWM Generator uses PGxPER register
     PG1CONHbits.MPHSEL = 0; // Master Phase Register Selection: PWM Generator uses PGxPHASE register
     PG1CONHbits.MSTEN = 0; // Master Update Enable: PWM Generator does not broadcast the UPDREQ status bit state or EOC signal
-    
-    
+
+/* registers to add    
+PG1STAT 
+PG1IOCONL 
+PG1IOCONH 
+PG1EVTL 
+PG1EVTH 
+PG1FPCIL 
+PG1FPCIH 
+PG1CLPCIL 
+PG1CLPCIH 
+PG1FFPCIL 
+PG1FFPCIH 
+PG1SPCIL 
+PG1SPCIH 
+PG1LEBL 
+PG1LEBH 
+PG1PHASE 
+PG1DC 
+PG1DCA 
+PG1PER
+PG1CAP    
+*/ 
     
     return(1);
 }
