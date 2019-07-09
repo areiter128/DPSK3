@@ -113,7 +113,7 @@ volatile uint16_t init_buck_pwm(void) {
     // PWM GENERATOR 1 CONTROL REGISTERS
     PG1CONLbits.ON = 0; // PWM Generator #1 Enable: PWM Generator is not enabled
     PG1CONLbits.TRGCNT = 0b000; // Trigger Count Select: PWM Generator produces one PWM cycle after triggered
-    PG1CONLbits.HREN = 0; // PWM Generator 1 operates in High-Resolution mode
+    PG1CONLbits.HREN = 0; // High-Resolution mode is not enabled for PWM Generator 1
     PG1CONLbits.CLKSEL = 0b00; // Clock Selection: PWM Generator uses Master clock selected by the MCLKSEL[1:0] (PCLKCON[1:0]) control bits
     PG1CONLbits.MODSEL = 0b000; // PWM Mode Selection: Independent Edge PWM mode
     
@@ -176,7 +176,7 @@ volatile uint16_t init_buck_pwm(void) {
     PG1CLPCIHbits.ACP       = 0b011;        // PCI Acceptance Mode: Latched
     PG1CLPCIHbits.SWPCI     = 0b0;          // Drives a '0' to PCI logic assigned to by the SWPCIM<1:0> control bits
     PG1CLPCIHbits.SWPCIM    = 0b00;         // SWPCI bit is assigned to PCI acceptance logic
-    PG1CLPCIHbits.LATMOD    = 0b0;          // SR latch is Set-dominant in Latched Acceptance modes
+    PG1CLPCIHbits.PCIGT    = 0b0;           // SR latch is Set-dominant in Latched Acceptance modes
     PG1CLPCIHbits.TQPS      = 0b0;          // Termination Qualifier not inverted
     PG1CLPCIHbits.TQSS      = 0b000;        // No termination qualifier used so terminator will work straight away without any qualifier
     
@@ -221,21 +221,162 @@ volatile uint16_t init_buck_pwm(void) {
     PG1PER      = 1000;     // 500 kHz
 
     // PG1TRIGA: PWM GENERATOR 1 TRIGGER A REGISTER
-    PGxTRIGA    = 100;  // ToDo: Check this value on oscilloscope
+    PG1TRIGA    = 100;  // ToDo: Check this value on oscilloscope
     
     // PG1TRIGB: PWM GENERATOR 1 TRIGGER B REGISTER       
-    PGxTRIGB    = 150;  // ToDo: Check this value on oscilloscope
+    PG1TRIGB    = 150;  // ToDo: Check this value on oscilloscope
     
     // PG1TRIGC: PWM GENERATOR 1 TRIGGER C REGISTER        
-    PGxTRIGC    = 800;  // ToDo: Check this value on oscilloscope
+    PG1TRIGC    = 800;  // ToDo: Check this value on oscilloscope
     
     // PG1DTL: PWM GENERATOR 1 DEAD-TIME REGISTER LOW        
-    PGxDTL      = 40;
+    PG1DTL      = 40;
     
     // PG1DTH: PWM GENERATOR 1 DEAD-TIME REGISTER HIGH
-    PGxDTH      = 20;
+    PG1DTH      = 20;
             
 //  PG1CAP      = 0x0000;   // Read only register
    
     return(1);
 }
+
+volatile uint16_t init_boost_pwm(void) {
+
+// Initialize PWM1 GPIOs
+    LATBbits.LATB12 = 0;    // Set GPIO RB12 LOW (PWM2H)
+    TRISBbits.TRISB12 = 1;  // Make GPIO RB12 an input (PWM2H)
+    CNPDBbits.CNPDB12 = 0;  // Disable intern pull down register (PWM2H)
+    
+    LATBbits.LATB13 = 0;    // Set GPIO RB13 LOW (PWM2L)
+    TRISBbits.TRISB13 = 0;  // Make GPIO RB13 an output (PWM2L)
+    CNPDBbits.CNPDB13 = 1;  // Enable intern pull down register (PWM2L)
+
+    // PWM GENERATOR 1 CONTROL REGISTERS
+    PG2CONLbits.ON = 0; // PWM Generator #2 Enable: PWM Generator is not enabled
+    PG2CONLbits.TRGCNT = 0b000; // Trigger Count Select: PWM Generator produces one PWM cycle after triggered
+    PG2CONLbits.HREN = 0; // High-Resolution mode is not enabled for PWM Generator 2 
+    PG2CONLbits.CLKSEL = 0b00; // Clock Selection: PWM Generator uses Master clock selected by the MCLKSEL[1:0] (PCLKCON[1:0]) control bits
+    PG2CONLbits.MODSEL = 0b000; // PWM Mode Selection: Independent Edge PWM mode
+    
+    PG2CONHbits.MDCSEL = 0; // Master Duty Cycle Register Selection: PWM Generator uses PGxDC register
+    PG2CONHbits.MPERSEL = 1; // Master Period Register Selection: PWM Generator uses MPER register
+    PG2CONHbits.MPHSEL = 0; // Master Phase Register Selection: PWM Generator uses PGxPHASE register
+    PG2CONHbits.MSTEN = 0; // Master Update Enable: PWM Generator does not broadcast the UPDREQ status bit state or EOC signal
+
+
+    // ************************
+    // ToDo: CHECK IF THIS SETTING IS CORRET AND DEAD TIMES ARE STILL INSERTED CORRECTLY
+    PG2IOCONLbits.CLMOD = 1;    // If PCI current limit is active, then the CLDAT[1:0] bits define the PWM output levels
+    // ************************
+
+    PG2IOCONLbits.SWAP = 1;    // Swap PWM Signals to PWMxH and PWMxL Device Pins
+    PG2IOCONLbits.OVRENH = 1;  // User Override Enable for PWMxH Pin: OVRDAT1 provides data for output on the PWMxH pin
+    PG2IOCONLbits.OVRENL = 1;  // User Override Enable for PWMxL Pin: OVRDAT0 provides data for output on the PWMxL pin
+    PG2IOCONLbits.OVRDAT = 0b00; // Data for PWMxH/PWMxL Pins if Override Event is Active: PWMxL=OVRDAT0, PWMxH=OVRDAR1
+    PG2IOCONLbits.OSYNC = 0b00; // User Output Override Synchronization Control: User output overrides via the OVRENH/L and OVRDAT[1:0] bits are synchronized to the local PWM time base (next Start-of-Cycle)
+    
+    PG2IOCONLbits.FLTDAT = 0b00; // Data for PWMxH/PWMxL Pins if Fault Event is Active: PWMxL=FLTDAT0, PWMxH=FLTDAR1
+    PG2IOCONLbits.CLDAT = 0b00; // Data for PWMxH/PWMxL Pins if Current-Limit Event is Active: PWMxL=CLDAT0, PWMxH=CLDAR1
+    PG2IOCONLbits.FFDAT = 0b00; // Data for PWMxH/PWMxL Pins if Feed-Forward Event is Active: PWMxL=CLDAT0, PWMxH=CLDAR1
+    PG2IOCONLbits.DBDAT = 0b00; // Data for PWMxH/PWMxL Pins if Debug Mode Event is Active: PWMxL=DBDAT0, PWMxH=DBDAR1
+
+    // PGxIOCONH: PWM GENERATOR x I/O CONTROL REGISTER HIGH
+    PG2IOCONHbits.CAPSRC = 0b000;  // Time Base Capture Source Selection: No hardware source selected for time base capture ? software only
+    PG2IOCONHbits.DTCMPSEL = 0; // Dead-Time Compensation Selection: Dead-time compensation is controlled by PCI Sync logic
+    PG2IOCONHbits.PMOD = 0b01; // PWM Generator Output Mode Selection: PWM Generator outputs operate in Independent mode
+    PG2IOCONHbits.PENH = 0; // PWMxH Output Port Enable: GPIO registers TRISx, LATx, Rxx registers control the PWMxH output pin
+    PG2IOCONHbits.PENL = 0; // PWMxL Output Port Enable: GPIO registers TRISx, LATx, Rxx registers control the PWMxL output pin
+    PG2IOCONHbits.POLH = 0; // PWMxH Output Port Enable: Output pin is active-high
+    PG2IOCONHbits.POLL = 0; // PWMxL Output Port Enable: Output pin is active-high
+    
+    // PWM GENERATOR 1 STATUS REGISTER
+    PG2STAT = 0x0000;   // Reset to default
+    
+    // PWM GENERATOR 1 EVENT REGISTER LOW 
+    PG2EVTLbits.ADTR1PS     = 0b00001;      // ADC Trigger 1 Postscaler Selection = 1:2
+    PG2EVTLbits.ADTR1EN3    = 0b0;          // PG2TRIGC  Compare Event is disabled as trigger source for ADC Trigger 1
+    PG2EVTLbits.ADTR1EN2    = 0b0;          // PG2TRIGB  Compare Event is disabled as trigger source for ADC Trigger 1
+    PG2EVTLbits.ADTR1EN1    = 0b1;          // PG2TRIGA  Compare Event is enabled as trigger source for ADC Trigger 1
+    PG2EVTLbits.UPDTRG      = 0b00;         // User must set the UPDATE bit (PG2STAT<4>) manually
+    PG2EVTLbits.PGTRGSEL    = 0b000;        // PWM Generator Trigger Output is not used, leave it as default: EOC event is the PWM Generator trigger
+    
+    // PWM GENERATOR 1 EVENT REGISTER HIGH
+    PG2EVTHbits.FLTIEN      = 0b0;          // PCI Fault interrupt is disabled
+    PG2EVTHbits.CLIEN       = 0b0;          // PCI Current-Limit interrupt is disabled
+    PG2EVTHbits.FFIEN       = 0b0;          // PCI Feed-Forward interrupt is disabled
+    PG2EVTHbits.SIEN        = 0b0;          // PCI Sync interrupt is disabled
+    PG2EVTHbits.IEVTSEL     = 0b11;         // Time base interrupts are disabled
+    PG2EVTHbits.ADTR2EN3    = 0b0;          // PG2TRIGC register compare event is disabled as trigger source for ADC Trigger 2
+    PG2EVTHbits.ADTR2EN2    = 0b0;          // PG2TRIGB register compare event is disabled as trigger source for ADC Trigger 2
+    PG2EVTHbits.ADTR2EN1    = 0b0;          // PG2TRIGA register compare event is disabled as trigger source for ADC Trigger 2
+    PG2EVTHbits.ADTR1OFS    = 0b00001;      // ADC Trigger 1 offset = Offset by 1 trigger event
+    
+    // PGCLPCIH: PWM GENERATOR CL PCI REGISTER HIGH
+    PG2CLPCIHbits.BPEN      = 0b0;          // PCI function is not bypassed
+    PG2CLPCIHbits.BPSEL     = 0b000;        // PCI control is sourced from PWM Generator 1 PCI logic when BPEN = 1
+    PG2CLPCIHbits.ACP       = 0b011;        // PCI Acceptance Mode: Latched
+    PG2CLPCIHbits.SWPCI     = 0b0;          // Drives a '0' to PCI logic assigned to by the SWPCIM<1:0> control bits
+    PG2CLPCIHbits.SWPCIM    = 0b00;         // SWPCI bit is assigned to PCI acceptance logic
+    PG2CLPCIHbits.PCIGT     = 0b0;          // SR latch is Set-dominant in Latched Acceptance modes; ToDo: Why is this not called LATMOD?
+    PG2CLPCIHbits.TQPS      = 0b0;          // Termination Qualifier not inverted
+    PG2CLPCIHbits.TQSS      = 0b000;        // No termination qualifier used so terminator will work straight away without any qualifier
+    
+    // PGCLPCIL: PWM GENERATOR CL PCI REGISTER LOW
+    PG2CLPCILbits.TSYNCDIS  = 0;            // Termination of latched PCI occurs at PWM EOC
+    PG2CLPCILbits.TERM      = 0b001;        // Termination Event: Terminate when Comparator 2 output transitions from active to inactive
+    PG2CLPCILbits.AQPS      = 0b1;          // Acceptance Qualifier (LEB) signal is inverted 
+    PG2CLPCILbits.AQSS      = 0b010;        // Acceptance Qualifier: LEB 
+    PG2CLPCILbits.SWTERM    = 0b0;          // A write of '1' to this location will produce a termination event. This bit location always reads as '0'.
+    PG2CLPCILbits.PSYNC     = 0;            // PCI source is not synchronized to PWM EOC
+    PG2CLPCILbits.PPS       = 0;            // Non-inverted PCI polarity
+    PG2CLPCILbits.PSS       = 0b11100;      // Selecting Comparator 2 output as PCI input
+    
+    // Reset further PCI control registers
+    PG2FPCIH        = 0x0000;          // PWM GENERATOR F PCI REGISTER HIGH
+    PG2FPCIL        = 0x0000;          // PWM GENERATOR F PCI REGISTER LOW
+    PG2FFPCIH       = 0x0000;          // PWM GENERATOR FF PCI REGISTER HIGH
+    PG2FFPCIL       = 0x0000;          // PWM GENERATOR FF PCI REGISTER LOW
+    PG2SPCIH        = 0x0000;          // PWM GENERATOR S PCI REGISTER HIGH
+    PG2SPCIL        = 0x0000;          // PWM GENERATOR S PCI REGISTER LOW
+    
+    // PWM GENERATOR 2 LEADING-EDGE BLANKING REGISTER HIGH 
+    PG2LEBHbits.PWMPCI      = 0b000;        // PWM Generator #1 output is made available to PCI logic
+    PG2LEBHbits.PHR         = 0b1;          // Rising edge of PWM2H will trigger the LEB duration counter
+    PG2LEBHbits.PHF         = 0b0;          // LEB ignores the falling edge of PWM2H
+    PG2LEBHbits.PLR         = 0b0;          // LEB ignores the rising edge of PWM2L
+    PG2LEBHbits.PLF         = 0b0;          // LEB ignores the falling edge of PWM2L
+    
+    // PWM GENERATOR 1 LEADING-EDGE BLANKING REGISTER LOW 
+    PG2LEBL                 = 52;           // ToDo: This value may need further adjustment
+    
+    // PG2PHASE: PWM GENERATOR 1 PHASE REGISTER
+    PG2PHASE    = 0;
+    
+    // PG2DC: PWM GENERATOR 1 DUTY CYCLE REGISTER
+    PG2DC       = 800;      // 80%
+    
+    // PG2DCA: PWM GENERATOR 1 DUTY CYCLE ADJUSTMENT REGISTER
+    PG2DCA      =  0x0000;      
+    
+    // PG2PER: PWM GENERATOR 1 PERIOD REGISTER        
+    PG2PER      = 1000;     // 500 kHz
+
+    // PG2TRIGA: PWM GENERATOR 1 TRIGGER A REGISTER
+    PG2TRIGA    = 100;  // ToDo: Check this value on oscilloscope
+    
+    // PG2TRIGB: PWM GENERATOR 1 TRIGGER B REGISTER       
+    PG2TRIGB    = 150;  // ToDo: Check this value on oscilloscope
+    
+    // PG2TRIGC: PWM GENERATOR 1 TRIGGER C REGISTER        
+    PG2TRIGC    = 800;  // ToDo: Check this value on oscilloscope
+    
+    // PG2DTL: PWM GENERATOR 1 DEAD-TIME REGISTER LOW        
+    PG2DTL      = 40;
+    
+    // PG2DTH: PWM GENERATOR 1 DEAD-TIME REGISTER HIGH
+    PG2DTH      = 20;
+            
+//  PG2CAP      = 0x0000;   // Read only register
+    
+    return(1);
+}        
