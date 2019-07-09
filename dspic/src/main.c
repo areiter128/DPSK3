@@ -34,6 +34,8 @@ int main(void) {
     init_buck_pwr_control();    // Initialize all peripherals and data structures of the buck controller
     init_boost_pwr_control();  // Initialize all peripherals and data structures of the boost controller
     
+    launch_buck_pwr_control();
+    
     while (1) {
 
         // wait for timer1 to overrun
