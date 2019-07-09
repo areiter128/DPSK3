@@ -41,6 +41,13 @@
 #include "init/init_timer1.h"
 #include "init/init_gpio.h"
 
+#include "init/init_acmp.h"
+#include "init/init_adc.h"
+#include "init/init_pwm.h"
+
+#include "buck_pwr_control.h"
+#include "boost_pwr_control.h"
+
 #ifdef	__cplusplus
 extern "C" {
 #endif /* __cplusplus */

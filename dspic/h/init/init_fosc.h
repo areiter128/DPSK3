@@ -42,6 +42,7 @@ extern "C" {
 #endif /* __cplusplus */
 
 extern volatile uint16_t init_fosc(void);
+extern volatile uint16_t init_aclk(void);
     
 #ifdef	__cplusplus
 }
