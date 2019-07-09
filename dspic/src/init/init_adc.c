@@ -12,6 +12,7 @@
 
 #include "init_adc.h"
 
+#define ADC_POWRUP_TIMEOUT  5000
 
 volatile uint16_t init_adc_module(void) {
     
@@ -191,14 +192,7 @@ volatile uint16_t init_buck_adc(void) {
     ADFL1CONbits.OVRSAM = 0b001; // Filter Averaging/Oversampling Ratio: 16x (result in the ADFLxDAT)
     ADFL1CONbits.IE = 0; // Filter Common ADC Interrupt Enable: Common ADC interrupt will not be generated for the filter
     ADFL1CONbits.FLCHSEL = 13; // Oversampling Filter Input Channel Selection: 13=AN13
-    
-    
-    return(1);
-}
 
-volatile uint16_t launch_buck_adc(void) {
-
-    
     return(1);
 }
 
@@ -252,9 +246,42 @@ volatile uint16_t init_boost_adc(void) {
     return(1);
 }
 
-volatile uint16_t launch_boost_adc(void) {
+volatile uint16_t launch_adc(void) {
 
+    volatile uint16_t timeout=0;
+    
+    // If ADC Module is already turned on, ADC is running => skip launch_adc())
+    if(ADCON1Lbits.ADON) return(1); 
+    
+    ADCON1Lbits.ADON = 1; // ADC Enable: ADC module is enabled first
+
+    ADCON5Lbits.SHRPWR = 1; // Shared ADC Core Power Enable: ADC core is on
+    while((!ADCON5Lbits.SHRRDY) && (timeout++<ADC_POWRUP_TIMEOUT));
+    if((!ADCON5Lbits.SHRRDY) || (timeout>=ADC_POWRUP_TIMEOUT)) return(0);
+    
+    ADCON5Lbits.C0PWR = 1; // Dedicated ADC Core 0 Power Enable: ADC core is off
+    while((!ADCON5Lbits.C0RDY) && (timeout++<ADC_POWRUP_TIMEOUT));
+    if((!ADCON5Lbits.C0RDY) || (timeout>=ADC_POWRUP_TIMEOUT)) return(0);
+
+    ADCON5Lbits.C1PWR = 1; // Dedicated ADC Core 1 Power Enable: ADC core is off
+    while((!ADCON5Lbits.C1RDY) && (timeout++<ADC_POWRUP_TIMEOUT));
+    if((!ADCON5Lbits.C1RDY) || (timeout>=ADC_POWRUP_TIMEOUT)) return(0);
+
+    // INITIALIZE AN13 INTERRUPTS (Board Input Voltage)
+    IPC25bits.ADCAN12IP = 0;   // Interrupt Priority Level 0
+    IFS6bits.ADCAN12IF = 0;    // Reset Interrupt Flag Bit
+    IEC6bits.ADCAN12IE = 0;    // Disable ADCAN13 Interrupt 
+
+    IPC26bits.ADCAN13IP = 5;   // Interrupt Priority Level 5
+    IFS6bits.ADCAN13IF = 0;    // Reset Interrupt Flag Bit
+    IEC6bits.ADCAN13IE = 1;    // Enable ADCAN13 Interrupt 
+    
+    // INITIALIZE AN13 INTERRUPTS (Boost Output Voltage)
+    IPC27bits.ADCAN18IP = 5;   // Interrupt Priority Level 5
+    IFS6bits.ADCAN18IF = 0;    // Reset Interrupt Flag Bit
+    IEC6bits.ADCAN18IE = 1;    // Enable ADCAN13 Interrupt 
     
     return(1);
 }
+
 

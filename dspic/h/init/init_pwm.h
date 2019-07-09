@@ -45,6 +45,7 @@ extern volatile uint16_t init_buck_pwm(void);
 extern volatile uint16_t launch_buck_pwm(void);
 
 extern volatile uint16_t init_boost_pwm(void);
+extern volatile uint16_t launch_boost_pwm(void);
 
 #ifdef	__cplusplus
 }
