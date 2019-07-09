@@ -38,6 +38,30 @@ volatile uint16_t init_acmp_module(void) {
     DACCTRL2Lbits.TMODTIME = (75 & 0x03FF); // Transition Mode Duration (default 0x55 = 340ns @ 500 MHz)
     DACCTRL2Hbits.SSTIME = (85 & 0x0FFF); // Time from Start of Transition Mode until Steady-State Filter is Enabled (default 0x8A = 552ns @ 500 MHz)
     
+    return(1);
+}
+
+volatile uint16_t init_buck_acmp(void) {
+
+    // DACxCONL: DACx CONTROL LOW REGISTER
+    DAC1CONLbits.DACEN = 0; // Individual DACx Module Enable: Disables DACx module during configuration
+    DAC1CONLbits.IRQM = 0b00; // Interrupt Mode Selection: Interrupts are disabled
+    DAC1CONLbits.CBE = 1; // Comparator Blank Enable: Enables the analog comparator output to be blanked (gated off) during the recovery transition following the completion of a slope operation
+    DAC1CONLbits.DACOEN = 1; // DACx Output Buffer Enable: DACx analog voltage is connected to the DACOUT1 pin (RA3/TP35 on DPSK3)
+    DAC1CONLbits.FLTREN = 0; // Comparator Digital Filter Enable: Digital filter is disabled
+    // DAC1CONLbits.CMPSTAT (read only bit)
+    DAC1CONLbits.CMPPOL = 0; // Comparator Output Polarity Control: Output is non-inverted
+    DAC1CONLbits.INSEL = 0b000; // Comparator Input Source Select: feedback is connected to CMPxA input pin
+    DAC1CONLbits.HYSPOL = 0; // Comparator Hysteresis Polarity Selection: Hysteresis is applied to the rising edge of the comparator output
+    DAC1CONLbits.HYSSEL = 0b11; // Comparator Hysteresis Selection: 45 mv hysteresis (0 = 0mV, 1 = 15mV, 2 = 30mV, 3 = 45mV)
+    
+    // DACxCONH: DACx CONTROL HIGH REGISTER
+    
+    // ***********************************************
+    // ToDo: CHECK DAC LEB PERIOD TO BE CORRECT AND DOESN'T CREATE CONFLICTS
+    DAC1CONHbits.TMCB = 50; // DACx Leading-Edge Blanking: period for the comparator
+    // ***********************************************
+        
     // DACxDATH: DACx DATA HIGH REGISTER
     DAC1DATH = (205 & 0x0FFF); // DACx Data: This register specifies the high DACx data value. Valid values are from 205 to 3890.
     DAC1DATL = (205 & 0x0FFF); // DACx Low Data
@@ -62,43 +86,7 @@ volatile uint16_t init_acmp_module(void) {
     
     // SLPxDAT: DACx SLOPE DATA REGISTER
     SLP1DAT = 500; // Slope Ramp Rate Value
-    
-    
-    return(1);
-}
-
-volatile uint16_t init_buck_acmp(void) {
-
-    // DACxCONL: DACx CONTROL LOW REGISTER
-    DAC1CONLbits.DACEN = 0; // Individual DACx Module Enable: Disables DACx module during configuration
-    DAC1CONLbits.IRQM = 0b00; // Interrupt Mode Selection: Interrupts are disabled
-    DAC1CONLbits.CBE = 1; // Comparator Blank Enable: Enables the analog comparator output to be blanked (gated off) during the recovery transition following the completion of a slope operation
-    DAC1CONLbits.DACOEN = 1; // DACx Output Buffer Enable: DACx analog voltage is connected to the DACOUT1 pin (RA3/TP35 on DPSK3)
-    DAC1CONLbits.FLTREN = 0; // Comparator Digital Filter Enable: Digital filter is disabled
-    // DAC1CONLbits.CMPSTAT (read only bit)
-    DAC1CONLbits.CMPPOL = 0; // Comparator Output Polarity Control: Output is non-inverted
-    DAC1CONLbits.INSEL = 0b000; // Comparator Input Source Select: feedback is connected to CMPxA input pin
-    DAC1CONLbits.HYSPOL = 0; // Comparator Hysteresis Polarity Selection: Hysteresis is applied to the rising edge of the comparator output
-    DAC1CONLbits.HYSSEL = 0b11; // Comparator Hysteresis Selection: 45 mv hysteresis (0 = 0mV, 1 = 15mV, 2 = 30mV, 3 = 45mV)
-    
-    // DACxCONH: DACx CONTROL HIGH REGISTER
-    
-    // ***********************************************
-    // ToDo: CHECK DAC LEB PERIOD TO BE CORRECT AND DOESN'T CREATE CONFLICTS
-    DAC1CONHbits.TMCB = 50; // DACx Leading-Edge Blanking: period for the comparator
-    // ***********************************************
-
-        
-    DACCTRL2L
-    DACCTRL2H
-        DAC1DATL
-        DAC1DATH
-        SLP1CONL
-        SLP1CONH
-        SLP1DAT
-        
-    DAC1CONLbits.DACEN = 1; // Individual DACx Module Enable: Enables DACx module
-        
+            
         
     return(1);
 }

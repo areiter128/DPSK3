@@ -10,8 +10,11 @@
         <itemPath>h/init/init_gpio.h</itemPath>
         <itemPath>h/init/init_pwm.h</itemPath>
         <itemPath>h/init/init_acmp.h</itemPath>
+        <itemPath>h/init/init_adc.h</itemPath>
       </logicalFolder>
       <itemPath>h/main.h</itemPath>
+      <itemPath>h/buck_pwr_control.h</itemPath>
+      <itemPath>h/boost_pwr_control.h</itemPath>
     </logicalFolder>
     <logicalFolder name="LinkerScript"
                    displayName="Linker Files"
@@ -26,9 +29,12 @@
         <itemPath>src/init/init_gpio.c</itemPath>
         <itemPath>src/init/init_pwm.c</itemPath>
         <itemPath>src/init/init_acmp.c</itemPath>
+        <itemPath>src/init/init_adc.c</itemPath>
       </logicalFolder>
       <itemPath>src/main.c</itemPath>
       <itemPath>src/config_bits.c</itemPath>
+      <itemPath>scr/buck_pwr_control.c</itemPath>
+      <itemPath>scr/boost_pwr_control.c</itemPath>
     </logicalFolder>
     <logicalFolder name="ExternalFiles"
                    displayName="Important Files"
