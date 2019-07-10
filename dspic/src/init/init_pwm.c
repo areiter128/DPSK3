@@ -12,6 +12,13 @@
 
 #include "init_pwm.h"
 
+#define SST_PERIOD                  40       // Update PWM cycle period during soft-start in terms of PWM1 interrupts (in this case EOC) 
+#define INIT_DUTY_CYCLE             80
+#define FINAL_DUTY_CYCLE            330    
+
+volatile uint16_t softstart_counter     = 0;
+volatile uint16_t SoftStartDC           = INIT_DUTY_CYCLE;
+volatile uint16_t SoftStartFinished     = 0;
 
 volatile uint16_t init_pwm_module(void) {
 
@@ -214,7 +221,8 @@ volatile uint16_t init_buck_pwm(void) {
     PG1PHASE    = 0;
     
     // PG1DC: PWM GENERATOR 1 DUTY CYCLE REGISTER
-    PG1DC       = 800;      // 80%
+//    PG1DC       = 800;      // 80%
+    PG1DC       = INIT_DUTY_CYCLE;      // 8% - This is the value the soft-start starts from
     
     // PG1DCA: PWM GENERATOR 1 DUTY CYCLE ADJUSTMENT REGISTER
     PG1DCA      =  0x0000;      
@@ -248,6 +256,11 @@ volatile uint16_t launch_buck_pwm(void) {
     Nop();
     Nop();
     
+     // Setting up interrupt for the soft-start routine
+    PG1EVTHbits.IEVTSEL     = 0b00;     // EOC event interrupts CPU
+    IPC16bits.PWM1IP        = 5;        // Setting PWM1 interrupt priority
+    
+    
     PG1CONLbits.ON = 1; // PWM Generator #1 Enable: PWM Generator is not enabled
     PG1STATbits.UPDREQ = 1; // Update all PWM registers
 
@@ -255,6 +268,9 @@ volatile uint16_t launch_buck_pwm(void) {
     PG1IOCONHbits.PENL = 1; // PWMxL Output Port Enable: PWM generator controls the PWMxL output pin
     PG1IOCONLbits.OVRENH = 0;  // User Override Enable for PWMxH Pin: OVRDAT1 provides data for output on the PWMxH pin
     PG1IOCONLbits.OVRENL = 0;  // User Override Enable for PWMxL Pin: OVRDAT0 provides data for output on the PWMxL pin
+    
+    IFS4bits.PWM1IF         = 0;        // Clearing PWM1 interrupt flag 
+    IEC4bits.PWM1IE         = 1;        // Enabling PWM1 interrupt
 
     return(1);
 }
@@ -372,7 +388,8 @@ volatile uint16_t init_boost_pwm(void) {
     PG2PHASE    = 0;
     
     // PG2DC: PWM GENERATOR 1 DUTY CYCLE REGISTER
-    PG2DC       = 800;      // 80%
+//    PG2DC       = 800;      // 80%
+    PG2DC       = INIT_DUTY_CYCLE;      // 8% - This is the initial value for the soft-start 
     
     // PG2DCA: PWM GENERATOR 1 DUTY CYCLE ADJUSTMENT REGISTER
     PG2DCA      =  0x0000;      
@@ -417,3 +434,25 @@ volatile uint16_t launch_boost_pwm(void) {
     return(1);
 }
 
+void __attribute__((__interrupt__, no_auto_psv)) _PWM1Interrupt(void)
+{
+    if (++softstart_counter == SST_PERIOD) 
+    {
+        softstart_counter = 0;
+        
+        if (++SoftStartDC <= FINAL_DUTY_CYCLE) 
+        {
+            PG1DC++;
+            PG2DC++;
+            while (PG1STATbits.UPDATE | PG2STATbits.UPDATE);
+            PG1STATbits.UPDREQ = 1; // Update all PWM registers
+            PG2STATbits.UPDREQ = 1; // Update all PWM registers
+        }
+        else {
+            IEC4bits.PWM1IE         = 0;    // Disabling PWM1 interrupt when PEAK_CURRENT_MAX is reached
+            SoftStartFinished       = 1; 
+        }
+    }
+    
+    IFS4bits.PWM1IF     = 0;                // Clearing PWM1 interrupt flag
+}
