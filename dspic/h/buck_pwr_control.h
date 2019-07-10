@@ -40,8 +40,35 @@
 extern "C" {
 #endif /* __cplusplus */
 
+typedef enum {
+    BUCK_STAT_OFF    = 0,  // Converter Status OFF
+    BUCK_STAT_START  = 1,  // Converter STatus Startup
+    BUCK_STAT_ON     = 2,  // Converter Status Active and Running
+    BUCK_STAT_FAULT  = 3   // Converter Status FAULT
+}BUCK_CONVERTER_STATUS_e;
+
+typedef enum {
+    BUCK_SS_INIT            = 0,  // Soft-Start Phase Initialization
+    BUCK_SS_PWR_ON_DELAY    = 1,  // Soft-Start Phase Power On Delay
+    BUCK_SS_RAMP_UP         = 2,  // Soft-Start Phase Output Ramp Up 
+    BUCK_SS_PWR_GOOD_DELAY  = 3,  // Soft-Start Phase Power Good Delay
+    BUCK_SS_COMPLETE        = 4   // Soft-Start Phase Complete
+}BUCK_SOFT_START_STATUS_e;
+
+typedef struct {
+    volatile uint16_t reference;        // Soft-Start target reference value
+    volatile uint16_t pwr_on_delay;     // Soft-Start POwer On Delay
+    volatile uint16_t ramp_period;      // Soft-Start Ramp-Up Duration
+    volatile uint16_t pwr_good_delay;   // Soft-Start Power Good Delay
+    volatile uint16_t counter;          // Soft-Start Execution Counter
+    volatile uint16_t phase;            // Soft-Start Phase Index
+}BUCK_SOFT_START_t;
+
+extern volatile BUCK_SOFT_START_t buck_soft_start;
+    
 extern volatile uint16_t init_buck_pwr_control(void);
 extern volatile uint16_t launch_buck_pwr_control(void);
+extern volatile uint16_t exec_buck_pwr_control(void);
 
 #ifdef	__cplusplus
 }
