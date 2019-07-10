@@ -58,8 +58,12 @@
     <Elem>.</Elem>
     <Elem>h</Elem>
     <Elem>h/init</Elem>
+    <Elem>h/driver</Elem>
+    <Elem>h/device</Elem>
     <Elem>src</Elem>
     <Elem>src/init</Elem>
+    <Elem>src/driver</Elem>
+    <Elem>src/device</Elem>
   </sourceRootList>
   <projectmakefile>Makefile</projectmakefile>
   <confs>
@@ -69,7 +73,7 @@
         <targetDevice>dsPIC33CK256MP505</targetDevice>
         <targetHeader></targetHeader>
         <targetPluginBoard></targetPluginBoard>
-        <platformTool>pkob4hybrid</platformTool>
+        <platformTool>snap</platformTool>
         <languageToolchain>XC16</languageToolchain>
         <languageToolchainVersion>1.36</languageToolchainVersion>
         <platform>3</platform>
@@ -387,6 +391,9 @@
         <property key="programoptions.uselvpprogramming" value="false"/>
         <property key="voltagevalue" value="3.25"/>
       </PICkit3PlatformTool>
+      <pkob4hybrid>
+        <property key="memories.programmemory.ranges" value="0-2beff"/>
+      </pkob4hybrid>
       <snap>
         <property key="ADC" value="true"/>
         <property key="AutoSelectMemRanges" value="auto"/>
