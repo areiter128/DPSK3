@@ -23,7 +23,7 @@
 #include <stdint.h>
 #include "stdbool.h"
 #include <xc.h>
-#include "delay.h"
+#include "misc/delay.h"
 #include "driver/drv_lcd_interface.h"
 
 //======================================================================================================================
@@ -138,7 +138,6 @@ void Dev_Lcd_Init(void)
 void Dev_Lcd_Clear(void)
 {
     Lcd_Interface_SendCmd(LCD_CLEAR);
-    //__delay_us(20);
     __delay_ms(1);
 }
 

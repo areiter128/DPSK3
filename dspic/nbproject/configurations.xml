@@ -6,10 +6,14 @@
                    projectFiles="true">
       <logicalFolder name="f4" displayName="app" projectFiles="true">
         <itemPath>h/app/app_display.h</itemPath>
+        <itemPath>h/app/app_proto24.h</itemPath>
+        <itemPath>h/app/app_logger.h</itemPath>
       </logicalFolder>
       <logicalFolder name="f3" displayName="device" projectFiles="true">
         <itemPath>h/device/dev_lcd.h</itemPath>
         <itemPath>h/device/dev_button.h</itemPath>
+        <itemPath>h/device/dev_uart2.h</itemPath>
+        <itemPath>h/device/dev_uart1.h</itemPath>
       </logicalFolder>
       <logicalFolder name="f2" displayName="driver" projectFiles="true">
         <itemPath>h/driver/drv_lcd_interface.h</itemPath>
@@ -19,8 +23,13 @@
         <itemPath>h/init/init_timer1.h</itemPath>
         <itemPath>h/init/init_gpio.h</itemPath>
       </logicalFolder>
+      <logicalFolder name="f5" displayName="misc" projectFiles="true">
+        <itemPath>h/misc/proto_data.h</itemPath>
+        <itemPath>h/misc/delay.h</itemPath>
+        <itemPath>h/misc/interrupt.h</itemPath>
+        <itemPath>h/misc/global.h</itemPath>
+      </logicalFolder>
       <itemPath>h/main.h</itemPath>
-      <itemPath>h/delay.h</itemPath>
     </logicalFolder>
     <logicalFolder name="LinkerScript"
                    displayName="Linker Files"
@@ -31,10 +40,14 @@
                    projectFiles="true">
       <logicalFolder name="f4" displayName="app" projectFiles="true">
         <itemPath>src/app/app_display.c</itemPath>
+        <itemPath>src/app/app_proto24.c</itemPath>
+        <itemPath>src/app/app_logger.c</itemPath>
       </logicalFolder>
       <logicalFolder name="f3" displayName="device" projectFiles="true">
         <itemPath>src/device/dev_lcd.c</itemPath>
         <itemPath>src/device/dev_button.c</itemPath>
+        <itemPath>src/device/dev_uart2.c</itemPath>
+        <itemPath>src/device/dev_uart1.c</itemPath>
       </logicalFolder>
       <logicalFolder name="f2" displayName="driver" projectFiles="true">
         <itemPath>src/driver/drv_lcd_interface.c</itemPath>
@@ -43,6 +56,9 @@
         <itemPath>src/init/init_fosc.c</itemPath>
         <itemPath>src/init/init_timer1.c</itemPath>
         <itemPath>src/init/init_gpio.c</itemPath>
+      </logicalFolder>
+      <logicalFolder name="f5" displayName="misc" projectFiles="true">
+        <itemPath>src/misc/global.c</itemPath>
       </logicalFolder>
       <itemPath>src/main.c</itemPath>
       <itemPath>src/config_bits.c</itemPath>
