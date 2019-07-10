@@ -20,9 +20,10 @@
 //
 //======================================================================================================================
 
-#include <stdint.h>
-#include "stdbool.h"
 #include <xc.h>
+#include <stdint.h>
+#include <stdbool.h>
+
 #include "delay.h"
 #include "driver/drv_lcd_interface.h"
 

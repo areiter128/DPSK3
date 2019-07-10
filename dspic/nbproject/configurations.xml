@@ -50,8 +50,12 @@
     <Elem>.</Elem>
     <Elem>h</Elem>
     <Elem>h/init</Elem>
+    <Elem>h/driver</Elem>
+    <Elem>h/device</Elem>
     <Elem>src</Elem>
     <Elem>src/init</Elem>
+    <Elem>src/driver</Elem>
+    <Elem>src/device</Elem>
   </sourceRootList>
   <projectmakefile>Makefile</projectmakefile>
   <confs>
@@ -61,7 +65,7 @@
         <targetDevice>dsPIC33CK256MP505</targetDevice>
         <targetHeader></targetHeader>
         <targetPluginBoard></targetPluginBoard>
-        <platformTool>pkob4hybrid</platformTool>
+        <platformTool>snap</platformTool>
         <languageToolchain>XC16</languageToolchain>
         <languageToolchainVersion>1.36</languageToolchainVersion>
         <platform>3</platform>
