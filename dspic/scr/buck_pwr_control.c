@@ -37,6 +37,19 @@ volatile uint16_t launch_buck_pwr_control(void) {
     launch_buck_acmp(); // Start analog comparator/DAC module
     launch_buck_pwm();  // Start PWM
     
+    while(PG1DC < 250)
+    {
+        PG1DC++;
+        PG1STATbits.UPDREQ = 1;
+        Nop();
+        Nop();
+        Nop();
+        Nop();
+        Nop();
+        Nop();
+        Nop();
+    }
+    
     return(1);
 }
 

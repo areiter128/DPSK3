@@ -214,7 +214,7 @@ volatile uint16_t init_buck_pwm(void) {
     PG1PHASE    = 0;
     
     // PG1DC: PWM GENERATOR 1 DUTY CYCLE REGISTER
-    PG1DC       = 800;      // 80%
+    PG1DC       = 50;      // 80%
     
     // PG1DCA: PWM GENERATOR 1 DUTY CYCLE ADJUSTMENT REGISTER
     PG1DCA      =  0x0000;      
@@ -239,23 +239,6 @@ volatile uint16_t init_buck_pwm(void) {
             
 //  PG1CAP      = 0x0000;   // Read only register
    
-    return(1);
-}
-
-volatile uint16_t launch_buck_pwm(void) {
-    
-    Nop();
-    Nop();
-    Nop();
-    
-    PG1CONLbits.ON = 1; // PWM Generator #1 Enable: PWM Generator is not enabled
-    PG1STATbits.UPDREQ = 1; // Update all PWM registers
-
-    PG1IOCONHbits.PENH = 1; // PWMxH Output Port Enable: PWM generator controls the PWMxH output pin
-    PG1IOCONHbits.PENL = 1; // PWMxL Output Port Enable: PWM generator controls the PWMxL output pin
-    PG1IOCONLbits.OVRENH = 0;  // User Override Enable for PWMxH Pin: OVRDAT1 provides data for output on the PWMxH pin
-    PG1IOCONLbits.OVRENL = 0;  // User Override Enable for PWMxL Pin: OVRDAT0 provides data for output on the PWMxL pin
-
     return(1);
 }
 
@@ -372,7 +355,7 @@ volatile uint16_t init_boost_pwm(void) {
     PG2PHASE    = 0;
     
     // PG2DC: PWM GENERATOR 1 DUTY CYCLE REGISTER
-    PG2DC       = 800;      // 80%
+    PG2DC       = 50;      // 80%
     
     // PG2DCA: PWM GENERATOR 1 DUTY CYCLE ADJUSTMENT REGISTER
     PG2DCA      =  0x0000;      
@@ -399,6 +382,23 @@ volatile uint16_t init_boost_pwm(void) {
     
     return(1);
 }        
+
+volatile uint16_t launch_buck_pwm(void) {
+    
+    Nop();
+    Nop();
+    Nop();
+    
+    PG1CONLbits.ON = 1; // PWM Generator #1 Enable: PWM Generator is not enabled
+    PG1STATbits.UPDREQ = 1; // Update all PWM registers
+
+    PG1IOCONHbits.PENH = 1; // PWMxH Output Port Enable: PWM generator controls the PWMxH output pin
+    PG1IOCONHbits.PENL = 1; // PWMxL Output Port Enable: PWM generator controls the PWMxL output pin
+    PG1IOCONLbits.OVRENH = 0;  // User Override Enable for PWMxH Pin: OVRDAT1 provides data for output on the PWMxH pin
+    PG1IOCONLbits.OVRENL = 0;  // User Override Enable for PWMxL Pin: OVRDAT0 provides data for output on the PWMxL pin
+
+    return(1);
+}
 
 volatile uint16_t launch_boost_pwm(void) {
     

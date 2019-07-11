@@ -38,6 +38,19 @@ volatile uint16_t launch_boost_pwr_control(void) {
     launch_boost_acmp(); // Start analog comparator/DAC module
     launch_boost_pwm();  // Start PWM
     
+    while(PG2DC < 700)
+    {
+        PG2DC++;
+        PG2STATbits.UPDREQ = 1;
+        Nop();
+        Nop();
+        Nop();
+        Nop();
+        Nop();
+        Nop();
+        Nop();
+    }
+
     return(1);
 }
 

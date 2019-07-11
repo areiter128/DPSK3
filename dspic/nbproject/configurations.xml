@@ -47,8 +47,12 @@
     <Elem>.</Elem>
     <Elem>h</Elem>
     <Elem>h/init</Elem>
+    <Elem>h/driver</Elem>
+    <Elem>h/device</Elem>
     <Elem>src</Elem>
     <Elem>src/init</Elem>
+    <Elem>src/driver</Elem>
+    <Elem>src/device</Elem>
   </sourceRootList>
   <projectmakefile>Makefile</projectmakefile>
   <confs>
@@ -400,8 +404,8 @@
         <property key="MCCP/SCCP 7" value="true"/>
         <property key="MCCP/SCCP 8" value="true"/>
         <property key="MCCP/SCCP 9" value="true"/>
-        <property key="PG1" value="true"/>
-        <property key="PG2" value="true"/>
+        <property key="PG1" value="false"/>
+        <property key="PG2" value="false"/>
         <property key="PG3" value="true"/>
         <property key="PG4" value="true"/>
         <property key="PG5" value="true"/>
