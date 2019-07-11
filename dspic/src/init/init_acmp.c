@@ -65,7 +65,7 @@ volatile uint16_t init_buck_acmp(void) {
     // ***********************************************
         
     // DACxDATH: DACx DATA HIGH REGISTER
-    DAC1DATH = (205 & 0x0FFF); // DACx Data: This register specifies the high DACx data value. Valid values are from 205 to 3890.
+    DAC1DATH = (1205 & 0x0FFF); // DACx Data: This register specifies the high DACx data value. Valid values are from 205 to 3890.
     DAC1DATL = (205 & 0x0FFF); // DACx Low Data
         
     // SLPxCONH: DACx SLOPE CONTROL HIGH REGISTER

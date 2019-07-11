@@ -43,9 +43,11 @@ extern "C" {
 extern volatile uint16_t init_pwm_module(void);
 extern volatile uint16_t init_buck_pwm(void);
 extern volatile uint16_t launch_buck_pwm(void);
+extern volatile uint16_t init_buck_trig_pwm(void);
 
 extern volatile uint16_t init_boost_pwm(void);
 extern volatile uint16_t launch_boost_pwm(void);
+extern volatile uint16_t init_boost_trig_pwm(void);
 
 #ifdef	__cplusplus
 }
