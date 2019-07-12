@@ -4,7 +4,7 @@ Out-Of-The-Box firmware for Microchip Technology's MPLAB Digital Power Starter K
 
 This repository holds two very different firmware versions:
 
-## 1) Original Firmware (branches orinial_master, orinial_develop, orinial_hotfix, etc.)  
+## 1) Original Firmware (branches original_master, orignal_develop, original_hotfix, etc.)  
 This original firmware verson is suffering from a number of startup and runtime issues which need to be resolved before product release. 
 The initial version was tag-ed with v0.9.0.
 All existing issues have been added as **Issues** to this repository and a **Project** has been added to organize the hotfix workflow.
