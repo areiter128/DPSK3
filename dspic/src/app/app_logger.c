@@ -26,19 +26,19 @@
 
 #define __print_serial_size 64
 
-
+/*
 static inline void UartSendText(char *pstring)
 {
     while (*pstring != '\0')
     {
-        while(UART1_TransmitBufferIsFull())
-            ;
-        UART1_Write(*pstring++);
+        while(Dev_UART1_TransmitBufferIsFull());    //wait while transmit buffer is full
+        Dev_UART1_Write(*pstring++);
     }
 }
+*/
 
 #define PrintSerialInit()  do{  UartSendText("\n\r"); } while(0)
-#define PrintSerial(...)   do{char __print_utils_string[__print_serial_size]; sprintf(__print_utils_string, __VA_ARGS__); UartSendText(__print_utils_string); } while(0)
+#define PrintSerial(...)   do{char __print_utils_string[__print_serial_size]; sprintf(__print_utils_string, __VA_ARGS__); Dev_UART1_WriteStringBlocking(__print_utils_string); } while(0)
 
 
 void App_Logger_Init(void)

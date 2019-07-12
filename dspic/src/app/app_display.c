@@ -53,7 +53,6 @@
 #define PAGE_BUCK_FAULTS            11
 #define PAGE_BOOST_FAULTS           12
 
-#define PAGE_DEBUG_UART2            15
 
 
 #define DISPLAY_AUTOREFRESHCOUNTER_100MS_MAX    8
@@ -120,7 +119,7 @@ void App_CheckEvents(void)
             if (buttonstate == DEV_BUTTON_EVENT_PRESSED_SHORT)
                 App_GotoPage(PAGE_VOLTAGES);
             else if (buttonstate == DEV_BUTTON_EVENT_PRESSED_LONG)
-                App_GotoPage(PAGE_EXAMPLE_LONG_BUTTON);
+                App_GotoPage(PAGE_BOOST_FAULTS);
             else if (++app_display_pagetimeoutcounter >= 20)
                 App_GotoPage(PAGE_INIT_1);
             break;
@@ -156,6 +155,7 @@ void App_CheckEvents(void)
             else if (++app_display_pagetimeoutcounter >= 20)
                 App_GotoPage(PAGE_INIT_0);           
             break;
+/*            
         case PAGE_EXAMPLE_SHORT_BUTTON:
             if (buttonstate != DEV_BUTTON_EVENT_NONE)
                 App_GotoPage(PAGE_INIT_0);
@@ -164,6 +164,7 @@ void App_CheckEvents(void)
             if (buttonstate != DEV_BUTTON_EVENT_NONE)
                 App_GotoPage(PAGE_INIT_0);
             break;
+*/
         case PAGE_VOLTAGES:
             if (buttonstate == DEV_BUTTON_EVENT_PRESSED_SHORT)
                 App_GotoPage(PAGE_LOAD_BUCK);
@@ -196,17 +197,10 @@ void App_CheckEvents(void)
             break;
         case PAGE_BOOST_FAULTS:
             if (buttonstate == DEV_BUTTON_EVENT_PRESSED_SHORT)
-                App_GotoPage(PAGE_DEBUG_UART2);
+                App_GotoPage(PAGE_INIT_0);
             else if (buttonstate == DEV_BUTTON_EVENT_PRESSED_LONG)
                 App_GotoPage(PAGE_BUCK_FAULTS);
             break;
-        case PAGE_DEBUG_UART2:
-            if (buttonstate == DEV_BUTTON_EVENT_PRESSED_SHORT)
-                App_GotoPage(PAGE_INIT_0);
-            else if (buttonstate == DEV_BUTTON_EVENT_PRESSED_LONG)
-                App_GotoPage(PAGE_BOOST_FAULTS);
-            break;
-            
             
     }
 }
@@ -241,6 +235,7 @@ void App_RefreshDisplay(void)
             Dev_Lcd_WriteStringXY(0,0,"  33CK256MP505  ");
             Dev_Lcd_WriteStringXY(0,1,"                ");
             break;
+/*            
         case PAGE_EXAMPLE_SHORT_BUTTON:
             Dev_Lcd_WriteStringXY(0,0," EXAMPLE PAGE 1 ");
             Dev_Lcd_WriteStringXY(0,1,"S2 PRESSED SHORT");
@@ -249,6 +244,7 @@ void App_RefreshDisplay(void)
             Dev_Lcd_WriteStringXY(0,0," EXAMPLE PAGE 2 ");
             Dev_Lcd_WriteStringXY(0,1,"S2 PRESSED LONG");
             break;
+*/
         case PAGE_VOLTAGES:
             PrintLcd(0, "Vbuck  =  %2.2f V   ", global_data.voltage_buck);
             PrintLcd(1, "Vboost = %2.2f V    ", global_data.voltage_boost);
@@ -278,10 +274,6 @@ void App_RefreshDisplay(void)
         case PAGE_BOOST_FAULTS:
             PrintLcd(0,"Boost faults:   ");
             PrintLcd(1,"OC %d OV %d REG %d ", global_data.fault_ocp_boost,  global_data.fault_ovp_boost, global_data.fault_reg_boost);
-            break;
-        case PAGE_DEBUG_UART2:
-            PrintLcd(0,"Uart2 rx: %d    ", global_debug_uart2_rx_counter);
-            PrintLcd(1,"Uart2 tx: %d    ", global_debug_uart2_tx_counter);
             break;
         default:
             PrintLcd(0,"Firmware error !");

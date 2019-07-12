@@ -11,6 +11,7 @@
 #include <stdint.h>
 #include "device/dev_lcd.h"
 #include "device/dev_button.h"
+#include "device/dev_uart1.h"
 #include "app/app_display.h"
 #include "app/app_proto24.h"
 #include "app/app_logger.h"
@@ -41,8 +42,6 @@ void GetVoltages(void);
 
 int main(void)
 {
-//    volatile uint16_t timeout = 0;
-
     init_fosc();
     init_timer1();
     init_gpio();
@@ -62,14 +61,16 @@ int main(void)
     GetVoltages();
     global_data.packet_counter = 0;
 
-    //Dev_Lcd_WriteString("\vMICROCHIP  dsPIC  33CK256MP505  ");    //would works too without XY
     //Dev_Lcd_WriteStringXY(0,0,"MICROCHIP  dsPIC");
     //Dev_Lcd_WriteStringXY(0,1,"  33CK256MP505  ");
+    //Dev_Lcd_WriteString("\vMICROCHIP  dsPIC  33CK256MP505  ");    //would work too without XY
     
     _T1IP = 1;  // Set interrupt priority to one (cpu is running on ip zero)
     _T1IF = 0;  // Reset interrupt flag bit
     _T1IE = 1;  // Enable Timer1 interrupt
     
+    //Dev_UART1_WriteStringBlocking("Booting up the DPSK3!!\r\n");;
+            
     Tasks_MainTaskLoop();
     
     return (0);
@@ -88,17 +89,9 @@ void __attribute__((__interrupt__,no_auto_psv)) _T1Interrupt(void)
 
 inline void Tasks_MainTaskLoop(void)
 {
-    //TODO: discuss the new counter logic with Andy, so he understands the advantage of
-    //      the new leader/follower counter concept. (Stefan Weilhartner)
     //TODO: should we implement a Watchdog that gets triggered in one of the Task-Routines?
     while (1)   //100µs scheduler
     {
-        //TODO: events can be lost with this implementation if the task takes longer than 100µs
-        // wait for timer1 to overrun
-//        while ((!_T1IF) && (timeout++ < TMR1_TIMEOUT));
-//        timeout = 0;    // Reset timeout counter
-//        _T1IF = 0; // reset Timer1 interrupt flag bit
-//        Tasks_100us();
         if (counter_100us_leader != counter_100us_follower)
         {
             counter_100us_follower++;
@@ -173,6 +166,7 @@ inline void Tasks_100ms(void)
     else if (time_counter_logger == 16)
     {   
         App_Logger_LogProto24();
+        time_counter_logger = 0;
     }
 }
 

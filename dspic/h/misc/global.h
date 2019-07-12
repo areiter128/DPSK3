@@ -54,8 +54,8 @@ typedef struct
 extern print_data_t global_data;
 extern protocol_data_t global_proto24data;
 //debug variables
-extern uint16_t global_debug_uart2_rx_counter;
-extern uint16_t global_debug_uart2_tx_counter;
+//extern uint16_t global_debug_uart2_rx_counter;
+//extern uint16_t global_debug_uart2_tx_counter;
 
 
 

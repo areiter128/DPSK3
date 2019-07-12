@@ -24,5 +24,5 @@
 
 print_data_t    global_data;
 protocol_data_t global_proto24data;
-uint16_t        global_debug_uart2_rx_counter = 0;
-uint16_t        global_debug_uart2_tx_counter = 0;
+//uint16_t        global_debug_uart2_rx_counter = 0;
+//uint16_t        global_debug_uart2_tx_counter = 0;

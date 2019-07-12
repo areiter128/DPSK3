@@ -61,8 +61,8 @@ void App_Proto24_GetData(protocol_data_t * newdata)
 
 void App_Proto24_Send(protocol_event_t p24_event)
 {
-    UART2_Write(PROTO_SOF);
-    UART2_WriteBuffer((uint8_t *)&p24_event, PROTO_DSP_P24_LEN);
+    Dev_UART2_Write(PROTO_SOF);
+    Dev_UART2_WriteBuffer((uint8_t *)&p24_event, PROTO_DSP_P24_LEN);
 }
 
 void App_Proto24_Task_1ms(void)
@@ -87,9 +87,9 @@ void App_Proto24_Task_1ms(void)
 
     if(WSOF) // waiting for SOF - start of frame
     {
-        if(!UART2_ReceiveBufferIsEmpty())
+        if(!Dev_UART2_ReceiveBufferIsEmpty())
         {
-            uint8_t byte = UART2_Read();
+            uint8_t byte = Dev_UART2_Read();
             if(byte == PROTO_SOF)
             {
                 WSOF = false; // no longer waiting for SOF, now can load the packet
@@ -99,10 +99,10 @@ void App_Proto24_Task_1ms(void)
     }
     else
     {
-        buff_len = 32 - (uint8_t)UART2_ReceiveBufferSizeGet(); // 32 must be replaced by UART2 API call
+        buff_len = 32 - (uint8_t)Dev_UART2_ReceiveBufferSizeGet(); // 32 must be replaced by UART2 API call
         if(buff_len >= PROTO_P24_DSP_LEN)
         {
-            transfer_len = UART2_ReadBuffer((uint8_t *)&temp_proto24data, PROTO_P24_DSP_LEN);
+            transfer_len = Dev_UART2_ReadBuffer((uint8_t *)&temp_proto24data, PROTO_P24_DSP_LEN);
             WSOF = true; // wait again for SOF
             if(transfer_len == PROTO_P24_DSP_LEN)
             {
