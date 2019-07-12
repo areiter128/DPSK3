@@ -194,7 +194,8 @@ void Dev_Lcd_WriteString(const char *str)
                 change_position = true;
                 break;
             default:
-               	Lcd_Interface_SendChar(*str);
+                if (pos_x < LCD_DISPLAYSIZE_X && pos_y < LCD_DISPLAYSIZE_Y)
+                   	Lcd_Interface_SendChar(*str);
                 if (++pos_x >= LCD_DISPLAYSIZE_X)
                 {
                     pos_x = 0;
@@ -203,11 +204,6 @@ void Dev_Lcd_WriteString(const char *str)
                 }
                 break;
         }
-        //if (pos_y >= LCD_DISPLAYSIZE_Y)
-        //{
-        //    pos_y = 0;
-        //    change_position = true;
-        //}
         str++;
     }
 }

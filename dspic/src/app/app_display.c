@@ -246,14 +246,14 @@ void App_RefreshDisplay(void)
             break;
 */
         case PAGE_VOLTAGES:
-            PrintLcd(0, "Vbuck  =  %2.2f V   ", global_data.voltage_buck);
-            PrintLcd(1, "Vboost = %2.2f V    ", global_data.voltage_boost);
+            PrintLcd(0, "Vbuck  =  %2.2f V ", global_data.voltage_buck);
+            PrintLcd(1, "Vboost = %2.2f V ", global_data.voltage_boost);
             break;
         case PAGE_LOAD_BUCK:
             {
                 double volt2 = global_data.voltage_buck * global_data.voltage_buck;
-                PrintLcd(0, "P buck = %1.2f W    ", volt2 * global_data.load_buck);
-                PrintLcd(1, "step   = %1.2f W    ", volt2 * global_data.step_load_buck);
+                PrintLcd(0, "P buck = %1.2f W ", volt2 * global_data.load_buck);
+                PrintLcd(1, "step   = %1.2f W ", volt2 * global_data.step_load_buck);
             }
             break;
         case PAGE_LOAD_BOOST:
