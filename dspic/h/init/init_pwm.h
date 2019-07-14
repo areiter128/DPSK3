@@ -35,6 +35,8 @@
 #include <stdint.h>
 #include <stdbool.h>
 
+#define TDR 25  // Rising edge dead time [2ns]
+#define TDF 40  // Falling edge dead time [2ns]
 
 #ifdef	__cplusplus
 extern "C" {
@@ -43,9 +45,13 @@ extern "C" {
 extern volatile uint16_t init_pwm_module(void);
 extern volatile uint16_t init_buck_pwm(void);
 extern volatile uint16_t launch_buck_pwm(void);
+extern volatile uint16_t init_buck_trig_pwm(void);
+extern volatile uint16_t launch_buck_trig_pwm(void);
 
 extern volatile uint16_t init_boost_pwm(void);
 extern volatile uint16_t launch_boost_pwm(void);
+extern volatile uint16_t init_boost_trig_pwm(void);
+extern volatile uint16_t launch_boost_trig_pwm(void);
 
 #ifdef	__cplusplus
 }

@@ -15,7 +15,7 @@
 volatile uint16_t init_acmp_module(void) {
 
     // Make sure power is turned on to comparator module #1
-    PMD7bits.CMP1MD = 0; // Comparator 1 Module Powetr Disable: Comparator 1 module is enabled
+    PMD7bits.CMP1MD = 0; // Comparator 1 Module Powetr Disable: Comparator 1 module is disabled
     
     // Turn off all Comparator/DAC modules during configuration
     DACCTRL1Lbits.DACON = 0; // Common DAC Module Enable: Disables all DAC modules
@@ -49,7 +49,7 @@ volatile uint16_t init_buck_acmp(void) {
     DAC1CONLbits.DACEN = 0; // Individual DACx Module Enable: Disables DACx module during configuration
     DAC1CONLbits.IRQM = 0b00; // Interrupt Mode Selection: Interrupts are disabled
     DAC1CONLbits.CBE = 1; // Comparator Blank Enable: Enables the analog comparator output to be blanked (gated off) during the recovery transition following the completion of a slope operation
-    DAC1CONLbits.DACOEN = 1; // DACx Output Buffer Enable: DACx analog voltage is connected to the DACOUT1 pin (RA3/TP35 on DPSK3)
+    DAC1CONLbits.DACOEN = 0; // DACx Output Buffer Enable: DACx analog voltage is connected to the DACOUT1 pin (RA3/TP35 on DPSK3)
     DAC1CONLbits.FLTREN = 0; // Comparator Digital Filter Enable: Digital filter is disabled
     // DAC1CONLbits.CMPSTAT (read only bit)
     DAC1CONLbits.CMPPOL = 0; // Comparator Output Polarity Control: Output is non-inverted
@@ -65,7 +65,7 @@ volatile uint16_t init_buck_acmp(void) {
     // ***********************************************
         
     // DACxDATH: DACx DATA HIGH REGISTER
-    DAC1DATH = (205 & 0x0FFF); // DACx Data: This register specifies the high DACx data value. Valid values are from 205 to 3890.
+    DAC1DATH = (3000 & 0x0FFF); // DACx Data: This register specifies the high DACx data value. Valid values are from 205 to 3890.
     DAC1DATL = (205 & 0x0FFF); // DACx Low Data
         
     // SLPxCONH: DACx SLOPE CONTROL HIGH REGISTER
@@ -77,7 +77,8 @@ volatile uint16_t init_buck_acmp(void) {
     // SLPxCONL: DACx SLOPE CONTROL LOW REGISTER
     SLP1CONLbits.HCFSEL = 0b0000; // Hysteretic Comparator Function Input Selection: (none)
     SLP1CONLbits.SLPSTOPA = 0b0001; // Slope Stop A Signal Selection: PWM1 Trigger 2
-    SLP1CONLbits.SLPSTOPB = 0b0001; // Slope Stop B Signal Selection: CMP1 Out
+//    SLP1CONLbits.SLPSTOPB = 0b0001; // Slope Stop B Signal Selection: CMP1 Out
+    SLP1CONLbits.SLPSTOPB = 0b0000; // Slope Stop B Signal Selection: 0
     SLP1CONLbits.SLPSTRT = 0b0001; // Slope Start Signal Selection: PWM1 Trigger 1
     
     // ToDo: CHECK SLP1DAT in conjunction with DAC1DATH and DAC1DATL
@@ -87,7 +88,8 @@ volatile uint16_t init_buck_acmp(void) {
     // Previous configurations have shown that this might not be true, so please revisit this setting.
     
     // SLPxDAT: DACx SLOPE DATA REGISTER
-    SLP1DAT = 500; // Slope Ramp Rate Value
+//    SLP1DAT = 500; // Slope Ramp Rate Value
+    SLP1DAT = 43; // Slope Ramp Rate Value
             
         
     return(1);
@@ -108,7 +110,7 @@ volatile uint16_t init_boost_acmp(void) {
     DAC2CONLbits.DACEN = 0; // Individual DACx Module Enable: Disables DACx module during configuration
     DAC2CONLbits.IRQM = 0b00; // Interrupt Mode Selection: Interrupts are disabled
     DAC2CONLbits.CBE = 1; // Comparator Blank Enable: Enables the analog comparator output to be blanked (gated off) during the recovery transition following the completion of a slope operation
-    DAC2CONLbits.DACOEN = 1; // DACx Output Buffer Enable: DACx analog voltage is connected to the DACOUT1 pin (RA3/TP35 on DPSK3)
+    DAC2CONLbits.DACOEN = 1; // DACx Output Buffer Enable: disabled for this module
     DAC2CONLbits.FLTREN = 0; // Comparator Digital Filter Enable: Digital filter is disabled
     // DAC2CONLbits.CMPSTAT (read only bit)
     DAC2CONLbits.CMPPOL = 0; // Comparator Output Polarity Control: Output is non-inverted
@@ -124,7 +126,7 @@ volatile uint16_t init_boost_acmp(void) {
     // ***********************************************
         
     // DACxDATH: DACx DATA HIGH REGISTER
-    DAC2DATH = (205 & 0x0FFF); // DACx Data: This register specifies the high DACx data value. Valid values are from 205 to 3890.
+    DAC2DATH = (2000 & 0x0FFF); // DACx Data: This register specifies the high DACx data value. Valid values are from 205 to 3890.
     DAC2DATL = (205 & 0x0FFF); // DACx Low Data
         
     // SLPxCONH: DACx SLOPE CONTROL HIGH REGISTER
@@ -135,9 +137,9 @@ volatile uint16_t init_boost_acmp(void) {
     
     // SLPxCONL: DACx SLOPE CONTROL LOW REGISTER
     SLP2CONLbits.HCFSEL = 0b0000; // Hysteretic Comparator Function Input Selection: (none)
-    SLP2CONLbits.SLPSTOPA = 0b0001; // Slope Stop A Signal Selection: PWM1 Trigger 2
+    SLP2CONLbits.SLPSTOPA = 0b0010; // Slope Stop A Signal Selection: PWM2 Trigger 2
     SLP2CONLbits.SLPSTOPB = 0b0010; // Slope Stop B Signal Selection: CMP2 Out
-    SLP2CONLbits.SLPSTRT = 0b0001; // Slope Start Signal Selection: PWM1 Trigger 1
+    SLP2CONLbits.SLPSTRT = 0b0010; // Slope Start Signal Selection: PWM2 Trigger 1
     
     // ToDo: CHECK SLP2DAT in conjunction with DAC2DATH and DAC2DATL
     // DAC2DATL should be reserved/valid only in hysteretic and triangular mode
@@ -146,7 +148,7 @@ volatile uint16_t init_boost_acmp(void) {
     // Previous configurations have shown that this might not be true, so please revisit this setting.
     
     // SLPxDAT: DACx SLOPE DATA REGISTER
-    SLP2DAT = 500; // Slope Ramp Rate Value
+    SLP2DAT = 43; // Slope Ramp Rate Value
             
         
     

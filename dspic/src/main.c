@@ -44,7 +44,7 @@ int main(void) {
         while ((!_T1IF) && (timeout++ < TMR1_TIMEOUT));
         timeout = 0;    // Reset timeout counter
         _T1IF = 0; // reset Timer1 interrupt flag bit
-        DBGPIN_TOGGLE; // Toggle DEBUG-PIN
+        //DBGPIN_TOGGLE; // Toggle DEBUG-PIN
 
         if (tgl_cnt++ > TGL_INTERVAL) // Count 100usec loops until LED toggle interval is exceeded
         {

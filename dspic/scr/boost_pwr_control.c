@@ -16,9 +16,10 @@ volatile BOOST_SOFT_START_t boost_soft_start;
 
 volatile uint16_t init_boost_pwr_control(void) {
 
-    init_boost_pwm();    // Set up boost converter PWM
-    init_boost_acmp();   // Set up boost converter peak current comparator/DAC
-    init_boost_adc();    // Set up boost converter ADC (voltage feedback only)
+    init_boost_trig_pwm();  // Initialize auxiliary PWM generator for the boost controller
+    init_boost_pwm();       // Set up boost converter PWM
+    init_boost_acmp();      // Set up boost converter peak current comparator/DAC
+    init_boost_adc();       // Set up boost converter ADC (voltage feedback only)
     
     boost_soft_start.counter = 0;            // Reset Soft-Start Counter
     boost_soft_start.phase = BOOST_SS_INIT;   // Reset Soft-Start Phase to Initialization
@@ -34,9 +35,10 @@ volatile uint16_t launch_boost_pwr_control(void) {
 
     // Run enable-sequence of all peripherals used by this power controller
 
-    launch_adc();       // Start ADC Module
-    launch_boost_acmp(); // Start analog comparator/DAC module
-    launch_boost_pwm();  // Start PWM
+    launch_adc();           // Start ADC Module
+    launch_boost_acmp();    // Start analog comparator/DAC module
+    launch_boost_trig_pwm();// Start auxiliary PWM
+    launch_boost_pwm();     // Start PWM
     
     return(1);
 }
