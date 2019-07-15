@@ -14,6 +14,8 @@
 
 volatile BOOST_SOFT_START_t boost_soft_start;
 
+volatile uint16_t VOUTboost = 0;
+
 volatile uint16_t init_boost_pwr_control(void) {
 
     init_boost_trig_pwm();  // Initialize auxiliary PWM generator for the boost controller
@@ -57,11 +59,12 @@ void __attribute__((__interrupt__, auto_psv)) _ADCAN18Interrupt(void)
     volatile uint16_t dummy=0;
     
     dummy = ADCBUF18;
-
+    VOUTboost = dummy;
+    DBGPIN_2_SET;
     Nop();
     Nop();
     Nop();
-
+    DBGPIN_2_CLEAR;
     _ADCAN18IF = 0;  // Clear the ADCANx interrupt flag 
     
 }

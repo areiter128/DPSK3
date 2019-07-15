@@ -115,7 +115,7 @@ volatile uint16_t init_vin_adc(void) {
     ADIELbits.IE12 = 1; // Common Interrupt Enable: Common and individual interrupts are disabled for the corresponding channel
     
     // ADTRIGnL/ADTRIGnH: ADC CHANNEL TRIGGER n(x) SELECTION REGISTERS LOW AND HIGH
-    ADTRIG3Lbits.TRGSRC12 = 0b01000; // Trigger Source Selection for Corresponding Analog Inputs: PWM3 Trigger 1
+    ADTRIG3Lbits.TRGSRC12 = 0b00101; // Trigger Source Selection for Corresponding Analog Inputs: PWM1 Trigger 2
     
     // ADCMPxCON: ADC DIGITAL COMPARATOR x CONTROL REGISTER
     ADCMP0CONbits.CHNL = 12; // Input Channel Number: 12=AN12
@@ -255,31 +255,35 @@ volatile uint16_t launch_adc(void) {
     
     ADCON1Lbits.ADON = 1; // ADC Enable: ADC module is enabled first
 
-    ADCON5Lbits.SHRPWR = 1; // Shared ADC Core Power Enable: ADC core is on
+    ADCON5Lbits.SHRPWR = 1; // Enabling Shared ADC Core analog circuits power
     while((!ADCON5Lbits.SHRRDY) && (timeout++<ADC_POWRUP_TIMEOUT));
     if((!ADCON5Lbits.SHRRDY) || (timeout>=ADC_POWRUP_TIMEOUT)) return(0);
-    
-    ADCON5Lbits.C0PWR = 1; // Dedicated ADC Core 0 Power Enable: ADC core is off
-    while((!ADCON5Lbits.C0RDY) && (timeout++<ADC_POWRUP_TIMEOUT));
-    if((!ADCON5Lbits.C0RDY) || (timeout>=ADC_POWRUP_TIMEOUT)) return(0);
+    ADCON3Hbits.SHREN  = 1; // Enable Shared ADC digital circuitry
+        
+    ADCON5Lbits.C0PWR = 0; // Dedicated ADC Core 0 Power Enable: ADC core is off
+//    while((!ADCON5Lbits.C0RDY) && (timeout++<ADC_POWRUP_TIMEOUT));
+//    if((!ADCON5Lbits.C0RDY) || (timeout>=ADC_POWRUP_TIMEOUT)) return(0);
+    ADCON3Hbits.C0EN  = 0; // Dedicated Core 0 is not enabled
 
-    ADCON5Lbits.C1PWR = 1; // Dedicated ADC Core 1 Power Enable: ADC core is off
-    while((!ADCON5Lbits.C1RDY) && (timeout++<ADC_POWRUP_TIMEOUT));
-    if((!ADCON5Lbits.C1RDY) || (timeout>=ADC_POWRUP_TIMEOUT)) return(0);
+    ADCON5Lbits.C1PWR = 0; // Dedicated ADC Core 1 Power Enable: ADC core is off
+//    while((!ADCON5Lbits.C1RDY) && (timeout++<ADC_POWRUP_TIMEOUT));
+//    if((!ADCON5Lbits.C1RDY) || (timeout>=ADC_POWRUP_TIMEOUT)) return(0);
+    ADCON3Hbits.C1EN  = 0; // Dedicated Core 1 is not enabled
 
-    // INITIALIZE AN13 INTERRUPTS (Board Input Voltage)
+    // INITIALIZE AN12 INTERRUPTS (Board Input Voltage)
     IPC25bits.ADCAN12IP = 0;   // Interrupt Priority Level 0
     IFS6bits.ADCAN12IF = 0;    // Reset Interrupt Flag Bit
-    IEC6bits.ADCAN12IE = 0;    // Disable ADCAN13 Interrupt 
+    IEC6bits.ADCAN12IE = 0;    // Disable ADCAN12 Interrupt 
 
+     // INITIALIZE AN13 INTERRUPTS (Buck Output Voltage)
     IPC26bits.ADCAN13IP = 5;   // Interrupt Priority Level 5
     IFS6bits.ADCAN13IF = 0;    // Reset Interrupt Flag Bit
     IEC6bits.ADCAN13IE = 1;    // Enable ADCAN13 Interrupt 
     
-    // INITIALIZE AN13 INTERRUPTS (Boost Output Voltage)
+    // INITIALIZE AN18 INTERRUPTS (Boost Output Voltage)
     IPC27bits.ADCAN18IP = 5;   // Interrupt Priority Level 5
     IFS6bits.ADCAN18IF = 0;    // Reset Interrupt Flag Bit
-    IEC6bits.ADCAN18IE = 1;    // Enable ADCAN13 Interrupt 
+    IEC6bits.ADCAN18IE = 1;    // Enable ADCAN18 Interrupt 
     
     return(1);
 }

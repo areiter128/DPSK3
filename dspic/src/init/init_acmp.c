@@ -14,8 +14,9 @@
 
 volatile uint16_t init_acmp_module(void) {
 
-    // Make sure power is turned on to comparator module #1
-    PMD7bits.CMP1MD = 0; // Comparator 1 Module Powetr Disable: Comparator 1 module is disabled
+    // Make sure power is turned on to comparator module #1 & #2
+    PMD7bits.CMP1MD = 0; // Comparator 1 Module Powetr Disable: Comparator 1 module is enabled
+    PMD7bits.CMP2MD = 0; // Comparator 1 Module Powetr Disable: Comparator 1 module is enabled
     
     // Turn off all Comparator/DAC modules during configuration
     DACCTRL1Lbits.DACON = 0; // Common DAC Module Enable: Disables all DAC modules
@@ -65,7 +66,7 @@ volatile uint16_t init_buck_acmp(void) {
     // ***********************************************
         
     // DACxDATH: DACx DATA HIGH REGISTER
-    DAC1DATH = (3000 & 0x0FFF); // DACx Data: This register specifies the high DACx data value. Valid values are from 205 to 3890.
+    DAC1DATH = (800 & 0x0FFF); // DACx Data: This register specifies the high DACx data value. Valid values are from 205 to 3890.
     DAC1DATL = (205 & 0x0FFF); // DACx Low Data
         
     // SLPxCONH: DACx SLOPE CONTROL HIGH REGISTER
@@ -77,8 +78,8 @@ volatile uint16_t init_buck_acmp(void) {
     // SLPxCONL: DACx SLOPE CONTROL LOW REGISTER
     SLP1CONLbits.HCFSEL = 0b0000; // Hysteretic Comparator Function Input Selection: (none)
     SLP1CONLbits.SLPSTOPA = 0b0001; // Slope Stop A Signal Selection: PWM1 Trigger 2
-//    SLP1CONLbits.SLPSTOPB = 0b0001; // Slope Stop B Signal Selection: CMP1 Out
-    SLP1CONLbits.SLPSTOPB = 0b0000; // Slope Stop B Signal Selection: 0
+    SLP1CONLbits.SLPSTOPB = 0b0001; // Slope Stop B Signal Selection: CMP1 Out
+//    SLP1CONLbits.SLPSTOPB = 0b0000; // Slope Stop B Signal Selection: 0
     SLP1CONLbits.SLPSTRT = 0b0001; // Slope Start Signal Selection: PWM1 Trigger 1
     
     // ToDo: CHECK SLP1DAT in conjunction with DAC1DATH and DAC1DATL
@@ -114,7 +115,7 @@ volatile uint16_t init_boost_acmp(void) {
     DAC2CONLbits.FLTREN = 0; // Comparator Digital Filter Enable: Digital filter is disabled
     // DAC2CONLbits.CMPSTAT (read only bit)
     DAC2CONLbits.CMPPOL = 0; // Comparator Output Polarity Control: Output is non-inverted
-    DAC2CONLbits.INSEL = 0b011; // Comparator Input Source Select: feedback is connected to CMPxA input pin
+    DAC2CONLbits.INSEL = 0b011; // Comparator Input Source Select: feedback is connected to CMPxD input pin
     DAC2CONLbits.HYSPOL = 0; // Comparator Hysteresis Polarity Selection: Hysteresis is applied to the rising edge of the comparator output
     DAC2CONLbits.HYSSEL = 0b11; // Comparator Hysteresis Selection: 45 mv hysteresis (0 = 0mV, 1 = 15mV, 2 = 30mV, 3 = 45mV)
     
@@ -126,7 +127,7 @@ volatile uint16_t init_boost_acmp(void) {
     // ***********************************************
         
     // DACxDATH: DACx DATA HIGH REGISTER
-    DAC2DATH = (2000 & 0x0FFF); // DACx Data: This register specifies the high DACx data value. Valid values are from 205 to 3890.
+    DAC2DATH = (800 & 0x0FFF); // DACx Data: This register specifies the high DACx data value. Valid values are from 205 to 3890.
     DAC2DATL = (205 & 0x0FFF); // DACx Low Data
         
     // SLPxCONH: DACx SLOPE CONTROL HIGH REGISTER

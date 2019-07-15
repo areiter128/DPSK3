@@ -377,7 +377,7 @@
         <property key="voltagevalue" value="3.25"/>
       </PICkit3PlatformTool>
       <snap>
-        <property key="ADC" value="true"/>
+        <property key="ADC" value="false"/>
         <property key="AutoSelectMemRanges" value="auto"/>
         <property key="CLC 1" value="true"/>
         <property key="CLC 2" value="true"/>
@@ -400,10 +400,10 @@
         <property key="MCCP/SCCP 7" value="true"/>
         <property key="MCCP/SCCP 8" value="true"/>
         <property key="MCCP/SCCP 9" value="true"/>
-        <property key="PG1" value="true"/>
-        <property key="PG2" value="true"/>
-        <property key="PG3" value="true"/>
-        <property key="PG4" value="true"/>
+        <property key="PG1" value="false"/>
+        <property key="PG2" value="false"/>
+        <property key="PG3" value="false"/>
+        <property key="PG4" value="false"/>
         <property key="PG5" value="true"/>
         <property key="PG6" value="true"/>
         <property key="PG7" value="true"/>

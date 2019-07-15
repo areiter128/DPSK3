@@ -11,6 +11,7 @@
 #include <stdbool.h>
 
 #include "init_pwm.h"
+#include "../../h/main.h"
 
 #define SST_PERIOD                   40       // Update PWM cycle period during soft-start in terms of PWM1 interrupts (in this case EOC) 
 #define INIT_DUTY_CYCLE              80
@@ -19,7 +20,8 @@
 #define PWM_PERIOD                 1000
 #define BOOST_OFFSET                500
 
-#define VOUT_ADC_TRIGGER_DELAY      0
+#define VOUT_ADC_TRIGGER_DELAY        0
+#define SLOPE_START_DELAY           100
 
 
 volatile uint16_t softstart_counter     = 0;
@@ -51,7 +53,7 @@ volatile uint16_t init_pwm_module(void) {
     FSMINPER = 0x0000;  // Reset frequency scaling minimum register
     
     // MASTER PHASE, DUTY CYCLE AND PERIOD REGISTERS
-    MPHASE = 0x0000;            // Reset master phase
+    MPHASE = BOOST_OFFSET;      // Master phase defines the time offset between buck and boost PWM channels
     MDC = 0x0000;               // Reset master duty cycle
     MPER = PWM_PERIOD;          // Master period PWM_PERIOD
     
@@ -136,11 +138,11 @@ volatile uint16_t init_buck_pwm(void) {
     PG1CONHbits.MSTEN = 0; // Master Update Enable: PWM Generator does not broadcast the UPDREQ status bit state or EOC signal
     PG1CONHbits.UPDMOD = 0b000; // PWM Buffer Update Mode Selection: Immediate update
     PG1CONHbits.TRGMOD = 0; // PWM Generator Trigger Mode Selection: PWM Generator operates in single trigger mode
-    PG1CONHbits.SOCS = 4; // Start-of-Cycle Selection: PG4 triggers PG1
+    PG1CONHbits.SOCS = 0; // Start-of-Cycle Selection: Local EOC ? PWM Generator is self-triggered
 
     // ************************
     // ToDo: CHECK IF THIS SETTING IS CORRET AND DEAD TIMES ARE STILL INSERTED CORRECTLY
-    PG1IOCONLbits.CLMOD = 1;    // If PCI current limit is active, then the CLDAT[1:0] bits define the PWM output levels
+    PG1IOCONLbits.CLMOD = 0;    // If PCI current limit is active, then the CLDAT[1:0] bits define the PWM output levels
     // ************************
 
     PG1IOCONLbits.SWAP = 0;    // Swap PWM Signals to PWMxH and PWMxL Device Pins: PWMxH/L signals are mapped to their respective pins
@@ -150,7 +152,7 @@ volatile uint16_t init_buck_pwm(void) {
     PG1IOCONLbits.OSYNC = 0b00; // User Output Override Synchronization Control: User output overrides via the OVRENH/L and OVRDAT[1:0] bits are synchronized to the local PWM time base (next Start-of-Cycle)
     
     PG1IOCONLbits.FLTDAT = 0b00; // Data for PWMxH/PWMxL Pins if Fault Event is Active: PWMxL=FLTDAT0, PWMxH=FLTDAR1
-    PG1IOCONLbits.CLDAT = 0b00; // Data for PWMxH/PWMxL Pins if Current-Limit Event is Active: PWMxL=CLDAT0, PWMxH=CLDAR1
+    PG1IOCONLbits.CLDAT = 0b01; // Data for PWMxH/PWMxL Pins if Current-Limit Event is Active: PWMxL=CLDAT0, PWMxH=CLDAR1
     PG1IOCONLbits.FFDAT = 0b00; // Data for PWMxH/PWMxL Pins if Feed-Forward Event is Active: PWMxL=CLDAT0, PWMxH=CLDAR1
     PG1IOCONLbits.DBDAT = 0b00; // Data for PWMxH/PWMxL Pins if Debug Mode Event is Active: PWMxL=DBDAT0, PWMxH=DBDAR1
 
@@ -172,7 +174,7 @@ volatile uint16_t init_buck_pwm(void) {
     PG1EVTLbits.ADTR1EN2    = 0b0;          // PG1TRIGB  Compare Event is disabled as trigger source for ADC Trigger 1
     PG1EVTLbits.ADTR1EN1    = 0b1;          // PG1TRIGA  Compare Event is enabled as trigger source for ADC Trigger 1 -> Slope start trigger
     PG1EVTLbits.UPDTRG      = 0b00;         // User must set the UPDATE bit (PG1STAT<4>) manually
-    PG1EVTLbits.PGTRGSEL    = 0b000;        // PWM Generator Trigger Output is not used, leave it as default: EOC event is the PWM Generator trigger
+    PG1EVTLbits.PGTRGSEL    = 0b000;        // EOC event is the PWM Generator trigger
     
     // PWM GENERATOR 1 EVENT REGISTER HIGH
     PG1EVTHbits.FLTIEN      = 0b0;          // PCI Fault interrupt is disabled
@@ -203,8 +205,8 @@ volatile uint16_t init_buck_pwm(void) {
     PG1CLPCILbits.SWTERM    = 0b0;          // A write of '1' to this location will produce a termination event. This bit location always reads as '0'.
     PG1CLPCILbits.PSYNC     = 0;            // PCI source is not synchronized to PWM EOC
     PG1CLPCILbits.PPS       = 0;            // Non-inverted PCI polarity
-//    PG1CLPCILbits.PSS       = 0b11011;      // Selecting Comparator 1 output as PCI input
-    PG1CLPCILbits.PSS       = 0b00000;      // PCI is DISABLED
+    PG1CLPCILbits.PSS       = 0b11011;      // Selecting Comparator 1 output as PCI input
+//    PG1CLPCILbits.PSS       = 0b00000;      // PCI is DISABLED
     
     // Reset further PCI control registers
     PG1FPCIH        = 0x0000;          // PWM GENERATOR F PCI REGISTER HIGH
@@ -224,32 +226,32 @@ volatile uint16_t init_buck_pwm(void) {
     // PWM GENERATOR 1 LEADING-EDGE BLANKING REGISTER LOW 
     PG1LEBL                 = 52;           // ToDo: This value may need further adjustment
     
-    // PG1PHASE: PWM GENERATOR 1 PHASE REGISTER
+    // PGxPHASE: PWM GENERATOR x PHASE REGISTER
     PG1PHASE    = 0;
     
-    // PG1DC: PWM GENERATOR 1 DUTY CYCLE REGISTER
+    // PGxDC: PWM GENERATOR x DUTY CYCLE REGISTER
 //    PG1DC       = 800;      // 80%
     PG1DC       = INIT_DUTY_CYCLE;      // 8% - This is the value the soft-start starts from
     
-    // PG1DCA: PWM GENERATOR 1 DUTY CYCLE ADJUSTMENT REGISTER
+    // PGxDCA: PWM GENERATOR x DUTY CYCLE ADJUSTMENT REGISTER
     PG1DCA      =  0x0000;      
     
-    // PG1PER: PWM GENERATOR 1 PERIOD REGISTER        
+    // PGxPER: PWM GENERATOR x PERIOD REGISTER        
     PG1PER      = 1000;     // 500 kHz
 
-    // PG1TRIGA: PWM GENERATOR 1 TRIGGER A REGISTER
-    PG1TRIGA    = 100;  // Defining start of slope; ToDo: Check this value on oscilloscope
+    // PGxTRIGA: PWM GENERATOR x TRIGGER A REGISTER
+    PG1TRIGA    = SLOPE_START_DELAY;  // Defining start of slope; ToDo: Check this value on oscilloscope
     
-    // PG1TRIGB: PWM GENERATOR 1 TRIGGER B REGISTER       
+    // PGxTRIGB: PWM GENERATOR x TRIGGER B REGISTER       
     PG1TRIGB    = 800;  // Defining end of slope;  ToDo: Check this value on oscilloscope
     
-    // PG1TRIGC: PWM GENERATOR 1 TRIGGER C REGISTER        
+    // PGxTRIGC: PWM GENERATOR x TRIGGER C REGISTER        
     PG1TRIGC    = 800;  // ToDo: Check this value on oscilloscope
     
-    // PG1DTL: PWM GENERATOR 1 DEAD-TIME REGISTER LOW        
+    // PGxDTL: PWM GENERATOR x DEAD-TIME REGISTER LOW        
     PG1DTL      = TDF;
     
-    // PG1DTH: PWM GENERATOR 1 DEAD-TIME REGISTER HIGH
+    // PGxDTH: PWM GENERATOR x DEAD-TIME REGISTER HIGH
     PG1DTH      = TDR;
             
 //  PG1CAP      = 0x0000;   // Read only register
@@ -286,7 +288,7 @@ volatile uint16_t init_boost_pwm(void) {
 
 // Initialize PWMx GPIOs
     LATBbits.LATB12 = 0;    // Set GPIO RB12 LOW (PWM2H)
-    TRISBbits.TRISB12 = 1;  // Make GPIO RB12 an input (PWM2H)
+//    TRISBbits.TRISB12 = 1;  // Make GPIO RB12 an input (PWM2H)
     CNPDBbits.CNPDB12 = 0;  // Disable intern pull down register (PWM2H)
     
     LATBbits.LATB13 = 0;    // Set GPIO RB13 LOW (PWM2L)
@@ -298,20 +300,20 @@ volatile uint16_t init_boost_pwm(void) {
     PG2CONLbits.TRGCNT = 0b000; // Trigger Count Select: PWM Generator produces one PWM cycle after triggered
     PG2CONLbits.HREN = 0; // High-Resolution mode is not enabled for PWM Generator 2 
     PG2CONLbits.CLKSEL = 0b01; // Clock Selection: PWM Generator uses Master clock selected by the MCLKSEL[1:0] (PCLKCON[1:0]) control bits
-    PG2CONLbits.MODSEL = 0b000; // PWM Mode Selection: Independent Edge PWM mode
+    PG2CONLbits.MODSEL = 0b001; // PWM Mode Selection: Variable Phase PWM mode
     
     PG2CONHbits.MDCSEL = 0; // Master Duty Cycle Register Selection: PWM Generator uses PGxDC register
     PG2CONHbits.MPERSEL = 1; // Master Period Register Selection: PWM Generator uses MPER register
-    PG2CONHbits.MPHSEL = 0; // Master Phase Register Selection: PWM Generator uses PGxPHASE register
+    PG2CONHbits.MPHSEL = 1; // Master Phase Register Selection: PWM Generator uses MPHASE register
     PG2CONHbits.MSTEN = 0; // Master Update Enable: PWM Generator does not broadcast the UPDREQ status bit state or EOC signal
     PG2CONHbits.UPDMOD = 0b000; // PWM Buffer Update Mode Selection: SOC update
     PG2CONHbits.TRGMOD = 0; // PWM Generator Trigger Mode Selection: PWM Generator operates in single trigger mode
-    PG2CONHbits.SOCS = 3; // Start-of-Cycle Selection: PG2 is triggered by PG3
+    PG2CONHbits.SOCS = 1; // Start-of-Cycle Selection: PG2 is triggered by PG1
 
     
     // ************************
     // ToDo: CHECK IF THIS SETTING IS CORRET AND DEAD TIMES ARE STILL INSERTED CORRECTLY
-    PG2IOCONLbits.CLMOD = 1;    // If PCI current limit is active, then the CLDAT[1:0] bits define the PWM output levels
+    PG2IOCONLbits.CLMOD = 0;    // If PCI current limit is active, then the CLDAT[1:0] bits define the PWM output levels
     // ************************
 
     PG2IOCONLbits.SWAP = 0;    // Swap PWM Signals to PWMxH and PWMxL Device Pins
@@ -352,7 +354,7 @@ volatile uint16_t init_boost_pwm(void) {
     PG2EVTHbits.SIEN        = 0b0;          // PCI Sync interrupt is disabled
     PG2EVTHbits.IEVTSEL     = 0b11;         // Time base interrupts are disabled
     PG2EVTHbits.ADTR2EN3    = 0b0;          // PG2TRIGC register compare event is disabled as trigger source for ADC Trigger 2
-    PG2EVTHbits.ADTR2EN2    = 0b1;          // PG2TRIGB register compare event is disabled as trigger source for ADC Trigger 2 -> Slope stop trigger
+    PG2EVTHbits.ADTR2EN2    = 0b1;          // PG2TRIGB register compare event is enabled as trigger source for ADC Trigger 2 -> Slope stop trigger
     PG2EVTHbits.ADTR2EN1    = 0b0;          // PG2TRIGA register compare event is disabled as trigger source for ADC Trigger 2
     PG2EVTHbits.ADTR1OFS    = 0b00000;      // ADC Trigger 1 offset = 0
     
@@ -374,8 +376,8 @@ volatile uint16_t init_boost_pwm(void) {
     PG2CLPCILbits.SWTERM    = 0b0;          // A write of '1' to this location will produce a termination event. This bit location always reads as '0'.
     PG2CLPCILbits.PSYNC     = 0;            // PCI source is not synchronized to PWM EOC
     PG2CLPCILbits.PPS       = 0;            // Non-inverted PCI polarity
-//    PG2CLPCILbits.PSS       = 0b11100;      // Selecting Comparator 2 output as PCI input
-     PG2CLPCILbits.PSS       = 0b00000;      // PCI is DISABLED
+    PG2CLPCILbits.PSS       = 0b11100;      // Selecting Comparator 2 output as PCI input
+//     PG2CLPCILbits.PSS       = 0b00000;      // PCI is DISABLED
     
     // Reset further PCI control registers
     PG2FPCIH        = 0x0000;          // PWM GENERATOR F PCI REGISTER HIGH
@@ -409,7 +411,7 @@ volatile uint16_t init_boost_pwm(void) {
     PG2PER      = 1000;     // 500 kHz
 
     // PG2TRIGA: PWM GENERATOR x TRIGGER A REGISTER
-    PG2TRIGA    = 100;  // Defining start of slope; ToDo: Check this value on oscilloscope
+    PG2TRIGA    = BOOST_OFFSET + SLOPE_START_DELAY;  // Defining start of slope; ToDo: Check this value on oscilloscope
     
     // PG2TRIGB: PWM GENERATOR x TRIGGER B REGISTER       
     PG2TRIGB    = 800;  // Defining end of slope; ToDo: Check this value on oscilloscope
@@ -418,10 +420,10 @@ volatile uint16_t init_boost_pwm(void) {
     PG2TRIGC    = 800;  // ToDo: Check this value on oscilloscope
     
     // PG2DTL: PWM GENERATOR 1 DEAD-TIME REGISTER LOW        
-    PG2DTL      = TDF;
+    PG2DTL      = 0;
     
     // PG2DTH: PWM GENERATOR 1 DEAD-TIME REGISTER HIGH
-    PG2DTH      = TDR;
+    PG2DTH      = 0;
             
 //  PG2CAP      = 0x0000;   // Read only register
     
@@ -465,14 +467,14 @@ void __attribute__((__interrupt__, no_auto_psv)) _PWM1Interrupt(void)
             
             // ToDo: For debug only
             PG3EVTHbits.IEVTSEL     = 0b10;     // ADC TRIGGER 1 event interrupts CPU
-            IPC17bits.PWM3IP        = 5;        // Setting PWM1 interrupt priority
+            IPC17bits.PWM3IP        = 6;        // Setting PWM1 interrupt priority
             IFS4bits.PWM3IF         = 0;        // Clearing PWM3 interrupt flag 
-            IEC4bits.PWM3IE         = 1;        // Enabling PWM3 interrupt
+//            IEC4bits.PWM3IE         = 1;        // Enabling PWM3 interrupt
             // ToDo: For debug only
             PG4EVTHbits.IEVTSEL     = 0b10;     // ADC TRIGGER 1 event interrupts CPU
-            IPC17bits.PWM4IP        = 5;        // Setting PWM1 interrupt priority
+            IPC17bits.PWM4IP        = 6;        // Setting PWM1 interrupt priority
             IFS4bits.PWM4IF         = 0;        // Clearing PWM4 interrupt flag 
-            IEC4bits.PWM4IE         = 1;        // Enabling PWM4 interrupt
+//            IEC4bits.PWM4IE         = 1;        // Enabling PWM4 interrupt
             
             
         }
@@ -483,13 +485,17 @@ void __attribute__((__interrupt__, no_auto_psv)) _PWM1Interrupt(void)
 
 void __attribute__((__interrupt__, no_auto_psv)) _PWM3Interrupt(void)
 {
-    _LATB5 ^= 1;                // Toggle DEBUG-PIN
+    DBGPIN_1_SET;
+//    DBGPIN_1_TOGGLE;                // Toggle DEBUG-PIN
+    DBGPIN_1_CLEAR;
     IFS4bits.PWM3IF     = 0;    // Clearing PWM3 interrupt flag
 }
 
 void __attribute__((__interrupt__, no_auto_psv)) _PWM4Interrupt(void)
 {
-    _LATB5 ^= 1;                // Toggle DEBUG-PIN
+    DBGPIN_1_SET;
+//    DBGPIN_1_TOGGLE;                // Toggle DEBUG-PIN
+    DBGPIN_1_CLEAR;
     IFS4bits.PWM4IF     = 0;    // Clearing PWM4 interrupt flag
 }
 
@@ -510,7 +516,7 @@ volatile uint16_t init_buck_trig_pwm(void) {
     PG3CONHbits.MSTEN = 0; // Master Update Enable: PWM Generator does not broadcast the UPDREQ status bit state or EOC signal
     PG3CONHbits.UPDMOD = 0b000; // PWM Buffer Update Mode Selection: SOC update
     PG3CONHbits.TRGMOD = 0; // PWM Generator Trigger Mode Selection: PWM Generator operates in single trigger mode
-    PG3CONHbits.SOCS = 0; // Start-of-Cycle Selection: Local EOC PWM Generator is self-triggered
+    PG3CONHbits.SOCS = 1; // Start-of-Cycle Selection: Trigger output selected by PG1
 
     // PGxIOCONH: PWM GENERATOR x I/O CONTROL REGISTER LOW
     PG3IOCONL = 0x0000;
@@ -528,12 +534,12 @@ volatile uint16_t init_buck_trig_pwm(void) {
     PG3STAT = 0x0000;   // Reset to default
     
     // PWM GENERATOR 1 EVENT REGISTER LOW 
-    PG3EVTLbits.ADTR1PS     = 0b00000;      // ADC Trigger 1 Postscaler Selection = 1:1
+    PG3EVTLbits.ADTR1PS     = 0b00001;      // ADC Trigger 1 Postscaler Selection = 1:2
     PG3EVTLbits.ADTR1EN3    = 0b0;          // PG1TRIGC  Compare Event is disabled as trigger source for ADC Trigger 1
     PG3EVTLbits.ADTR1EN2    = 0b0;          // PG1TRIGB  Compare Event is disabled as trigger source for ADC Trigger 1
     PG3EVTLbits.ADTR1EN1    = 0b1;          // PG1TRIGA  Compare Event is enabled as trigger source for ADC Trigger 1
     PG3EVTLbits.UPDTRG      = 0b00;         // User must set the UPDATE bit (PG1STAT<4>) manually
-    PG3EVTLbits.PGTRGSEL    = 0b010;        // PWM Generator Trigger Output is TRIGB -> trigger for PG4
+    PG3EVTLbits.PGTRGSEL    = 0b000;        // PWM Generator Trigger Output is EOC (not used in this case)
     
     // PWM GENERATOR 1 EVENT REGISTER HIGH
     PG3EVTHbits.FLTIEN      = 0b0;          // PCI Fault interrupt is disabled
@@ -579,16 +585,16 @@ volatile uint16_t init_buck_trig_pwm(void) {
     PG3TRIGA    = VOUT_ADC_TRIGGER_DELAY;  // ToDo: Check this value on oscilloscope
     
     // PGxTRIGB: PWM GENERATOR x TRIGGER B REGISTER       
-    PG3TRIGB    = BOOST_OFFSET;  // This value sets the delay between PG1 and PG2
+    PG3TRIGB    = 0;  
     
     // PGxTRIGC: PWM GENERATOR x TRIGGER C REGISTER        
     PG3TRIGC    = 0;  
     
     // PGxDTL: PWM GENERATOR x DEAD-TIME REGISTER LOW        
-    PG3DTL      = TDF;
+    PG3DTL      = 0;
     
     // PGxDTH: PWM GENERATOR x DEAD-TIME REGISTER HIGH
-    PG3DTH      = TDR;
+    PG3DTH      = 0;
             
 //  PG3CAP      = 0x0000;   // Read only register
    
@@ -621,15 +627,15 @@ volatile uint16_t init_boost_trig_pwm(void) {
     PG4CONLbits.TRGCNT = 0b000; // Trigger Count Select: PWM Generator produces one PWM cycle after triggered
     PG4CONLbits.HREN = 0; // High-Resolution mode is not enabled for PWM Generator 4
     PG4CONLbits.CLKSEL = 0b01; // Clock Selection: PWM Generator uses Master clock selected by the MCLKSEL[1:0] (PCLKCON[1:0]) control bits
-    PG4CONLbits.MODSEL = 0b000; // PWM Mode Selection: Independent Edge PWM mode
+    PG4CONLbits.MODSEL = 0b001; // PWM Mode Selection: Variable Phase PWM mode
     
     PG4CONHbits.MDCSEL = 0; // Master Duty Cycle Register Selection: PWM Generator uses PGxDC register
     PG4CONHbits.MPERSEL = 1; // Master Period Register Selection: PWM Generator uses MPER register
-    PG4CONHbits.MPHSEL = 0; // Master Phase Register Selection: PWM Generator uses PGxPHASE register
+    PG4CONHbits.MPHSEL = 1; // Master Phase Register Selection: PWM Generator uses MPHASE register
     PG4CONHbits.MSTEN = 0; // Master Update Enable: PWM Generator does not broadcast the UPDREQ status bit state or EOC signal
     PG4CONHbits.UPDMOD = 0b000; // PWM Buffer Update Mode Selection: SOC update
     PG4CONHbits.TRGMOD = 0; // PWM Generator Trigger Mode Selection: PWM Generator operates in single trigger mode
-    PG4CONHbits.SOCS = 3; // Start-of-Cycle Selection: PG3 triggers PG4
+    PG4CONHbits.SOCS = 1; // Start-of-Cycle Selection: PG1 triggers PG4
 
     // PGxIOCONH: PWM GENERATOR x I/O CONTROL REGISTER LOW
     PG4IOCONL = 0x0000;
@@ -641,12 +647,12 @@ volatile uint16_t init_boost_trig_pwm(void) {
     PG4STAT = 0x0000;   // Reset to default
     
     // PWM GENERATOR x EVENT REGISTER LOW 
-    PG4EVTLbits.ADTR1PS     = 0b00000;      // ADC Trigger 1 Postscaler Selection = 1:1
+    PG4EVTLbits.ADTR1PS     = 0b00001;      // ADC Trigger 1 Postscaler Selection = 1:2
     PG4EVTLbits.ADTR1EN3    = 0b0;          // PG1TRIGC  Compare Event is disabled as trigger source for ADC Trigger 1
     PG4EVTLbits.ADTR1EN2    = 0b0;          // PG1TRIGB  Compare Event is disabled as trigger source for ADC Trigger 1
     PG4EVTLbits.ADTR1EN1    = 0b1;          // PG1TRIGA  Compare Event is enabled as trigger source for ADC Trigger 1
     PG4EVTLbits.UPDTRG      = 0b00;         // User must set the UPDATE bit (PG1STAT<4>) manually
-    PG4EVTLbits.PGTRGSEL    = 0b010;        // PWM Generator Trigger Output is TRIGB -> trigger for PG1
+    PG4EVTLbits.PGTRGSEL    = 0b000;        // PWM Generator Trigger Output is EOC (not used in this case)
     
     // PWM GENERATOR x EVENT REGISTER HIGH
     PG4EVTHbits.FLTIEN      = 0b0;          // PCI Fault interrupt is disabled
@@ -674,32 +680,32 @@ volatile uint16_t init_boost_trig_pwm(void) {
     PG4LEBL         = 0x0000;
     
         
-    // PG1PHASE: PWM GENERATOR 1 PHASE REGISTER
+    // PGxPHASE: PWM GENERATOR x PHASE REGISTER
     PG4PHASE    = 0;
     
-    // PG1DC: PWM GENERATOR 1 DUTY CYCLE REGISTER
+    // PGxDC: PWM GENERATOR x DUTY CYCLE REGISTER
     PG4DC       = 800;      // 80%
     
-    // PG1DCA: PWM GENERATOR 1 DUTY CYCLE ADJUSTMENT REGISTER
+    // PGxDCA: PWM GENERATOR x DUTY CYCLE ADJUSTMENT REGISTER
     PG4DCA      =  0x0000;      
     
-    // PG1PER: PWM GENERATOR 1 PERIOD REGISTER        
+    // PGxPER: PWM GENERATOR x PERIOD REGISTER        
     PG4PER      = 1000;     // 500 kHz
 
-    // PG1TRIGA: PWM GENERATOR 1 TRIGGER A REGISTER
-    PG4TRIGA    = VOUT_ADC_TRIGGER_DELAY;  // ToDo: Check this value on oscilloscope
+    // PGxTRIGA: PWM GENERATOR x TRIGGER A REGISTER
+    PG4TRIGA    = BOOST_OFFSET + VOUT_ADC_TRIGGER_DELAY;  // ToDo: Check this value on oscilloscope
     
-    // PG1TRIGB: PWM GENERATOR 1 TRIGGER B REGISTER       
-    PG4TRIGB    = PWM_PERIOD - BOOST_OFFSET;  
+    // PGxTRIGB: PWM GENERATOR x TRIGGER B REGISTER       
+    PG4TRIGB    = 0;  
     
-    // PG1TRIGC: PWM GENERATOR 1 TRIGGER C REGISTER        
+    // PGxTRIGC: PWM GENERATOR x TRIGGER C REGISTER        
     PG4TRIGC    = 0;  
     
-    // PG1DTL: PWM GENERATOR 1 DEAD-TIME REGISTER LOW        
-    PG4DTL      = TDF;
+    // PGxDTL: PWM GENERATOR x DEAD-TIME REGISTER LOW        
+    PG4DTL      = 0;
     
-    // PG1DTH: PWM GENERATOR 1 DEAD-TIME REGISTER HIGH
-    PG4DTH      = TDR;
+    // PGxDTH: PWM GENERATOR x DEAD-TIME REGISTER HIGH
+    PG4DTH      = 0;
             
 //  PG4CAP      = 0x0000;   // Read only register
    
