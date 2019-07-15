@@ -16,12 +16,8 @@
                 <sourceRootElem>.</sourceRootElem>
                 <sourceRootElem>h</sourceRootElem>
                 <sourceRootElem>h/init</sourceRootElem>
-                <sourceRootElem>h/driver</sourceRootElem>
-                <sourceRootElem>h/device</sourceRootElem>
                 <sourceRootElem>src</sourceRootElem>
                 <sourceRootElem>src/init</sourceRootElem>
-                <sourceRootElem>src/driver</sourceRootElem>
-                <sourceRootElem>src/device</sourceRootElem>
             </sourceRootList>
             <confList>
                 <confElem>
