@@ -414,7 +414,7 @@ volatile uint16_t init_boost_pwm(void) {
     PG2TRIGA    = BOOST_OFFSET + SLOPE_START_DELAY;  // Defining start of slope; ToDo: Check this value on oscilloscope
     
     // PGxTRIGB: PWM GENERATOR x TRIGGER B REGISTER       
-    PG2TRIGB    = 800;  // Defining end of slope; ToDo: This must be adjusted due to the Variable Phase PWM mode applied here!
+    PG2TRIGB    = 1300;  // Defining end of slope; ToDo: This must be adjusted due to the Variable Phase PWM mode applied here!
     
     // PGxTRIGC: PWM GENERATOR x TRIGGER C REGISTER        
     PG2TRIGC    = 800;  // ToDo: Check this value on oscilloscope
