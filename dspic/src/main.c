@@ -12,9 +12,6 @@
 
 #include "main.h"
 
-extern volatile uint16_t VOUTbuck, VOUTboost;
-volatile uint16_t vbuck, vboost;
-
 volatile uint16_t tgl_cnt = 0;  // local counter of LED toggle loops
 #define TGL_INTERVAL    2999     // LED toggle interval of (2999 + 1) x 100usec = 100ms
 #define TMR1_TIMEOUT    30000   // Timeout protection for Timer1 interrupt flag bit
@@ -53,9 +50,6 @@ int main(void) {
         {
             DBGLED_TOGGLE;
             tgl_cnt = 0;
-            
-            vbuck = VOUTbuck;
-            vboost = VOUTboost;
         } // Toggle LED and reset toggle counter
 
     }

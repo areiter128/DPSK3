@@ -13,7 +13,6 @@
 #include "main.h"
 
 volatile BUCK_SOFT_START_t buck_soft_start;
-volatile uint16_t VOUTbuck = 0;
 
 volatile uint16_t init_buck_pwr_control(void) {
     
@@ -54,12 +53,11 @@ void __attribute__((__interrupt__, auto_psv)) _ADCAN13Interrupt(void)
     volatile uint16_t dummy=0;
     
     dummy = ADCBUF13;
-    VOUTbuck = dummy;
-    DBGPIN_3_SET;
+
     Nop();
     Nop();
     Nop();
-    DBGPIN_3_CLEAR;
+
     _ADCAN13IF = 0;  // Clear the ADCANx interrupt flag 
     
 }

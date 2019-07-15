@@ -138,7 +138,7 @@ volatile uint16_t init_buck_pwm(void) {
     PG1CONHbits.MSTEN = 0; // Master Update Enable: PWM Generator does not broadcast the UPDREQ status bit state or EOC signal
     PG1CONHbits.UPDMOD = 0b000; // PWM Buffer Update Mode Selection: Immediate update
     PG1CONHbits.TRGMOD = 0; // PWM Generator Trigger Mode Selection: PWM Generator operates in single trigger mode
-    PG1CONHbits.SOCS = 0; // Start-of-Cycle Selection: Local EOC ? PWM Generator is self-triggered
+    PG1CONHbits.SOCS = 0; // Start-of-Cycle Selection: Local EOC, PWM Generator is self-triggered
 
     // ************************
     // ToDo: CHECK IF THIS SETTING IS CORRET AND DEAD TIMES ARE STILL INSERTED CORRECTLY
@@ -400,29 +400,29 @@ volatile uint16_t init_boost_pwm(void) {
     // PG2PHASE: PWM GENERATOR x PHASE REGISTER
     PG2PHASE    = 0;
     
-    // PG2DC: PWM GENERATOR x DUTY CYCLE REGISTER
+    // PGxDC: PWM GENERATOR x DUTY CYCLE REGISTER
 //    PG2DC       = 800;      // 80%
     PG2DC       = INIT_DUTY_CYCLE;      // 8% - This is the initial value for the soft-start 
     
-    // PG2DCA: PWM GENERATOR 1 DUTY CYCLE ADJUSTMENT REGISTER
+    // PGxDCA: PWM GENERATOR x DUTY CYCLE ADJUSTMENT REGISTER
     PG2DCA      =  0x0000;      
     
-    // PG2PER: PWM GENERATOR x PERIOD REGISTER        
+    // PGxPER: PWM GENERATOR x PERIOD REGISTER        
     PG2PER      = 1000;     // 500 kHz
 
-    // PG2TRIGA: PWM GENERATOR x TRIGGER A REGISTER
+    // PGxTRIGA: PWM GENERATOR x TRIGGER A REGISTER
     PG2TRIGA    = BOOST_OFFSET + SLOPE_START_DELAY;  // Defining start of slope; ToDo: Check this value on oscilloscope
     
-    // PG2TRIGB: PWM GENERATOR x TRIGGER B REGISTER       
-    PG2TRIGB    = 800;  // Defining end of slope; ToDo: Check this value on oscilloscope
+    // PGxTRIGB: PWM GENERATOR x TRIGGER B REGISTER       
+    PG2TRIGB    = 800;  // Defining end of slope; ToDo: This must be adjusted due to the Variable Phase PWM mode applied here!
     
-    // PG2TRIGC: PWM GENERATOR x TRIGGER C REGISTER        
+    // PGxTRIGC: PWM GENERATOR x TRIGGER C REGISTER        
     PG2TRIGC    = 800;  // ToDo: Check this value on oscilloscope
     
-    // PG2DTL: PWM GENERATOR 1 DEAD-TIME REGISTER LOW        
+    // PGxDTL: PWM GENERATOR x DEAD-TIME REGISTER LOW        
     PG2DTL      = 0;
     
-    // PG2DTH: PWM GENERATOR 1 DEAD-TIME REGISTER HIGH
+    // PGxDTH: PWM GENERATOR x DEAD-TIME REGISTER HIGH
     PG2DTH      = 0;
             
 //  PG2CAP      = 0x0000;   // Read only register
@@ -469,12 +469,12 @@ void __attribute__((__interrupt__, no_auto_psv)) _PWM1Interrupt(void)
             PG3EVTHbits.IEVTSEL     = 0b10;     // ADC TRIGGER 1 event interrupts CPU
             IPC17bits.PWM3IP        = 6;        // Setting PWM1 interrupt priority
             IFS4bits.PWM3IF         = 0;        // Clearing PWM3 interrupt flag 
-//            IEC4bits.PWM3IE         = 1;        // Enabling PWM3 interrupt
+            IEC4bits.PWM3IE         = 0;        // Disable PWM3 interrupt
             // ToDo: For debug only
             PG4EVTHbits.IEVTSEL     = 0b10;     // ADC TRIGGER 1 event interrupts CPU
             IPC17bits.PWM4IP        = 6;        // Setting PWM1 interrupt priority
             IFS4bits.PWM4IF         = 0;        // Clearing PWM4 interrupt flag 
-//            IEC4bits.PWM4IE         = 1;        // Enabling PWM4 interrupt
+            IEC4bits.PWM4IE         = 0;        // Disable PWM4 interrupt
             
             
         }
