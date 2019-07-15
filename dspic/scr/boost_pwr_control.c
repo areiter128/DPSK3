@@ -40,6 +40,19 @@ volatile uint16_t launch_boost_pwr_control(void) {
     launch_boost_trig_pwm();// Start auxiliary PWM
     launch_boost_pwm();     // Start PWM
     
+    while(PG2DC < 700)
+    {
+        PG2DC++;
+        PG2STATbits.UPDREQ = 1;
+        Nop();
+        Nop();
+        Nop();
+        Nop();
+        Nop();
+        Nop();
+        Nop();
+    }
+
     return(1);
 }
 
