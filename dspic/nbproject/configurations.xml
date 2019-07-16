@@ -4,6 +4,10 @@
     <logicalFolder name="HeaderFiles"
                    displayName="Header Files"
                    projectFiles="true">
+      <logicalFolder name="f2" displayName="control" projectFiles="true">
+        <itemPath>h/c2P2Z_boost.h</itemPath>
+        <itemPath>h/npnz16b.h</itemPath>
+      </logicalFolder>
       <logicalFolder name="f1" displayName="init" projectFiles="true">
         <itemPath>h/init/init_fosc.h</itemPath>
         <itemPath>h/init/init_timer1.h</itemPath>
@@ -23,6 +27,12 @@
         <itemPath>src/init/init_timer1.c</itemPath>
         <itemPath>src/init/init_gpio.c</itemPath>
       </logicalFolder>
+      <logicalFolder name="f2" displayName="source" projectFiles="true">
+        <logicalFolder name="f1" displayName="New Folder 1" projectFiles="true">
+        </logicalFolder>
+        <itemPath>src/c2P2Z_boost.c</itemPath>
+        <itemPath>src/c2P2Z_boost_asm.s</itemPath>
+      </logicalFolder>
       <itemPath>src/main.c</itemPath>
       <itemPath>src/config_bits.c</itemPath>
     </logicalFolder>
@@ -30,7 +40,7 @@
                    displayName="Important Files"
                    projectFiles="false">
       <itemPath>Makefile</itemPath>
-      <itemPath>MyConfig.mc3</itemPath>
+      <itemPath>ctrl_boost.dcld</itemPath>
     </logicalFolder>
   </logicalFolder>
   <sourceRootList>

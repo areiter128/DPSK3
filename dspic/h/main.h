@@ -40,6 +40,7 @@
 #include "init/init_fosc.h"
 #include "init/init_timer1.h"
 #include "init/init_gpio.h"
+#include "c2P2Z_boost.h"
 
 #ifdef	__cplusplus
 extern "C" {
