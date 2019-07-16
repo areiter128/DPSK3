@@ -12,6 +12,18 @@
 
 #include "init_acmp.h"
 
+#define DACDATH_BUCK    800     // DAC value for the buck the slope starts from
+#define DACDATH_BOOST   800     // DAC value for the boost the slope starts from
+#define DACDATL_BUCK    205     // Set this to minimum in Slope mode
+#define DACDATL_BOOST   205     // Set this to minimum in Slope mode
+
+#define LEB_PER_COMP    50      // Leading edge period for the comparator when slope re-settles to its initial value
+
+#define TMOD_DURATION   75      // Transition Mode Duration
+#define SS_DURATION     85      // Time from Start of Transition Mode until Steady-State Filter is Enabled
+
+#define SLOPE_RATE      43      // Slope Ramp Rate Value
+
 volatile uint16_t init_acmp_module(void) {
 
     // Make sure power is turned on to comparator module #1 & #2
@@ -38,8 +50,8 @@ volatile uint16_t init_acmp_module(void) {
     
     // DACCTRL2H/L: DAC CONTROL 2 HIGH and DAC CONTROL 2 LOW REGISTER
     // Settings = 2 x 
-    DACCTRL2Lbits.TMODTIME = (75 & 0x03FF); // Transition Mode Duration (default 0x55 = 340ns @ 500 MHz)
-    DACCTRL2Hbits.SSTIME = (85 & 0x0FFF); // Time from Start of Transition Mode until Steady-State Filter is Enabled (default 0x8A = 552ns @ 500 MHz)
+    DACCTRL2Lbits.TMODTIME = (TMOD_DURATION  & 0x03FF); // Transition Mode Duration (default 0x55 = 340ns @ 500 MHz)
+    DACCTRL2Hbits.SSTIME = (SS_DURATION & 0x0FFF); // Time from Start of Transition Mode until Steady-State Filter is Enabled (default 0x8A = 552ns @ 500 MHz)
     
     return(1);
 }
@@ -62,12 +74,12 @@ volatile uint16_t init_buck_acmp(void) {
     
     // ***********************************************
     // ToDo: CHECK DAC LEB PERIOD TO BE CORRECT AND DOESN'T CREATE CONFLICTS
-    DAC1CONHbits.TMCB = 50; // DACx Leading-Edge Blanking: period for the comparator
+    DAC1CONHbits.TMCB = LEB_PER_COMP; // DACx Leading-Edge Blanking: period for the comparator
     // ***********************************************
         
     // DACxDATH: DACx DATA HIGH REGISTER
-    DAC1DATH = (800 & 0x0FFF); // DACx Data: This register specifies the high DACx data value. Valid values are from 205 to 3890.
-    DAC1DATL = (205 & 0x0FFF); // DACx Low Data
+    DAC1DATH = (DACDATH_BUCK & 0x0FFF); // DACx Data: This register specifies the high DACx data value. Valid values are from 205 to 3890.
+    DAC1DATL = (DACDATL_BUCK & 0x0FFF); // DACx Low Data
         
     // SLPxCONH: DACx SLOPE CONTROL HIGH REGISTER
     SLP1CONHbits.SLOPEN = 1; // Slope Function Enable/On: Enables slope function
@@ -90,7 +102,7 @@ volatile uint16_t init_buck_acmp(void) {
     
     // SLPxDAT: DACx SLOPE DATA REGISTER
 //    SLP1DAT = 500; // Slope Ramp Rate Value
-    SLP1DAT = 43; // Slope Ramp Rate Value
+    SLP1DAT = SLOPE_RATE; // Slope Ramp Rate Value
             
         
     return(1);
@@ -123,12 +135,12 @@ volatile uint16_t init_boost_acmp(void) {
     
     // ***********************************************
     // ToDo: CHECK DAC LEB PERIOD TO BE CORRECT AND DOESN'T CREATE CONFLICTS
-    DAC2CONHbits.TMCB = 50; // DACx Leading-Edge Blanking: period for the comparator
+    DAC2CONHbits.TMCB = LEB_PER_COMP; // DACx Leading-Edge Blanking: period for the comparator
     // ***********************************************
         
     // DACxDATH: DACx DATA HIGH REGISTER
-    DAC2DATH = (800 & 0x0FFF); // DACx Data: This register specifies the high DACx data value. Valid values are from 205 to 3890.
-    DAC2DATL = (205 & 0x0FFF); // DACx Low Data
+    DAC2DATH = (DACDATH_BOOST & 0x0FFF); // DACx Data: This register specifies the high DACx data value. Valid values are from 205 to 3890.
+    DAC2DATL = (DACDATL_BOOST & 0x0FFF); // DACx Low Data
         
     // SLPxCONH: DACx SLOPE CONTROL HIGH REGISTER
     SLP2CONHbits.SLOPEN = 1; // Slope Function Enable/On: Enables slope function
@@ -149,7 +161,7 @@ volatile uint16_t init_boost_acmp(void) {
     // Previous configurations have shown that this might not be true, so please revisit this setting.
     
     // SLPxDAT: DACx SLOPE DATA REGISTER
-    SLP2DAT = 43; // Slope Ramp Rate Value
+    SLP2DAT = SLOPE_RATE; // Slope Ramp Rate Value
             
         
     
