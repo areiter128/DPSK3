@@ -414,7 +414,7 @@ volatile uint16_t init_boost_pwm(void) {
     PG2TRIGA    = BOOST_OFFSET + SLOPE_START_DELAY;  // Defining start of slope; ToDo: Check this value on oscilloscope
     
     // PG2TRIGB: PWM GENERATOR x TRIGGER B REGISTER       
-    PG2TRIGB    = 800;  // Defining end of slope; ToDo: Check this value on oscilloscope
+    PG2TRIGB    = 1300;  // Defining end of slope; ToDo: Check this value on oscilloscope
     
     // PG2TRIGC: PWM GENERATOR x TRIGGER C REGISTER        
     PG2TRIGC    = 800;  // ToDo: Check this value on oscilloscope
@@ -466,15 +466,20 @@ void __attribute__((__interrupt__, no_auto_psv)) _PWM1Interrupt(void)
             SoftStartFinished       = 1; 
             
             // ToDo: For debug only
+            PG1EVTHbits.IEVTSEL     = 0b10;     // ADC TRIGGER 1 event interrupts CPU
+            IPC16bits.PWM1IP        = 6;        // Setting PWM3 interrupt priority
+            IFS4bits.PWM1IF         = 0;        // Clearing PWM3 interrupt flag 
+            IEC4bits.PWM1IE         = 0;        // Enabling PWM3 interrupt
+            
             PG3EVTHbits.IEVTSEL     = 0b10;     // ADC TRIGGER 1 event interrupts CPU
-            IPC17bits.PWM3IP        = 6;        // Setting PWM1 interrupt priority
+            IPC17bits.PWM3IP        = 6;        // Setting PWM3 interrupt priority
             IFS4bits.PWM3IF         = 0;        // Clearing PWM3 interrupt flag 
-//            IEC4bits.PWM3IE         = 1;        // Enabling PWM3 interrupt
-            // ToDo: For debug only
+            IEC4bits.PWM3IE         = 0;        // Enabling PWM3 interrupt
+          
             PG4EVTHbits.IEVTSEL     = 0b10;     // ADC TRIGGER 1 event interrupts CPU
             IPC17bits.PWM4IP        = 6;        // Setting PWM1 interrupt priority
             IFS4bits.PWM4IF         = 0;        // Clearing PWM4 interrupt flag 
-//            IEC4bits.PWM4IE         = 1;        // Enabling PWM4 interrupt
+            IEC4bits.PWM4IE         = 0;        // Enabling PWM4 interrupt
             
             
         }

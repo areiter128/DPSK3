@@ -55,11 +55,11 @@ void __attribute__((__interrupt__, auto_psv)) _ADCAN13Interrupt(void)
     
     dummy = ADCBUF13;
     VOUTbuck = dummy;
-    DBGPIN_3_SET;
+    DBGPIN_2_SET;
     Nop();
     Nop();
     Nop();
-    DBGPIN_3_CLEAR;
+    DBGPIN_2_CLEAR;
     _ADCAN13IF = 0;  // Clear the ADCANx interrupt flag 
     
 }

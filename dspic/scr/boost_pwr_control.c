@@ -60,11 +60,11 @@ void __attribute__((__interrupt__, auto_psv)) _ADCAN18Interrupt(void)
     
     dummy = ADCBUF18;
     VOUTboost = dummy;
-    DBGPIN_2_SET;
+    DBGPIN_3_SET;
     Nop();
     Nop();
     Nop();
-    DBGPIN_2_CLEAR;
+    DBGPIN_3_CLEAR;
     _ADCAN18IF = 0;  // Clear the ADCANx interrupt flag 
     
 }
