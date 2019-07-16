@@ -26,7 +26,7 @@
 
 
 volatile uint16_t softstart_counter     = 0;
-volatile uint16_t SoftStartDC           = INIT_DUTY_CYCLE;
+volatile uint16_t SoftStartDC           = FINAL_DUTY_CYCLE; // This effectively disables the openloop soft start routine
 volatile uint16_t SoftStartFinished     = 0;
 
 volatile uint16_t init_pwm_module(void) {

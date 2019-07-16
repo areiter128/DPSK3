@@ -52,6 +52,8 @@
 typedef struct {
     volatile uint16_t vout_boost; 
     volatile uint16_t boost_vref;
+    volatile uint16_t vout_buck;
+    volatile uint16_t buck_vref;
 }MY_DATA_POINTS_t;
 
 extern volatile MY_DATA_POINTS_t data;

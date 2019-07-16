@@ -4,16 +4,20 @@
     <logicalFolder name="HeaderFiles"
                    displayName="Header Files"
                    projectFiles="true">
-      <logicalFolder name="f2" displayName="control" projectFiles="true">
-        <itemPath>h/c2P2Z_boost.h</itemPath>
-        <itemPath>h/npnz16b.h</itemPath>
-      </logicalFolder>
       <logicalFolder name="f1" displayName="init" projectFiles="true">
         <itemPath>h/init/init_fosc.h</itemPath>
         <itemPath>h/init/init_timer1.h</itemPath>
         <itemPath>h/init/init_gpio.h</itemPath>
+        <itemPath>h/init/init_pwm.h</itemPath>
+        <itemPath>h/init/init_acmp.h</itemPath>
+        <itemPath>h/init/init_adc.h</itemPath>
       </logicalFolder>
       <itemPath>h/main.h</itemPath>
+      <itemPath>h/buck_pwr_control.h</itemPath>
+      <itemPath>h/boost_pwr_control.h</itemPath>
+      <itemPath>h/c2P2Z_boost.h</itemPath>
+      <itemPath>h/npnz16b.h</itemPath>
+      <itemPath>h/c2p2z_buck.h</itemPath>
     </logicalFolder>
     <logicalFolder name="LinkerScript"
                    displayName="Linker Files"
@@ -26,20 +30,25 @@
         <itemPath>src/init/init_fosc.c</itemPath>
         <itemPath>src/init/init_timer1.c</itemPath>
         <itemPath>src/init/init_gpio.c</itemPath>
-      </logicalFolder>
-      <logicalFolder name="f2" displayName="source" projectFiles="true">
-        <itemPath>src/c2P2Z_boost.c</itemPath>
-        <itemPath>src/c2P2Z_boost_asm.s</itemPath>
+        <itemPath>src/init/init_pwm.c</itemPath>
+        <itemPath>src/init/init_acmp.c</itemPath>
+        <itemPath>src/init/init_adc.c</itemPath>
       </logicalFolder>
       <itemPath>src/main.c</itemPath>
       <itemPath>src/config_bits.c</itemPath>
       <itemPath>src/boost_pwr_control.c</itemPath>
       <itemPath>src/buck_pwr_control.c</itemPath>
+      <itemPath>src/c2P2Z_boost.c</itemPath>
+      <itemPath>src/c2P2Z_boost_asm.s</itemPath>
+      <itemPath>src/c2p2z_buck.c</itemPath>
+      <itemPath>src/c2p2z_buck_asm.s</itemPath>
     </logicalFolder>
     <logicalFolder name="ExternalFiles"
                    displayName="Important Files"
                    projectFiles="false">
       <itemPath>Makefile</itemPath>
+      <itemPath>MyConfig.mc3</itemPath>
+      <itemPath>buck_loop.dcld</itemPath>
       <itemPath>ctrl_boost.dcld</itemPath>
     </logicalFolder>
   </logicalFolder>
@@ -377,7 +386,7 @@
         <property key="voltagevalue" value="3.25"/>
       </PICkit3PlatformTool>
       <snap>
-        <property key="ADC" value="true"/>
+        <property key="ADC" value="false"/>
         <property key="AutoSelectMemRanges" value="auto"/>
         <property key="CLC 1" value="true"/>
         <property key="CLC 2" value="true"/>
@@ -400,10 +409,10 @@
         <property key="MCCP/SCCP 7" value="true"/>
         <property key="MCCP/SCCP 8" value="true"/>
         <property key="MCCP/SCCP 9" value="true"/>
-        <property key="PG1" value="true"/>
-        <property key="PG2" value="true"/>
-        <property key="PG3" value="true"/>
-        <property key="PG4" value="true"/>
+        <property key="PG1" value="false"/>
+        <property key="PG2" value="false"/>
+        <property key="PG3" value="false"/>
+        <property key="PG4" value="false"/>
         <property key="PG5" value="true"/>
         <property key="PG6" value="true"/>
         <property key="PG7" value="true"/>
@@ -440,7 +449,7 @@
         <property key="programoptions.donoteraseauxmem" value="false"/>
         <property key="programoptions.eraseb4program" value="true"/>
         <property key="programoptions.pgmentry.voltage" value="low"/>
-        <property key="programoptions.pgmspeed" value="Med"/>
+        <property key="programoptions.pgmspeed" value="Min"/>
         <property key="programoptions.preservedataflash" value="false"/>
         <property key="programoptions.preserveeeprom" value="false"/>
         <property key="programoptions.preserveeeprom.ranges" value=""/>
@@ -745,7 +754,6 @@
                   value="Press to browse for a specific firmware version"/>
         <property key="ToolFirmwareOption.UseLatestFirmware" value="true"/>
         <property key="debugoptions.useswbreakpoints" value="false"/>
-        <property key="firmware.download.all" value="false"/>
         <property key="hwtoolclock.frcindebug" value="false"/>
         <property key="memories.aux" value="false"/>
         <property key="memories.bootflash" value="true"/>

@@ -48,6 +48,8 @@ int main(void) {
         _T1IF = 0; // reset Timer1 interrupt flag bit
         DBGPIN_1_TOGGLE; // Toggle DEBUG-PIN
 
+        if (data.buck_vref < 2047) data.buck_vref++;
+        
         if (tgl_cnt++ > TGL_INTERVAL) // Count 100usec loops until LED toggle interval is exceeded
         {
             DBGLED_TOGGLE;
