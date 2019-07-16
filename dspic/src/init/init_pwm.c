@@ -466,7 +466,8 @@ void __attribute__((__interrupt__, no_auto_psv)) _PWM1Interrupt(void)
             SoftStartFinished       = 1; 
             
             // ToDo: For debug only
-            PG1EVTHbits.IEVTSEL     = 0b10;     // ADC TRIGGER 1 event interrupts CPU
+//            PG1EVTHbits.IEVTSEL     = 0b10;     // ADC TRIGGER 1 event interrupts CPU
+            PG1EVTHbits.CLIEN       = 0b1;      // PCI Current-Limit interrupt enable/disable for buck
             IPC16bits.PWM1IP        = 6;        // Setting PWM3 interrupt priority
             IFS4bits.PWM1IF         = 0;        // Clearing PWM3 interrupt flag 
             IEC4bits.PWM1IE         = 0;        // Enabling PWM3 interrupt
@@ -481,6 +482,8 @@ void __attribute__((__interrupt__, no_auto_psv)) _PWM1Interrupt(void)
             IFS4bits.PWM4IF         = 0;        // Clearing PWM4 interrupt flag 
             IEC4bits.PWM4IE         = 0;        // Enabling PWM4 interrupt
             
+            
+            PG2EVTHbits.CLIEN       = 0b0;      // PCI Current-Limit interrupt enable/disable for boost
             
         }
     }
@@ -551,7 +554,7 @@ volatile uint16_t init_buck_trig_pwm(void) {
     PG3EVTHbits.CLIEN       = 0b0;          // PCI Current-Limit interrupt is disabled
     PG3EVTHbits.FFIEN       = 0b0;          // PCI Feed-Forward interrupt is disabled
     PG3EVTHbits.SIEN        = 0b0;          // PCI Sync interrupt is disabled
-    PG3EVTHbits.IEVTSEL     = 0b000;        // Interrupt Event Selection: Time based interrupts are disabled
+    PG3EVTHbits.IEVTSEL     = 0b11;         // Interrupt Event Selection: Time base interrupts are disabled
     PG3EVTHbits.ADTR2EN3    = 0b0;          // PG1TRIGC register compare event is disabled as trigger source for ADC Trigger 2
     PG3EVTHbits.ADTR2EN2    = 0b0;          // PG1TRIGB register compare event is disabled as trigger source for ADC Trigger 2
     PG3EVTHbits.ADTR2EN1    = 0b0;          // PG1TRIGA register compare event is disabled as trigger source for ADC Trigger 2
