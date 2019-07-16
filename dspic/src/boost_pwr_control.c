@@ -11,6 +11,7 @@
 #include <stdbool.h>
 
 #include "main.h"
+#include "npnz16b.h"
 
 volatile BOOST_SOFT_START_t boost_soft_start;
 
@@ -28,6 +29,16 @@ volatile uint16_t init_boost_pwr_control(void) {
     boost_soft_start.pwr_good_delay = 1999;  // Soft-Start Power Good Delay = 200 ms
     boost_soft_start.reference = 2047;       // Soft-Start Target Reference = 3.3V
     
+    c2P2Z_boost_Init();
+    
+    c2P2Z_boost.ADCTriggerOffset = 80;
+    c2P2Z_boost.ptrADCTriggerRegister = &PG4TRIGA;
+    c2P2Z_boost.InputOffset = 0;
+    c2P2Z_boost.ptrControlReference = &data.boost_vref;
+    c2P2Z_boost.ptrSource = &ADCBUF18;
+    c2P2Z_boost.ptrTarget = &DAC2DATH;
+    c2P2Z_boost.status.flag.enable = 0;
+    
     return(1);
 }
 
@@ -39,6 +50,8 @@ volatile uint16_t launch_boost_pwr_control(void) {
     launch_boost_acmp();    // Start analog comparator/DAC module
     launch_boost_trig_pwm();// Start auxiliary PWM
     launch_boost_pwm();     // Start PWM
+    
+    
     
     return(1);
 }
@@ -56,12 +69,11 @@ void __attribute__((__interrupt__, auto_psv)) _ADCAN18Interrupt(void)
 {
     volatile uint16_t dummy=0;
     
-    dummy = ADCBUF18;
+//    dummy = ADCBUF18;
 
-    Nop();
-    Nop();
-    Nop();
-
+    data.vout_boost = ADCBUF18;
+    c2P2Z_boost_Update(&c2P2Z_boost);
+            
     _ADCAN18IF = 0;  // Clear the ADCANx interrupt flag 
     
 }

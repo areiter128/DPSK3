@@ -36,6 +36,9 @@
 #include <stdint.h>
 #include <stdbool.h>
 
+#include "c2P2Z_boost.h"
+
+
 #ifdef	__cplusplus
 extern "C" {
 #endif /* __cplusplus */

@@ -48,6 +48,14 @@
 #include "buck_pwr_control.h"
 #include "boost_pwr_control.h"
 
+
+typedef struct {
+    volatile uint16_t vout_boost; 
+    volatile uint16_t boost_vref;
+}MY_DATA_POINTS_t;
+
+extern volatile MY_DATA_POINTS_t data;
+
 #ifdef	__cplusplus
 extern "C" {
 #endif /* __cplusplus */
