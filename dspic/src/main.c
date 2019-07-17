@@ -51,6 +51,7 @@ int main(void) {
         DBGPIN_1_TOGGLE; // Toggle DEBUG-PIN
 
         exec_buck_pwr_control();
+        //exec_boos_pwr_control();
         
         if (tgl_cnt++ > TGL_INTERVAL) // Count 100usec loops until LED toggle interval is exceeded
         {
