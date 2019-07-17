@@ -56,10 +56,10 @@ void App_Logger_LogData(void)
     PrintSerial("Vboost = %2.2f V\n\r", global_data.voltage_boost);
     PrintSerial("Vinput =  %2.2f V\n\r", global_data.voltage_input);
     PrintSerial("Temp   = %d deg C\n\r",  global_data.temperature);
-    volt2 = global_data.voltage_buck * global_data.voltage_buck;
+    volt2 = global_data.voltage_buck * global_data.voltage_buck;            //TODO: seems to be wrong to me, P = U*I
     PrintSerial("P buck = %1.2f W, ", volt2 * global_data.load_buck);
     PrintSerial("step = %1.2f W\n\r", volt2 * global_data.step_load_buck);
-    volt2 = global_data.voltage_boost * global_data.voltage_boost;
+    volt2 = global_data.voltage_boost * global_data.voltage_boost;          //TODO: seems to be wrong to me, P = U*I
     PrintSerial("Pboost = %1.2f W, ", volt2 * global_data.load_boost);
     PrintSerial("step = %1.2f W\n\r", volt2 * global_data.step_load_boost);
     PrintSerial("Buck faults:  OCP %d, OVP %d, REG %d\n\r", global_data.fault_ocp_buck, global_data.fault_ovp_buck, global_data.fault_reg_buck);

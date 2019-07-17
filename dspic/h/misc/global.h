@@ -30,6 +30,13 @@
 extern "C" {
 #endif
 
+typedef struct
+{
+    uint16_t reference_voltage;     // this is the target voltage for the control loop
+    uint16_t output_voltage;        // this is the output voltage of the buck/boost converter
+    uint16_t output_current;        // this is the output current of the buck/boost converter
+} ControlLoopData_t;
+
 
 typedef struct
 {
@@ -50,6 +57,11 @@ typedef struct
     uint8_t fault_reg_boost:1;
     uint8_t :2;
 } print_data_t;
+
+
+// Variables to exchange with the Control loop and other modules
+extern ControlLoopData_t globaldata_buck;
+extern ControlLoopData_t globaldata_boost;
 
 extern print_data_t global_data;
 extern protocol_data_t global_proto24data;

@@ -22,6 +22,10 @@
 
 #include "misc/global.h"
 
+
+ControlLoopData_t globaldata_buck;
+ControlLoopData_t globaldata_boost;
+
 print_data_t    global_data;
 protocol_data_t global_proto24data;
 //uint16_t        global_debug_uart2_rx_counter = 0;

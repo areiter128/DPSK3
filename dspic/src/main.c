@@ -15,6 +15,7 @@
 #include "app/app_display.h"
 #include "app/app_proto24.h"
 #include "app/app_logger.h"
+#include "app/app_fault_handling.h"
 #include "misc/delay.h"
 #include "misc/global.h"
 #include "main.h"
@@ -49,6 +50,7 @@ int main(void)
     Dev_Lcd_Init();
     Dev_Button_Init();
     App_Logger_Init();
+    App_Fault_Handling_Init();
     App_Proto24_Init();
     App_Proto24_GetData(&global_proto24data);
     //TODO: is that delay for sending the SYS_RESET information after about one second to make sure that the pic24 is also ready?
@@ -121,6 +123,7 @@ inline void Tasks_100us(void)
 inline void Tasks_1ms(void)
 {
     App_Proto24_Task_1ms();
+    App_Fault_Handling_Task_1ms();
     if(App_Proto24_IsNewDataAvailable())
     {
         App_Proto24_GetData(&global_proto24data);

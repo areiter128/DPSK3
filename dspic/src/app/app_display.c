@@ -24,6 +24,7 @@
 #include <stdio.h>
 #include "device/dev_lcd.h"
 #include "device/dev_button.h"
+#include "app/app_fault_handling.h"
 #include "misc/global.h"
 
 //======================================================================================================================
@@ -52,6 +53,7 @@
 #define PAGE_VIN_TEMP               10
 #define PAGE_BUCK_FAULTS            11
 #define PAGE_BOOST_FAULTS           12
+#define PAGE_FAULT_HANDLING         13
 
 
 
@@ -119,7 +121,7 @@ void App_CheckEvents(void)
             if (buttonstate == DEV_BUTTON_EVENT_PRESSED_SHORT)
                 App_GotoPage(PAGE_VOLTAGES);
             else if (buttonstate == DEV_BUTTON_EVENT_PRESSED_LONG)
-                App_GotoPage(PAGE_BOOST_FAULTS);
+                App_GotoPage(PAGE_FAULT_HANDLING);
             else if (++app_display_pagetimeoutcounter >= 20)
                 App_GotoPage(PAGE_INIT_1);
             break;
@@ -127,7 +129,7 @@ void App_CheckEvents(void)
             if (buttonstate == DEV_BUTTON_EVENT_PRESSED_SHORT)
                 App_GotoPage(PAGE_VOLTAGES);
             else if (buttonstate == DEV_BUTTON_EVENT_PRESSED_LONG)
-                App_GotoPage(PAGE_EXAMPLE_LONG_BUTTON);
+                App_GotoPage(PAGE_FAULT_HANDLING);
             else if (++app_display_pagetimeoutcounter >= 20)
                 App_GotoPage(PAGE_INIT_2);           
             break;
@@ -135,7 +137,7 @@ void App_CheckEvents(void)
             if (buttonstate == DEV_BUTTON_EVENT_PRESSED_SHORT)
                 App_GotoPage(PAGE_VOLTAGES);
             else if (buttonstate == DEV_BUTTON_EVENT_PRESSED_LONG)
-                App_GotoPage(PAGE_EXAMPLE_LONG_BUTTON);
+                App_GotoPage(PAGE_FAULT_HANDLING);
             else if (++app_display_pagetimeoutcounter >= 20)
                 App_GotoPage(PAGE_INIT_3);           
             break;
@@ -143,7 +145,7 @@ void App_CheckEvents(void)
             if (buttonstate == DEV_BUTTON_EVENT_PRESSED_SHORT)
                 App_GotoPage(PAGE_VOLTAGES);
             else if (buttonstate == DEV_BUTTON_EVENT_PRESSED_LONG)
-                App_GotoPage(PAGE_EXAMPLE_LONG_BUTTON);
+                App_GotoPage(PAGE_FAULT_HANDLING);
             else if (++app_display_pagetimeoutcounter >= 20)
                 App_GotoPage(PAGE_INIT_4);           
             break;
@@ -151,7 +153,7 @@ void App_CheckEvents(void)
             if (buttonstate == DEV_BUTTON_EVENT_PRESSED_SHORT)
                 App_GotoPage(PAGE_VOLTAGES);
             else if (buttonstate == DEV_BUTTON_EVENT_PRESSED_LONG)
-                App_GotoPage(PAGE_EXAMPLE_LONG_BUTTON);
+                App_GotoPage(PAGE_FAULT_HANDLING);
             else if (++app_display_pagetimeoutcounter >= 20)
                 App_GotoPage(PAGE_INIT_0);           
             break;
@@ -169,7 +171,7 @@ void App_CheckEvents(void)
             if (buttonstate == DEV_BUTTON_EVENT_PRESSED_SHORT)
                 App_GotoPage(PAGE_LOAD_BUCK);
             else if (buttonstate == DEV_BUTTON_EVENT_PRESSED_LONG)
-                App_GotoPage(PAGE_BOOST_FAULTS);
+                App_GotoPage(PAGE_FAULT_HANDLING);
             break;
         case PAGE_LOAD_BUCK:
             if (buttonstate == DEV_BUTTON_EVENT_PRESSED_SHORT)
@@ -197,11 +199,16 @@ void App_CheckEvents(void)
             break;
         case PAGE_BOOST_FAULTS:
             if (buttonstate == DEV_BUTTON_EVENT_PRESSED_SHORT)
-                App_GotoPage(PAGE_INIT_0);
+                App_GotoPage(PAGE_FAULT_HANDLING);
             else if (buttonstate == DEV_BUTTON_EVENT_PRESSED_LONG)
                 App_GotoPage(PAGE_BUCK_FAULTS);
             break;
-            
+        case PAGE_FAULT_HANDLING:
+            if (buttonstate == DEV_BUTTON_EVENT_PRESSED_SHORT)
+                App_GotoPage(PAGE_INIT_0);
+            else if (buttonstate == DEV_BUTTON_EVENT_PRESSED_LONG)
+                App_GotoPage(PAGE_BOOST_FAULTS);
+            break;
     }
 }
 
@@ -251,14 +258,14 @@ void App_RefreshDisplay(void)
             break;
         case PAGE_LOAD_BUCK:
             {
-                double volt2 = global_data.voltage_buck * global_data.voltage_buck;
+                double volt2 = global_data.voltage_buck * global_data.voltage_buck;     //TODO: seems to be wrong to me, P = U*I
                 PrintLcd(0, "P buck = %1.2f W ", volt2 * global_data.load_buck);
                 PrintLcd(1, "step   = %1.2f W ", volt2 * global_data.step_load_buck);
             }
             break;
         case PAGE_LOAD_BOOST:
             {
-                double volt2 = global_data.voltage_boost * global_data.voltage_boost;
+                double volt2 = global_data.voltage_boost * global_data.voltage_boost;   //TODO: seems to be wrong to me, P = U*I
                 PrintLcd(0, "Pboost = %1.2f W    ", volt2 * global_data.load_boost);
                 PrintLcd(1, "step   = %1.2f W    ", volt2 * global_data.step_load_boost);
             }
@@ -274,6 +281,23 @@ void App_RefreshDisplay(void)
         case PAGE_BOOST_FAULTS:
             PrintLcd(0,"Boost faults:   ");
             PrintLcd(1,"OC %d OV %d REG %d ", global_data.fault_ocp_boost,  global_data.fault_ovp_boost, global_data.fault_reg_boost);
+            break;
+        case PAGE_FAULT_HANDLING:
+            PrintLcd(0,"Fault bits:     ");
+            Dev_Lcd_GotoXY(0,1);
+            {
+                uint8_t i;
+                uint16_t fault_bits;
+                fault_bits = App_Fault_Handling_GetFaults();
+                for (i=0; i<8; i++)
+                {
+                    if (fault_bits & (1<<i))
+                        Dev_Lcd_WriteChar('1');
+                    else
+                        Dev_Lcd_WriteChar('0');
+                    Dev_Lcd_WriteChar(' ');
+                }
+            }
             break;
         default:
             PrintLcd(0,"Firmware error !");
