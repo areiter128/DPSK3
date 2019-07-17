@@ -48,7 +48,6 @@
 #include "buck_pwr_control.h"
 #include "boost_pwr_control.h"
 
-#include "soft_start.h"
 
 
 typedef struct {
