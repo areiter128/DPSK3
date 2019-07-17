@@ -28,6 +28,22 @@ extern "C" {
 extern void Dev_Lcd_Init(void);
 
 //======================================================================================================================
+// @brief   sets the cursor position to the given x- and y-coordinates starting with zero
+// @param   x x-coordinates for the new cursor position starting with zero
+// @param   y y-coordinates for the new cursor position starting with zero
+//======================================================================================================================
+extern void Dev_Lcd_GotoXY(uint8_t x,uint8_t y);
+
+//======================================================================================================================
+// @brief   writes the character on the lcd screen
+// @param    ch is the charactert be written on the lcd screen
+// @note    '\f' clears the screen and positions the cursor on the upper left corner,
+// @note    '\r' sets the x position of the cursor to 0
+// @note    '\n' poairiona the cursor on the next line (without changing the x-position)
+//======================================================================================================================
+extern void Dev_Lcd_WriteChar(const char ch);
+
+//======================================================================================================================
 // @brief   writes the given string on the lcd screen
 // @param   str is the string to be written on the lcd screen
 // @note    '\f' clears the screen and positions the cursor on the upper left corner,

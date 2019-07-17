@@ -155,6 +155,57 @@ void Dev_Lcd_GotoXY(uint8_t x,uint8_t y)
     change_position = false;
 }
 
+
+//======================================================================================================================
+// @brief   writes the character on the lcd screen
+// @param    ch is the charactert be written on the lcd screen
+// @note    '\f' clears the screen and positions the cursor on the upper left corner,
+// @note    '\r' sets the x position of the cursor to 0
+// @note    '\n' poairiona the cursor on the next line (without changing the x-position)
+//======================================================================================================================
+void Dev_Lcd_WriteChar(const char ch)
+{
+    if (change_position)
+    {
+        Dev_Lcd_GotoXY(pos_x, pos_y);
+        change_position = false;
+    }
+                
+    switch (ch)
+    {
+        case '\f':          //sets position to 0,0 after clearing the screen. this is slow (1ms)!
+            Dev_Lcd_Clear();
+            pos_x = 0;
+            pos_y = 0;
+            change_position = false;
+            break;
+        case '\v':          //sets position to 0,0 without clearing the screen
+            pos_x = 0;
+            pos_y = 0;
+            change_position = true;
+            break;
+        case '\r':  //carriage return ==> x=0;
+            pos_x = 0;
+            change_position = true;
+            break;
+        case '\n':  //new line return ==> y++;
+            pos_y++;
+            change_position = true;
+            break;
+        default:
+            if (pos_x < LCD_DISPLAYSIZE_X && pos_y < LCD_DISPLAYSIZE_Y)
+                Lcd_Interface_SendChar(ch);
+            if (++pos_x >= LCD_DISPLAYSIZE_X)
+            {
+                pos_x = 0;
+                pos_y++;
+                change_position = true;
+            }
+            break;
+    }
+}
+
+
 //======================================================================================================================
 // @brief   writes the given string on the lcd screen
 // @param   str is the string to be written on the lcd screen
@@ -166,44 +217,7 @@ void Dev_Lcd_WriteString(const char *str)
 {
     while(*str)
     {
-        if (change_position)
-        {
-            Dev_Lcd_GotoXY(pos_x, pos_y);
-            change_position = false;
-        }
-                
-        switch (*str)
-        {
-            case '\f':          //sets position to 0,0 after clearing the screen. this is slow (1ms)!
-                Dev_Lcd_Clear();
-                pos_x = 0;
-                pos_y = 0;
-                change_position = false;
-                break;
-            case '\v':          //sets position to 0,0 without clearing the screen
-                pos_x = 0;
-                pos_y = 0;
-                change_position = true;
-                break;
-            case '\r':  //carriage return ==> x=0;
-                pos_x = 0;
-                change_position = true;
-                break;
-            case '\n':  //new line return ==> y++;
-                pos_y++;
-                change_position = true;
-                break;
-            default:
-                if (pos_x < LCD_DISPLAYSIZE_X && pos_y < LCD_DISPLAYSIZE_Y)
-                   	Lcd_Interface_SendChar(*str);
-                if (++pos_x >= LCD_DISPLAYSIZE_X)
-                {
-                    pos_x = 0;
-                    pos_y++;
-                    change_position = true;
-                }
-                break;
-        }
+        Dev_Lcd_WriteChar(*str);
         str++;
     }
 }
@@ -222,3 +236,4 @@ void Dev_Lcd_WriteStringXY(uint8_t column_index, uint8_t line_index, const char 
     Dev_Lcd_GotoXY(column_index, line_index);
     Dev_Lcd_WriteString(str);    
 }
+
