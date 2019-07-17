@@ -12,8 +12,8 @@
 
 #include "init_acmp.h"
 
-#define DACDATH_BUCK    800     // DAC value for the buck the slope starts from
-#define DACDATH_BOOST   800     // DAC value for the boost the slope starts from
+#define DACDATH_BUCK    0       // DAC value for the buck the slope starts from
+#define DACDATH_BOOST   0       // DAC value for the boost the slope starts from
 #define DACDATL_BUCK    205     // Set this to minimum in Slope mode
 #define DACDATL_BOOST   205     // Set this to minimum in Slope mode
 

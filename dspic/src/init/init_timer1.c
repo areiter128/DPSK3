@@ -33,8 +33,6 @@ volatile uint16_t init_timer1 (void)
     _T1IP = 0;  // Set interrupt priority to zero
     _T1IF = 0;  // Reset interrupt flag bit
     _T1IE = 0;  // Disable Timer1 interrupt
-    // Enable Timer1
-    T1CONbits.TON = 1; 
-
+   
     return(1);
 }

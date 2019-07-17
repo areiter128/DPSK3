@@ -14,6 +14,7 @@
 #include "npnz16b.h"
 
 
+volatile bool adc_active = false;
 volatile BUCK_SOFT_START_t buck_soft_start;
 
 volatile uint16_t init_buck_pwr_control(void) {
@@ -42,7 +43,7 @@ volatile uint16_t init_buck_pwr_control(void) {
     c2p2z_buck.MinOutput = 10;
     c2p2z_buck.status.flag.enable = 0;
     
-    data.buck_vref = 100;
+    data.buck_vref = 0;
     
     return(1);
 }
@@ -55,6 +56,7 @@ volatile uint16_t launch_buck_pwr_control(void) {
     launch_buck_trig_pwm(); // Start auxiliary PWM 
     launch_buck_pwm();      // Start PWM
     
+    while (!adc_active); 
     c2p2z_buck.status.flag.enable = 1; // Start the control loop for buck
     
     return(1);
@@ -69,6 +71,8 @@ volatile uint16_t exec_buck_pwr_control(void) {
 void __attribute__((__interrupt__, auto_psv)) _ADCAN13Interrupt(void)
 {
     volatile uint16_t dummy=0;
+    
+    adc_active = true;
     
 //    dummy = ADCBUF13;
 

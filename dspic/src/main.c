@@ -38,7 +38,10 @@ int main(void) {
     init_boost_pwr_control();   // Initialize all peripherals and data structures of the boost controller
 
     launch_buck_pwr_control();  // Start Buck Power Controller
-    launch_boost_pwr_control(); // Start Buck Power Controller
+//    launch_boost_pwr_control(); // Start Buck Power Controller
+    
+    // Enable Timer1
+    T1CONbits.TON = 1; 
     
     while (1) {
 
