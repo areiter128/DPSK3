@@ -14,8 +14,8 @@
 #include "../../h/main.h"
 
 #define SST_PERIOD                   40         // Update PWM cycle period during soft-start in terms of PWM1 interrupts (in this case EOC) 
-#define INIT_DUTY_CYCLE              80         // Simple soft-start routine initial value
-#define FINAL_DUTY_CYCLE            330         // Simple soft-start routine settles to this value
+#define INIT_DUTY_CYCLE             800         // Simple soft-start routine initial value
+#define FINAL_DUTY_CYCLE            800         // Simple soft-start routine settles to this value
 
 #define PWM_PERIOD                 1000         // Measured in [tick = 2ns]
 #define BOOST_OFFSET                500         // With respect to the buck converter 
@@ -279,8 +279,9 @@ volatile uint16_t launch_buck_pwm(void) {
     PG1IOCONLbits.OVRENL = 0;  // User Override Enable for PWMxL Pin: OVRDAT0 provides data for output on the PWMxL pin
     
     IFS4bits.PWM1IF         = 0;        // Clearing PWM1 interrupt flag 
-    IEC4bits.PWM1IE         = 1;        // Enabling PWM1 interrupt to give pace to the open-loop soft-start routine
-
+//    IEC4bits.PWM1IE         = 1;        // Enabling PWM1 interrupt to give pace to the open-loop soft-start routine
+    IEC4bits.PWM1IE         = 0;
+    
     return(1);
 }
 

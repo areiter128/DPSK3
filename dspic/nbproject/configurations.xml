@@ -393,7 +393,7 @@
         <property key="CLC 3" value="true"/>
         <property key="CLC 4" value="true"/>
         <property key="CRC" value="true"/>
-        <property key="DACFRZ" value="true"/>
+        <property key="DACFRZ" value="false"/>
         <property key="DMA" value="true"/>
         <property key="FRZ" value="true"/>
         <property key="Freeze All Other Peripherals" value="true"/>
@@ -426,7 +426,7 @@
         <property key="SPI 1" value="true"/>
         <property key="SPI 2" value="true"/>
         <property key="SPI 3" value="true"/>
-        <property key="TIMER1" value="true"/>
+        <property key="TIMER1" value="false"/>
         <property key="ToolFirmwareFilePath"
                   value="Press to browse for a specific firmware version"/>
         <property key="ToolFirmwareOption.UseLatestFirmware" value="true"/>

@@ -38,6 +38,8 @@ volatile uint16_t init_buck_pwr_control(void) {
     c2p2z_buck.ptrControlReference = &data.buck_vref;
     c2p2z_buck.ptrSource = &ADCBUF13;
     c2p2z_buck.ptrTarget = &DAC1DATH;
+    c2p2z_buck.MaxOutput = 3600;
+    c2p2z_buck.MinOutput = 10;
     c2p2z_buck.status.flag.enable = 0;
     
     data.buck_vref = 100;
