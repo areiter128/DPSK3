@@ -42,6 +42,9 @@ int main(void) {
     // Enable Timer1
     T1CONbits.TON = 1; 
     
+    // Reset Soft-Start Phase to Initialization
+    buck_soft_start.phase = BUCK_SS_INIT;   
+    
     while (1) {
 
         // wait for timer1 to overrun

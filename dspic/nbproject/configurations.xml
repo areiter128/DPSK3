@@ -18,7 +18,6 @@
       <itemPath>h/c2P2Z_boost.h</itemPath>
       <itemPath>h/npnz16b.h</itemPath>
       <itemPath>h/c2p2z_buck.h</itemPath>
-      <itemPath>h/soft_start.h</itemPath>
     </logicalFolder>
     <logicalFolder name="LinkerScript"
                    displayName="Linker Files"
@@ -43,7 +42,6 @@
       <itemPath>src/c2P2Z_boost_asm.s</itemPath>
       <itemPath>src/c2p2z_buck.c</itemPath>
       <itemPath>src/c2p2z_buck_asm.s</itemPath>
-      <itemPath>src/soft_start.c</itemPath>
     </logicalFolder>
     <logicalFolder name="ExternalFiles"
                    displayName="Important Files"

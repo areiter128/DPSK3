@@ -24,12 +24,12 @@ volatile uint16_t init_buck_pwr_control(void) {
     init_buck_acmp();       // Set up buck converter peak current comparator/DAC
     init_buck_adc();        // Set up buck converter ADC (voltage feedback only)
     
-    buck_soft_start.counter = 0;            // Reset Soft-Start Counter
-    buck_soft_start.phase = BUCK_SS_INIT;   // Reset Soft-Start Phase to Initialization
-    buck_soft_start.pwr_good_delay = 999;   // Soft-Start Power-On Delay = 100 ms
-    buck_soft_start.ramp_period = 499;      // Soft-Start Ramp Period = 500 ms
-    buck_soft_start.pwr_good_delay = 1999;  // Soft-Start Power Good Delay = 200 ms
-    buck_soft_start.reference = 2047;       // Soft-Start Target Reference = 3.3V
+    buck_soft_start.counter = 0;                // Reset Soft-Start Counter
+    buck_soft_start.pwr_on_delay = 999;         // Soft-Start Power-On Delay = 100 ms
+    buck_soft_start.precharge_delay = 9;        // Soft-Start Boost Capacitor pre-charge delay = 1 ms
+    buck_soft_start.ramp_period = 499;          // Soft-Start Ramp Period = 500 ms
+    buck_soft_start.pwr_good_delay = 1999;      // Soft-Start Power Good Delay = 200 ms
+    buck_soft_start.reference = 2047;           // Soft-Start Target Reference = 3.3V
     
     c2p2z_buck_Init();
     
@@ -67,28 +67,26 @@ volatile uint16_t exec_buck_pwr_control(void) {
     
     switch (buck_soft_start.phase) {
         
-        case 0: // basic PWM, ADC, CMP, DAC configuration
+        case BUCK_SS_INIT: // basic PWM, ADC, CMP, DAC configuration
             init_buck_pwr_control();    // Initialize all peripherals and data structures of the buck controller
-            buck_soft_start.phase = 1;
+            buck_soft_start.phase = BUCK_SS_LAUNCH_PER;
             break;
 
-        case 1: // Enabling PWM, ADC, CMP, DAC
-            launch_buck_pwr_control();  // Start Buck Power Controller
-            buck_soft_start.phase = 2;
+        case BUCK_SS_LAUNCH_PER: // Enabling PWM, ADC, CMP, DAC and compensator
+            launch_buck_pwr_control(); 
+            buck_soft_start.phase = BUCK_SS_PWR_ON_DELAY;
             break;
 
-        case 2:
-            if (data.buck_vref < buck_soft_start.reference) 
-            { data.buck_vref++; }
-            else
-            {  buck_soft_start.phase = 3; }
-            
-        case 3: // Soft start is complete, system is running
+        case BUCK_SS_PWR_ON_DELAY: 
+        case BUCK_SS_PRECHARGE:
+        case BUCK_SS_RAMP_UP:
+        case BUCK_SS_PWR_GOOD_DELAY:
+        case BUCK_SS_COMPLETE: // Soft start is complete, system is running
             Nop();
             break;
 
         default: // If something is going wrong, reset entire PWR controller
-            buck_soft_start.phase = 0;
+            buck_soft_start.phase = BUCK_SS_INIT;
             break;
             
     }

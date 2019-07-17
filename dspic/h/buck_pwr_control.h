@@ -51,15 +51,18 @@ typedef enum {
 
 typedef enum {
     BUCK_SS_INIT            = 0,  // Soft-Start Phase Initialization
-    BUCK_SS_PWR_ON_DELAY    = 1,  // Soft-Start Phase Power On Delay
-    BUCK_SS_RAMP_UP         = 2,  // Soft-Start Phase Output Ramp Up 
-    BUCK_SS_PWR_GOOD_DELAY  = 3,  // Soft-Start Phase Power Good Delay
-    BUCK_SS_COMPLETE        = 4   // Soft-Start Phase Complete
+    BUCK_SS_LAUNCH_PER      = 1,  // Soft-Start Phase Peripheral Launch
+    BUCK_SS_PWR_ON_DELAY    = 2,  // Soft-Start Phase Power On Delay
+    BUCK_SS_PRECHARGE       = 3,  // Soft-Start Phase Precharge Bootstrap C        
+    BUCK_SS_RAMP_UP         = 4,  // Soft-Start Phase Output Ramp Up 
+    BUCK_SS_PWR_GOOD_DELAY  = 5,  // Soft-Start Phase Power Good Delay
+    BUCK_SS_COMPLETE        = 6   // Soft-Start Phase Complete
 }BUCK_SOFT_START_STATUS_e;
 
 typedef struct {
     volatile uint16_t reference;        // Soft-Start target reference value
     volatile uint16_t pwr_on_delay;     // Soft-Start POwer On Delay
+    volatile uint16_t precharge_delay;  // Soft-Start Bootstrap Capacitor pre-charge delay
     volatile uint16_t ramp_period;      // Soft-Start Ramp-Up Duration
     volatile uint16_t pwr_good_delay;   // Soft-Start Power Good Delay
     volatile uint16_t counter;          // Soft-Start Execution Counter
