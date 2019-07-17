@@ -65,6 +65,35 @@ volatile uint16_t launch_buck_pwr_control(void) {
 volatile uint16_t exec_buck_pwr_control(void) {
     
     
+    switch (buck_soft_start.phase) {
+        
+        case 0: // basic PWM, ADC, CMP, DAC configuration
+            init_buck_pwr_control();    // Initialize all peripherals and data structures of the buck controller
+            buck_soft_start.phase = 1;
+            break;
+
+        case 1: // Enabling PWM, ADC, CMP, DAC
+            launch_buck_pwr_control();  // Start Buck Power Controller
+            buck_soft_start.phase = 2;
+            break;
+
+        case 2:
+            if (data.buck_vref < buck_soft_start.reference) 
+            { data.buck_vref++; }
+            else
+            {  buck_soft_start.phase = 3; }
+            
+        case 3: // Soft start is complete, system is running
+            Nop();
+            break;
+
+        default: // If something is going wrong, reset entire PWR controller
+            buck_soft_start.phase = 0;
+            break;
+            
+    }
+        
+    
     return(1);
 }
 

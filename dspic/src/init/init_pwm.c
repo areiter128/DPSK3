@@ -13,6 +13,8 @@
 #include "init_pwm.h"
 #include "../../h/main.h"
 
+#define LEB_PERIOD                  100         // Leading Edge Blanking = n x PWM resolution (here: 50 x 2ns = 100ns)
+
 #define SST_PERIOD                   40         // Update PWM cycle period during soft-start in terms of PWM1 interrupts (in this case EOC) 
 #define INIT_DUTY_CYCLE             800         // Simple soft-start routine initial value
 #define FINAL_DUTY_CYCLE            800         // Simple soft-start routine settles to this value
@@ -225,7 +227,7 @@ volatile uint16_t init_buck_pwm(void) {
     PG1LEBHbits.PLF         = 0b0;          // LEB ignores the falling edge of PWM1L
     
     // PWM GENERATOR x LEADING-EDGE BLANKING REGISTER LOW 
-    PG1LEBL                 = 52;           // ToDo: This value may need further adjustment
+    PG1LEBL                 = LEB_PERIOD;   // ToDo: This value may need further adjustment
     
     // PGxPHASE: PWM GENERATOR x PHASE REGISTER
     PG1PHASE    = 0;

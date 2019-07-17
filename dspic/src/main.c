@@ -22,27 +22,23 @@ int main(void) {
 
     volatile uint16_t timeout = 0;
 
-    init_fosc();
-    init_timer1();
-    init_gpio();
+    init_fosc();        // Set up system oscillator for 100 MIPS operation
+    init_aclk();        // Set up Auxiliary PLL for 500 MHz (source clock to PWM module)
+    init_timer1();      // Set up Timer1 as scheduler time base
+    init_gpio();        // Initialize common device GPIOs
     
     
     // Basic setup of common power controller peripheral modules
-    init_aclk();        // Set up Auxiliary PLL for 500 MHz (source clock to PWM module)
     init_pwm_module();  // Set up PWM module (basic module configuration)
     init_acmp_module(); // Set up analog comparator/DAC module
     init_adc_module();  // Set up Analog-To-Digital converter module
     init_vin_adc();     // Initialize ADC Channel to measure input voltage
     
     // Initialize peripheral modules of individual power controllers
-    init_buck_pwr_control();    // Initialize all peripherals and data structures of the buck controller
-    init_boost_pwr_control();   // Initialize all peripherals and data structures of the boost controller
+//    init_boost_pwr_control();   // Initialize all peripherals and data structures of the boost controller
 
-    launch_buck_pwr_control();  // Start Buck Power Controller
 //    launch_boost_pwr_control(); // Start Buck Power Controller
 
-    DBGPIN_1_SET;
-    
     // Enable Timer1
     T1CONbits.TON = 1; 
     
@@ -52,13 +48,9 @@ int main(void) {
         while ((!_T1IF) && (timeout++ < TMR1_TIMEOUT));
         timeout = 0;    // Reset timeout counter
         _T1IF = 0; // reset Timer1 interrupt flag bit
-//        DBGPIN_1_TOGGLE; // Toggle DEBUG-PIN
+        DBGPIN_1_TOGGLE; // Toggle DEBUG-PIN
 
-        if (data.buck_vref < buck_soft_start.reference) 
-        { data.buck_vref++; }
-        else
-        { DBGPIN_1_CLEAR; }
-        
+        exec_buck_pwr_control();
         
         if (tgl_cnt++ > TGL_INTERVAL) // Count 100usec loops until LED toggle interval is exceeded
         {
