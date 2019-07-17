@@ -26,6 +26,7 @@ int main(void) {
     init_timer1();
     init_gpio();
     
+    
     // Basic setup of common power controller peripheral modules
     init_aclk();        // Set up Auxiliary PLL for 500 MHz (source clock to PWM module)
     init_pwm_module();  // Set up PWM module (basic module configuration)
@@ -39,6 +40,8 @@ int main(void) {
 
     launch_buck_pwr_control();  // Start Buck Power Controller
 //    launch_boost_pwr_control(); // Start Buck Power Controller
+
+    DBGPIN_1_SET;
     
     // Enable Timer1
     T1CONbits.TON = 1; 
@@ -49,9 +52,13 @@ int main(void) {
         while ((!_T1IF) && (timeout++ < TMR1_TIMEOUT));
         timeout = 0;    // Reset timeout counter
         _T1IF = 0; // reset Timer1 interrupt flag bit
-        DBGPIN_1_TOGGLE; // Toggle DEBUG-PIN
+//        DBGPIN_1_TOGGLE; // Toggle DEBUG-PIN
 
-        if (data.buck_vref < buck_soft_start.reference) data.buck_vref++;
+        if (data.buck_vref < buck_soft_start.reference) 
+        { data.buck_vref++; }
+        else
+        { DBGPIN_1_CLEAR; }
+        
         
         if (tgl_cnt++ > TGL_INTERVAL) // Count 100usec loops until LED toggle interval is exceeded
         {
