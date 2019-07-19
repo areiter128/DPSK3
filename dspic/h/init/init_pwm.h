@@ -35,6 +35,19 @@
 #include <stdint.h>
 #include <stdbool.h>
 
+#define LEB_PERIOD                  100         // Leading Edge Blanking = n x PWM resolution (here: 50 x 2ns = 100ns)
+
+#define SST_PERIOD                   40         // Update PWM cycle period during soft-start in terms of PWM1 interrupts (in this case EOC) 
+#define INIT_DUTY_CYCLE             800         // Simple soft-start routine initial value
+#define FINAL_DUTY_CYCLE            800         // Simple soft-start routine settles to this value
+
+#define PWM_PERIOD                 1000         // Measured in [tick = 2ns]
+#define BOOST_OFFSET                500         // With respect to the buck converter 
+
+#define VOUT_ADC_TRIGGER_DELAY       80         // With respect to the start of the PWM cycle 
+#define SLOPE_START_DELAY           100         // With respect to the start of the PWM cycle; ToDo: How is this influenced by the settling and steady-state time of the DAC-slope generator?
+#define SLOPE_STOP_DELAY            800         // With respect to the start of the PWM cycle
+
 #define TDR 25  // Rising edge dead time [2ns]
 #define TDF 40  // Falling edge dead time [2ns]
 
