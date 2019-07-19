@@ -22,7 +22,7 @@
 #define PWM_PERIOD                 1000         // Measured in [tick = 2ns]
 #define BOOST_OFFSET                500         // With respect to the buck converter 
 
-#define VOUT_ADC_TRIGGER_DELAY        0         // With respect to the start of the PWM cycle 
+#define VOUT_ADC_TRIGGER_DELAY       80         // With respect to the start of the PWM cycle 
 #define SLOPE_START_DELAY           100         // With respect to the start of the PWM cycle; ToDo: How is this influenced by the settling and steady-state time of the DAC-slope generator?
 #define SLOPE_STOP_DELAY            800         // With respect to the start of the PWM cycle
 

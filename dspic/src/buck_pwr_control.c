@@ -33,7 +33,7 @@ volatile uint16_t init_buck_pwr_control(void) {
     
     c2p2z_buck_Init();
     
-    c2p2z_buck.ADCTriggerOffset = 80;
+    c2p2z_buck.ADCTriggerOffset = VOUT_ADC_TRIGGER_DELAY;
     c2p2z_buck.ptrADCTriggerRegister = &PG3TRIGA;
     c2p2z_buck.InputOffset = 0;
     c2p2z_buck.ptrControlReference = &data.buck_vref;
