@@ -23,23 +23,7 @@
 #include <stdio.h>
 #include "device/dev_uart1.h"
 #include "misc/global.h"
-
-#define __print_serial_size 64
-
-/*
-static inline void UartSendText(char *pstring)
-{
-    while (*pstring != '\0')
-    {
-        while(Dev_UART1_TransmitBufferIsFull());    //wait while transmit buffer is full
-        Dev_UART1_Write(*pstring++);
-    }
-}
-*/
-
-#define PrintSerialInit()  do{  UartSendText("\n\r"); } while(0)
-#define PrintSerial(...)   do{char __print_utils_string[__print_serial_size]; sprintf(__print_utils_string, __VA_ARGS__); Dev_UART1_WriteStringBlocking(__print_utils_string); } while(0)
-
+#include "misc/helpers.h"
 
 void App_Logger_Init(void)
 {
@@ -51,19 +35,21 @@ void App_Logger_LogData(void)
 {
     double volt2;
     PrintSerial("==================================\n\r");
-    PrintSerial("Packet count = %d\n\r", global_data.packet_counter);
-    PrintSerial("Vbuck  =  %2.2f V\n\r", global_data.voltage_buck);
-    PrintSerial("Vboost = %2.2f V\n\r", global_data.voltage_boost);
-    PrintSerial("Vinput =  %2.2f V\n\r", global_data.voltage_input);
-    PrintSerial("Temp   = %d deg C\n\r",  global_data.temperature);
-    volt2 = global_data.voltage_buck * global_data.voltage_buck;            //TODO: seems to be wrong to me, P = U*I
-    PrintSerial("P buck = %1.2f W, ", volt2 * global_data.load_buck);
-    PrintSerial("step = %1.2f W\n\r", volt2 * global_data.step_load_buck);
-    volt2 = global_data.voltage_boost * global_data.voltage_boost;          //TODO: seems to be wrong to me, P = U*I
-    PrintSerial("Pboost = %1.2f W, ", volt2 * global_data.load_boost);
-    PrintSerial("step = %1.2f W\n\r", volt2 * global_data.step_load_boost);
-    PrintSerial("Buck faults:  OCP %d, OVP %d, REG %d\n\r", global_data.fault_ocp_buck, global_data.fault_ovp_buck, global_data.fault_reg_buck);
-    PrintSerial("Boost faults: OCP %d, OVP %d, REG %d\n\r", global_data.fault_ocp_boost, global_data.fault_ovp_boost, global_data.fault_reg_boost);
+    PrintSerial("Packet count = %d\n\r", global_data.pic24_packet_counter);
+    PrintSerial("Vbuck  =  %2.2f V\n\r", global_data.buck.output_voltage);
+    PrintSerial("Vboost = %2.2f V\n\r", global_data.boost.output_voltage);
+    PrintSerial("Vinput =  %2.2f V\n\r", global_data.board.input_voltage);
+    PrintSerial("Temp   = %d deg C\n\r",  global_data.board.temperature);
+    volt2 = global_data.buck.output_voltage * global_data.buck.output_voltage;            //TODO: seems to be wrong to me, P = U*I
+    PrintSerial("P buck = %1.2f W, ", volt2 * global_data.buck.load);
+    PrintSerial("step = %1.2f W\n\r", volt2 * global_data.buck.step_load);
+    volt2 = global_data.boost.output_voltage * global_data.boost.output_voltage;          //TODO: seems to be wrong to me, P = U*I
+    PrintSerial("Pboost = %1.2f W, ", volt2 * global_data.boost.load);
+    PrintSerial("step = %1.2f W\n\r", volt2 * global_data.boost.step_load);
+    PrintSerial("Buck faults:  OCP %d, OVP %d, REG %d\n\r",
+        global_data.buck.fault_overcurrentprotection, global_data.buck.fault_overvoltageprotection, global_data.buck.fault_reg);
+    PrintSerial("Boost faults: OCP %d, OVP %d, REG %d\n\r",
+        global_data.boost.fault_overcurrentprotection, global_data.boost.fault_overvoltageprotection, global_data.boost.fault_reg);
 }
 
 

@@ -13,6 +13,16 @@
 // PAID DIRECTLY TO MICROCHIP FOR THIS SOFTWARE.
 //======================================================================================================================
 
+//======================================================================================================================
+// @file dev_button.c
+//
+// @brief contains the driver for the button
+//
+// @note this driver is not suited for multiple buttons but only for one button
+//
+//======================================================================================================================
+
+
 #include <xc.h>
 #include <stdbool.h>
 #include "device/dev_button.h"

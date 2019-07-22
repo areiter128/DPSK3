@@ -32,43 +32,40 @@ extern "C" {
 
 typedef struct
 {
-    uint16_t reference_voltage;     // this is the target voltage for the control loop
-    uint16_t output_voltage;        // this is the output voltage of the buck/boost converter
-    uint16_t output_current;        // this is the output current of the buck/boost converter
+    uint16_t    output_current;     // this is the output current of the buck/boost converter
+    uint16_t    reference_voltage;  // this is the target voltage for the control loop
+    double      output_voltage;     // this is the output voltage of the buck/boost converter
+    double      load;               // data is coming from the pic24 communication
+    double      step_load;          // data is coming from the pic24 communication
+    uint8_t     fault_overvoltageprotection:1;  // data is coming from the pic24 communication
+    uint8_t     fault_overcurrentprotection:1;  // data is coming from the pic24 communication
+    uint8_t     fault_reg:1;
+    uint8_t     :5;
 } ControlLoopData_t;
 
 
 typedef struct
 {
-    double  voltage_buck;
-    double  voltage_boost;
-    double  voltage_input;
-    double  load_buck;
-    double  step_load_buck;
-    double  load_boost;
-    double  step_load_boost;
-    uint8_t temperature;
-    uint8_t packet_counter;
-    uint8_t fault_ocp_buck:1;
-    uint8_t fault_ovp_buck:1;
-    uint8_t fault_ocp_boost:1;
-    uint8_t fault_ovp_boost:1;
-    uint8_t fault_reg_buck:1;
-    uint8_t fault_reg_boost:1;
+    double      input_voltage;      // input voltage on the board connector
+    uint8_t     temperature;        // board temperature - coming from the pic24 communication
+} BoardData_t;
+
+
+typedef struct
+{
+    ControlLoopData_t buck;
+    ControlLoopData_t boost;
+    BoardData_t board;
+    uint8_t pic24_packet_counter;
     uint8_t :2;
-} print_data_t;
+} GlobalData_t;
 
+extern GlobalData_t     global_data;
+extern protocol_data_t  global_proto24data;
 
-// Variables to exchange with the Control loop and other modules
-extern ControlLoopData_t globaldata_buck;
-extern ControlLoopData_t globaldata_boost;
+void Global_UpdateBoardData(void);
 
-extern print_data_t global_data;
-extern protocol_data_t global_proto24data;
-//debug variables
-//extern uint16_t global_debug_uart2_rx_counter;
-//extern uint16_t global_debug_uart2_tx_counter;
-
+void Global_UpdateProto24Data(void);
 
 
 #ifdef	__cplusplus

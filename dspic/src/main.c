@@ -1,10 +1,29 @@
-/*
- * File:   main.c
- * Author: M91406
- *
- * Created on July 8, 2019, 1:52 PM
- */
+//======================================================================================================================
+// Copyright(c) 2018 Microchip Technology Inc. and its subsidiaries.
+// Subject to your compliance with these terms, you may use Microchip software and any derivatives exclusively with
+// Microchip products. It is your responsibility to comply with third party license terms applicable to your use of
+// third-party software (including open source software) that may accompany Microchip software.
+// THIS SOFTWARE IS SUPPLIED BY MICROCHIP "AS IS". NO WARRANTIES, WHETHER EXPRESS, IMPLIED OR STATUTORY, APPLY TO
+// THIS SOFTWARE, INCLUDING ANY IMPLIED WARRANTIES OF NON-INFRINGEMENT, MERCHANTABILITY, AND FITNESS FOR A PARTICULAR
+// PURPOSE.
+// IN NO EVENT WILL MICROCHIP BE LIABLE FOR ANY INDIRECT, SPECIAL, PUNITIVE, INCIDENTAL OR CONSEQUENTIAL LOSS, DAMAGE,
+// COST OR EXPENSE OF ANY KIND WHATSOEVER RELATED TO THE SOFTWARE, HOWEVER CAUSED, EVEN IF MICROCHIP HAS BEEN ADVISED
+// OF THE POSSIBILITY OR THE DAMAGES ARE FORESEEABLE. TO THE FULLEST EXTENT ALLOWED BY LAW, MICROCHIP'S TOTAL LIABILITY
+// ON ALL CLAIMS IN ANY WAY RELATED TO THIS SOFTWARE WILL NOT EXCEED THE AMOUNT OF FEES, IF ANY, THAT YOU HAVE
+// PAID DIRECTLY TO MICROCHIP FOR THIS SOFTWARE.
+//======================================================================================================================
 
+//======================================================================================================================
+// @file main.c
+//
+// @brief contains the main function for the Digital Power Starter Kit Version 3 (aka DPSK3)
+//
+// @author M91406
+// @author M91281
+// @author M52409
+//
+// @date July 8, 2019, 1:52 PM
+//======================================================================================================================
 
 #include <xc.h>
 #include <stdbool.h>
@@ -16,8 +35,12 @@
 #include "app/app_proto24.h"
 #include "app/app_logger.h"
 #include "app/app_fault_handling.h"
+#ifdef TEST_ENABLED
+#include "app/app_test.h"
+#endif  // TEST_ENABLED
 #include "misc/delay.h"
 #include "misc/global.h"
+#include "misc/dummy_compensator.h"
 #include "main.h"
 
 #define TMR1_TIMEOUT    30000   // Timeout protection for Timer1 interrupt flag bit
@@ -29,17 +52,11 @@ volatile uint16_t tasks_10ms_counter = 0;       // local counter for 10ms tasks
 volatile uint16_t tasks_100ms_counter = 0;      // local counter for 100ms tasks
 volatile uint16_t time_counter_logger = 0;      // for the timing of the logger
 
-
 inline void Tasks_MainTaskLoop(void);
 inline void Tasks_100us(void);
 inline void Tasks_1ms(void);
 inline void Tasks_10ms(void);
 inline void Tasks_100ms(void);
-
-void mainDataExtract(void);
-double mainGetLoadBuck(uint8_t bits);
-double mainGetLoadBoost(uint8_t bits);
-void GetVoltages(void);
 
 int main(void)
 {
@@ -60,21 +77,21 @@ int main(void)
     // the PROTO_SYS_RESET message was eliminated because the pic24 does reset itself too which it should not do
     //App_Proto24_Send(PROTO_SYS_RESET);
 
-    GetVoltages();
-    global_data.packet_counter = 0;
+    Global_UpdateBoardData();
+    global_data.pic24_packet_counter = 0;
 
     //Dev_Lcd_WriteStringXY(0,0,"MICROCHIP  dsPIC");
     //Dev_Lcd_WriteStringXY(0,1,"  33CK256MP505  ");
-    //Dev_Lcd_WriteString("\vMICROCHIP  dsPIC  33CK256MP505  ");    //would work too without XY
     
     _T1IP = 1;  // Set interrupt priority to one (cpu is running on ip zero)
     _T1IF = 0;  // Reset interrupt flag bit
     _T1IE = 1;  // Enable Timer1 interrupt
     
-    //Dev_UART1_WriteStringBlocking("Booting up the DPSK3!!\r\n");;
-            
+#ifdef TEST_ENABLED
+    App_Test();
+#else
     Tasks_MainTaskLoop();
-    
+#endif  // TEST_ENABLED
     return (0);
 }
 
@@ -104,7 +121,7 @@ inline void Tasks_MainTaskLoop(void)
 
 //======================================================================================================================
 //  @brief  the function Tasks_100us gets called every 100µs, put your things in it that need to be called that often
-//  @note   make sure that calls don't get lost even if this function takes longer than 100µs !!!!
+//  @note   make sure that calls don't get lost even if this function takes longer than 100µs !
 //======================================================================================================================
 inline void Tasks_100us(void)
 {
@@ -122,12 +139,12 @@ inline void Tasks_100us(void)
 //======================================================================================================================
 inline void Tasks_1ms(void)
 {
-    App_Proto24_Task_1ms();
     App_Fault_Handling_Task_1ms();
+    App_Proto24_Task_1ms();
     if(App_Proto24_IsNewDataAvailable())
     {
         App_Proto24_GetData(&global_proto24data);
-        mainDataExtract();
+        Global_UpdateProto24Data();
     }
 
     if (tasks_10ms_counter++ >= 10)
@@ -152,7 +169,6 @@ inline void Tasks_10ms(void)
     }
 }
 
-
 //======================================================================================================================
 //  @brief  the function Tasks_100ms gets called every 100 ms, put your things in it that need to be called regularly
 //  @note   there can be some jitter here because it is not called by a timer interrupt
@@ -161,7 +177,7 @@ inline void Tasks_100ms(void)
 {
     DBGLED_TOGGLE;              // Toggle debug LED
     App_Display_Task_100ms();   // calling the display application that contains the main state machine
-    GetVoltages();
+    Global_UpdateBoardData();
     
     time_counter_logger++;
     if (time_counter_logger == 8)
@@ -172,73 +188,4 @@ inline void Tasks_100ms(void)
         time_counter_logger = 0;
     }
 }
-
-
-void mainDataExtract(void)
-{
-    global_data.temperature     = global_proto24data.temperature;
-    global_data.load_buck       = mainGetLoadBuck(global_proto24data.load_status.buck_still);
-    global_data.step_load_buck  = mainGetLoadBuck(global_proto24data.load_status.buck_blink);
-    global_data.load_boost      = mainGetLoadBoost(global_proto24data.load_status.boost_still);
-    global_data.step_load_boost = mainGetLoadBoost(global_proto24data.load_status.boost_blink);
-    global_data.fault_ocp_buck  = global_proto24data.fault_status.fault_ocp_buck;
-    global_data.fault_ovp_buck  = global_proto24data.fault_status.fault_ovp_buck;
-    global_data.fault_ocp_boost = global_proto24data.fault_status.fault_ocp_boost;
-    global_data.fault_ovp_boost = global_proto24data.fault_status.fault_ovp_boost;
-    global_data.packet_counter++;
-}
-
-//returns 1/ohms, because the loads are in parallel
-double mainGetLoadBuck(uint8_t bits)
-{
-    double retval = 0.0;
-    if(bits & 4)
-        retval = 1.0/6.65;
-    if(bits & 2)
-        retval = retval + 1.0/8.25;
-    if(bits & 1)
-        retval = retval + 1.0/33.0;
-    return retval;
-}
-
-//returns 1/ohms
-double mainGetLoadBoost(uint8_t bits)
-{
-    double retval = 0.0;
-    if(bits & 4)
-        retval = 1.0/150.0;
-    if(bits & 2)
-        retval = retval + 1.0/215.0;
-    if(bits & 1)
-        retval = retval + 1.0/499.0;
-    return retval;
-}
-
-// TODO: This is a dummy functions to fake the ADC values as long as they are not implemented
-double GetVoltageBuck(void)     //fake, just for testing
-{
-    return 1.5;
-}
-// TODO: This is a dummy functions to fake the ADC values as long as they are not implemented
-double GetVoltageBoost(void)     //fake, just for testing
-{
-    return 2.3;
-}
-// TODO: This is a dummy functions to fake the ADC values as long as they are not implemented
-double GetVoltageInput(void)     //fake, just for testing
-{
-    return 3.4;
-}
-
-void GetVoltages(void)
-{
-    global_data.voltage_buck  = GetVoltageBuck();
-    global_data.voltage_boost = GetVoltageBoost();
-    global_data.voltage_input = GetVoltageInput();
-//    global_data.fault_reg_buck  = buck_event; 
-//    global_data.fault_reg_boost = boost_event;
-    global_data.fault_reg_buck  = false;             //TODO: fake, just for testing
-    global_data.fault_reg_boost = false;             //TODO: fake, just for testing
-}
-
 

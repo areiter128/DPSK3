@@ -14,47 +14,52 @@
 //======================================================================================================================
 
 //======================================================================================================================
-// @file dev_button.h
+// @file helpers.c
 //
-// @brief contains the driver for the button
-//
-// @note this driver is not suited for multiple buttons but only for one button
+// @brief misc functions that are helpful for the project and there is no suitable place elsewhere
 //
 //======================================================================================================================
 
-#ifndef _DEV_BUTTON_H_
-#define	_DEV_BUTTON_H_
-
+//#include <string.h>
+#include <stdio.h>
 #include <stdint.h>
-#include <xc.h>
-
-#ifdef	__cplusplus
-extern "C" {
-#endif
+#include <stdarg.h>
+#include "device/dev_lcd.h"
+#include "device/dev_uart1.h"
 
 
-#define DEV_BUTTON_EVENT_NONE           0
-#define DEV_BUTTON_EVENT_PRESSED_SHORT  1
-#define DEV_BUTTON_EVENT_PRESSED_LONG   2
+/*
+void PrintLcd(uint8_t linenumber, char *format, ...)
+{
+    char tmpstr[TEMPSTR_LCD_SIZE];
+    va_list args;
 
-//======================================================================================================================
-// @brief initializes the button device, needs to be called once at boot up before that device can be used
-//======================================================================================================================
-extern void Dev_Button_Init(void);
+    va_start(args, format);
+    sprintf(tmpstr, format, args);
+    va_end(args);
 
-//======================================================================================================================
-// @brief this function returns the event of the button like specified in the Dev_BUTTON_EVENT_* events above
-// @returns event of the button
-//======================================================================================================================
-extern uint8_t Dev_Button_GetEvent(void);
-
-//======================================================================================================================
-// @brief this function evaluates the button status/events and needs to be called approximately every 10 ms
-//======================================================================================================================
-extern void Dev_Button_Task_10ms(void);
-
-#ifdef	__cplusplus
+    Dev_Lcd_WriteStringXY(0, linenumber, tmpstr);
 }
-#endif
+*/
 
-#endif	// _DEV_BUTTON_H_
+/*
+
+void PrintSerialInit()
+{
+    //UartSendText("\n\r");
+    Dev_UART1_WriteStringBlocking("\n\r"); 
+}
+
+void PrintSerial( char *format, ...)
+{
+    char tmpstr[TEMPSTR_SERIAL_SIZE];
+    //sprintf(tmpstr, __VA_ARGS__);
+    va_list args;
+
+    va_start(args, format);
+    sprintf(tmpstr, format, args);
+    va_end(args);
+
+    Dev_UART1_WriteStringBlocking(tmpstr); 
+}
+*/

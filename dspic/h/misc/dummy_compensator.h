@@ -14,47 +14,19 @@
 //======================================================================================================================
 
 //======================================================================================================================
-// @file dev_button.h
+// @file dummy_compensator.h
 //
-// @brief contains the driver for the button
-//
-// @note this driver is not suited for multiple buttons but only for one button
+// @brief as long we do not have the real compensator merged into this project this file will provide dummy functions for that
 //
 //======================================================================================================================
 
-#ifndef _DEV_BUTTON_H_
-#define	_DEV_BUTTON_H_
 
-#include <stdint.h>
-#include <xc.h>
+double GetVoltageBuck(void);
 
-#ifdef	__cplusplus
-extern "C" {
-#endif
+double GetVoltageBoost(void);
 
+double GetVoltageInput(void);
 
-#define DEV_BUTTON_EVENT_NONE           0
-#define DEV_BUTTON_EVENT_PRESSED_SHORT  1
-#define DEV_BUTTON_EVENT_PRESSED_LONG   2
+uint16_t GetDacBuck(void);
 
-//======================================================================================================================
-// @brief initializes the button device, needs to be called once at boot up before that device can be used
-//======================================================================================================================
-extern void Dev_Button_Init(void);
-
-//======================================================================================================================
-// @brief this function returns the event of the button like specified in the Dev_BUTTON_EVENT_* events above
-// @returns event of the button
-//======================================================================================================================
-extern uint8_t Dev_Button_GetEvent(void);
-
-//======================================================================================================================
-// @brief this function evaluates the button status/events and needs to be called approximately every 10 ms
-//======================================================================================================================
-extern void Dev_Button_Task_10ms(void);
-
-#ifdef	__cplusplus
-}
-#endif
-
-#endif	// _DEV_BUTTON_H_
+uint16_t GetDacBoost(void);

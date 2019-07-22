@@ -14,47 +14,43 @@
 //======================================================================================================================
 
 //======================================================================================================================
-// @file dev_button.h
+// @file dummy_compensator.c
 //
-// @brief contains the driver for the button
-//
-// @note this driver is not suited for multiple buttons but only for one button
+// @brief as long we do not have the real compensator merged into this project this file will provide dummy functions for that
 //
 //======================================================================================================================
 
-#ifndef _DEV_BUTTON_H_
-#define	_DEV_BUTTON_H_
+#include "stdint.h"
 
-#include <stdint.h>
-#include <xc.h>
-
-#ifdef	__cplusplus
-extern "C" {
-#endif
-
-
-#define DEV_BUTTON_EVENT_NONE           0
-#define DEV_BUTTON_EVENT_PRESSED_SHORT  1
-#define DEV_BUTTON_EVENT_PRESSED_LONG   2
-
-//======================================================================================================================
-// @brief initializes the button device, needs to be called once at boot up before that device can be used
-//======================================================================================================================
-extern void Dev_Button_Init(void);
-
-//======================================================================================================================
-// @brief this function returns the event of the button like specified in the Dev_BUTTON_EVENT_* events above
-// @returns event of the button
-//======================================================================================================================
-extern uint8_t Dev_Button_GetEvent(void);
-
-//======================================================================================================================
-// @brief this function evaluates the button status/events and needs to be called approximately every 10 ms
-//======================================================================================================================
-extern void Dev_Button_Task_10ms(void);
-
-#ifdef	__cplusplus
+// TODO: This is a dummy function to fake the ADC values as long as they are not implemented
+double GetVoltageBuck(void)     //fake, just for testing
+{
+//    return BUCKVOLTAGE_GET(buckVoltage);
+    return 3.3;
 }
-#endif
+// TODO: This is a dummy functions to fake the ADC values as long as they are not implemented
+double GetVoltageBoost(void)     //fake, just for testing
+{
+//    return BOOSTVOLTAGE_GET(boostVoltage);
+    return 15.1;
+}
+// TODO: This is a dummy functions to fake the ADC values as long as they are not implemented
+double GetVoltageInput(void)     //fake, just for testing
+{
+//    return INPUTVOLTAGE_GET(inputVoltage);
+    return 9.1;
+}
 
-#endif	// _DEV_BUTTON_H_
+// TODO: This is a dummy functions to fake the ADC values as long as they are not implemented
+uint16_t GetDacBuck(void)
+{
+//    return PDMDAC_GetValue(DAC_BUCK_INSTANCE);
+    return 254;     // hopefully a right estimation near 25% if the value is 10 bit
+}
+
+// TODO: This is a dummy functions to fake the ADC values as long as they are not implemented
+uint16_t GetDacBoost(void)
+{
+//    return PDMDAC_GetValue(DAC_BOOST_INSTANCE);
+    return 257;     // hopefully a right estimation near 25% if the value is 10 bit
+}

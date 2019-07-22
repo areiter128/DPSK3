@@ -26,14 +26,12 @@
 #include "device/dev_button.h"
 #include "app/app_fault_handling.h"
 #include "misc/global.h"
+#include "misc/helpers.h"
 
 //======================================================================================================================
 // defines
 //======================================================================================================================
 
-#define __print_lcd_size    32
-// PrintLcd helps to make printing on the Lcd easier
-#define PrintLcd(LINE, ...)       do{char __print_utils_string[__print_lcd_size]; sprintf(__print_utils_string, __VA_ARGS__); Dev_Lcd_WriteStringXY(0, LINE, __print_utils_string); } while(0)
 
 //======================================================================================================================
 // scree page defines
@@ -253,34 +251,36 @@ void App_RefreshDisplay(void)
             break;
 */
         case PAGE_VOLTAGES:
-            PrintLcd(0, "Vbuck  =  %2.2f V ", global_data.voltage_buck);
-            PrintLcd(1, "Vboost = %2.2f V ", global_data.voltage_boost);
+            PrintLcd(0, "Vbuck  =  %2.2f V ", global_data.buck.output_voltage);
+            PrintLcd(1, "Vboost = %2.2f V ", global_data.boost.output_voltage);
             break;
         case PAGE_LOAD_BUCK:
             {
-                double volt2 = global_data.voltage_buck * global_data.voltage_buck;     //TODO: seems to be wrong to me, P = U*I
-                PrintLcd(0, "P buck = %1.2f W ", volt2 * global_data.load_buck);
-                PrintLcd(1, "step   = %1.2f W ", volt2 * global_data.step_load_buck);
+                double volt2 = global_data.buck.output_voltage * global_data.buck.output_voltage;     //TODO: seems to be wrong to me, P = U*I
+                PrintLcd(0, "P buck = %1.2f W ", volt2 * global_data.buck.load);
+                PrintLcd(1, "step   = %1.2f W ", volt2 * global_data.buck.step_load);
             }
             break;
         case PAGE_LOAD_BOOST:
             {
-                double volt2 = global_data.voltage_boost * global_data.voltage_boost;   //TODO: seems to be wrong to me, P = U*I
-                PrintLcd(0, "Pboost = %1.2f W    ", volt2 * global_data.load_boost);
-                PrintLcd(1, "step   = %1.2f W    ", volt2 * global_data.step_load_boost);
+                double volt2 = global_data.boost.output_voltage * global_data.boost.output_voltage;   //TODO: seems to be wrong to me, P = U*I
+                PrintLcd(0, "Pboost = %1.2f W    ", volt2 * global_data.boost.load);
+                PrintLcd(1, "step   = %1.2f W    ", volt2 * global_data.boost.step_load);
             }
             break;
         case PAGE_VIN_TEMP:
-            PrintLcd(0,"Vin  =  %2.2f V   ", global_data.voltage_input);
-            PrintLcd(1,"Temp = %d deg C   ", global_data.temperature);
+            PrintLcd(0,"Vin  =  %2.2f V   ", global_data.board.input_voltage);
+            PrintLcd(1,"Temp = %d deg C   ", global_data.board.temperature);
             break;
         case PAGE_BUCK_FAULTS:
             PrintLcd(0,"Buck faults:    ");
-            PrintLcd(1,"OC %d OV %d REG %d ", global_data.fault_ocp_buck,  global_data.fault_ovp_buck, global_data.fault_reg_buck);
+            PrintLcd(1,"OC %d OV %d REG %d ",
+                global_data.buck.fault_overcurrentprotection, global_data.buck.fault_overvoltageprotection, global_data.buck.fault_reg);
             break;
         case PAGE_BOOST_FAULTS:
             PrintLcd(0,"Boost faults:   ");
-            PrintLcd(1,"OC %d OV %d REG %d ", global_data.fault_ocp_boost,  global_data.fault_ovp_boost, global_data.fault_reg_boost);
+            PrintLcd(1,"OC %d OV %d REG %d ",
+                global_data.boost.fault_overcurrentprotection, global_data.boost.fault_overvoltageprotection, global_data.boost.fault_reg);
             break;
         case PAGE_FAULT_HANDLING:
             PrintLcd(0,"Fault bits:     ");
