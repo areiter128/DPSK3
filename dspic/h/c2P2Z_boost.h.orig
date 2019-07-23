@@ -8,7 +8,11 @@
  * 	Sampling Frequency:	250000 Hz 
  * 	Fixed Point Format:	15
  * 	Scaling Mode:		3 - Dual Bit-Shift Scaling
+<<<<<<< HEAD
  * 	Input Gain:			0.125
+=======
+ * 	Input Gain:			1
+>>>>>>> develop
  * 
  * ***************************************************************************************/
 

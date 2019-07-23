@@ -1,4 +1,5 @@
 [GUI]
+<<<<<<< HEAD
 CreateDate=07/16/2019 02:55:41 PM
 SaveDate=07/16/2019 04:07:17 PM
 Name=z-Domain Control Loop Designer
@@ -8,6 +9,17 @@ Top=-8
 Left=-8
 Height=1066
 Width=1936
+=======
+CreateDate=07/16/2019 02:40:13 PM
+SaveDate=07/16/2019 02:49:54 PM
+Name=z-Domain Control Loop Designer
+Version=0.9.0.61
+WindoWState=Normal
+Top=57
+Left=260
+Height=894
+Width=1424
+>>>>>>> develop
 TabHeight=244
 [ControlSetup]
 ControlType=1

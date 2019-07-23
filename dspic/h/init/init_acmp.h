@@ -20,33 +20,35 @@
  */
 
 /* 
- * File:   init_fosc.h
- * Author: M91406
- * Comments: Initializes the internal RC oscillator and PLL for 100 MIPS operation
+ * File:   
+ * Author: 
+ * Comments:
  * Revision history: 
- * 1.0  initial version
  */
 
 // This is a guard condition so that contents of this file are not included
 // more than once.  
-#ifndef INITIALIZE_FRC_OSCILLATOR_H
-#define	INITIALIZE_FRC_OSCILLATOR_H
+#ifndef INITIALIZE_ANALOG_COMPARATOR_H
+#define	INITIALIZE_ANALOG_COMPARATOR_H
 
 #include <xc.h> // include processor files - each processor file is guarded.  
 #include <stdint.h>
 #include <stdbool.h>
 
-
 #ifdef	__cplusplus
 extern "C" {
 #endif /* __cplusplus */
 
-extern volatile uint16_t init_fosc(void);
-extern volatile uint16_t init_aclk(void);
-    
+extern volatile uint16_t init_acmp_module(void);
+extern volatile uint16_t init_buck_acmp(void);
+extern volatile uint16_t init_boost_acmp(void);
+
+extern volatile uint16_t launch_buck_acmp(void);
+extern volatile uint16_t launch_boost_acmp(void);
+
 #ifdef	__cplusplus
 }
 #endif /* __cplusplus */
 
-#endif	/* INITIALIZE_FRC_OSCILLATOR_H */
+#endif	/* INITIALIZE_ANALOG_COMPARATOR_H */
 

@@ -42,6 +42,8 @@
       <itemPath>h/main.h</itemPath>
       <itemPath>h/buck_pwr_control.h</itemPath>
       <itemPath>h/boost_pwr_control.h</itemPath>
+      <itemPath>h/c2P2Z_boost.h</itemPath>
+      <itemPath>h/npnz16b.h</itemPath>
       <itemPath>h/c2p2z_buck.h</itemPath>
     </logicalFolder>
     <logicalFolder name="LinkerScript"
@@ -86,6 +88,8 @@
       <itemPath>src/config_bits.c</itemPath>
       <itemPath>src/boost_pwr_control.c</itemPath>
       <itemPath>src/buck_pwr_control.c</itemPath>
+      <itemPath>src/c2P2Z_boost.c</itemPath>
+      <itemPath>src/c2P2Z_boost_asm.s</itemPath>
       <itemPath>src/c2p2z_buck.c</itemPath>
       <itemPath>src/c2p2z_buck_asm.s</itemPath>
     </logicalFolder>
@@ -93,8 +97,12 @@
                    displayName="Important Files"
                    projectFiles="false">
       <itemPath>Makefile</itemPath>
-      <itemPath>ctrl_boost.dcld</itemPath>
+<<<<<<< HEAD
+      <itemPath>MyConfig.mc3</itemPath>
       <itemPath>buck_loop.dcld</itemPath>
+=======
+>>>>>>> develop
+      <itemPath>ctrl_boost.dcld</itemPath>
     </logicalFolder>
   </logicalFolder>
   <sourceRootList>

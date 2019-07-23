@@ -36,7 +36,7 @@
 #include <stdint.h>
 #include <stdbool.h>
 
-#include "../../h/main.h"
+#include "main.h"
 
 #ifdef DPSK3_R30
 // DPSK3 Debug Pins 
@@ -45,10 +45,24 @@
     #define DBGLED_TOGGLE	{ _LATB6 ^= 1; }
     #define DBGLED_INIT		{ _LATB6 = 0; _TRISB6 = 0; }
 
-    #define DBGPIN_SET		{ _LATB5 = 1; }
-    #define DBGPIN_CLEAR	{ _LATB5 = 0; }
-    #define DBGPIN_TOGGLE	{ _LATB5 ^= 1; }
-    #define DBGPIN_INIT		{ _LATB5 = 0; _TRISB5 = 0; }
+    // TP50
+    #define DBGPIN_1_SET	{ _LATB5 = 1; }
+    #define DBGPIN_1_CLEAR	{ _LATB5 = 0; }
+    #define DBGPIN_1_TOGGLE	{ _LATB5 ^= 1; }
+    #define DBGPIN_1_INIT	{ _LATB5 = 0; _TRISB5 = 0; }
+
+    // TP52
+    #define DBGPIN_2_SET	{ _LATB11 = 1; }
+    #define DBGPIN_2_CLEAR	{ _LATB11 = 0; }
+    #define DBGPIN_2_TOGGLE	{ _LATB11 ^= 1; }
+    #define DBGPIN_2_INIT	{ _LATB11 = 0; _TRISB11 = 0; }
+
+    // TP53
+    #define DBGPIN_3_SET	{ _LATB12 = 1; }
+    #define DBGPIN_3_CLEAR	{ _LATB12 = 0; }
+    #define DBGPIN_3_TOGGLE	{ _LATB12 ^= 1; }
+    #define DBGPIN_3_INIT	{ _LATB12 = 0; _TRISB12 = 0; }
+
 #endif
 
 #ifdef MA330048_R30

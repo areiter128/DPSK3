@@ -19,34 +19,38 @@
  * TERMS. 
  */
 
+
 /* 
- * File:   init_fosc.h
+ * File:   init_adc.h
  * Author: M91406
- * Comments: Initializes the internal RC oscillator and PLL for 100 MIPS operation
+ * Comments: Initializes the ADC module
  * Revision history: 
  * 1.0  initial version
  */
 
 // This is a guard condition so that contents of this file are not included
 // more than once.  
-#ifndef INITIALIZE_FRC_OSCILLATOR_H
-#define	INITIALIZE_FRC_OSCILLATOR_H
+#ifndef INITIALIZE_ADC_MODULE_H
+#define	INITIALIZE_ADC_MODULE_H
 
 #include <xc.h> // include processor files - each processor file is guarded.  
 #include <stdint.h>
 #include <stdbool.h>
 
-
 #ifdef	__cplusplus
 extern "C" {
 #endif /* __cplusplus */
 
-extern volatile uint16_t init_fosc(void);
-extern volatile uint16_t init_aclk(void);
-    
+extern volatile uint16_t init_adc_module(void);
+extern volatile uint16_t init_vin_adc(void);
+extern volatile uint16_t init_buck_adc(void);
+extern volatile uint16_t init_boost_adc(void);
+
+extern volatile uint16_t launch_adc(void);
+
 #ifdef	__cplusplus
 }
 #endif /* __cplusplus */
 
-#endif	/* INITIALIZE_FRC_OSCILLATOR_H */
+#endif	/* INITIALIZE_ADC_MODULE_H */
 
