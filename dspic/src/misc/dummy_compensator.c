@@ -1,0 +1,56 @@
+//======================================================================================================================
+// Copyright(c) 2018 Microchip Technology Inc. and its subsidiaries.
+// Subject to your compliance with these terms, you may use Microchip software and any derivatives exclusively with
+// Microchip products. It is your responsibility to comply with third party license terms applicable to your use of
+// third-party software (including open source software) that may accompany Microchip software.
+// THIS SOFTWARE IS SUPPLIED BY MICROCHIP "AS IS". NO WARRANTIES, WHETHER EXPRESS, IMPLIED OR STATUTORY, APPLY TO
+// THIS SOFTWARE, INCLUDING ANY IMPLIED WARRANTIES OF NON-INFRINGEMENT, MERCHANTABILITY, AND FITNESS FOR A PARTICULAR
+// PURPOSE.
+// IN NO EVENT WILL MICROCHIP BE LIABLE FOR ANY INDIRECT, SPECIAL, PUNITIVE, INCIDENTAL OR CONSEQUENTIAL LOSS, DAMAGE,
+// COST OR EXPENSE OF ANY KIND WHATSOEVER RELATED TO THE SOFTWARE, HOWEVER CAUSED, EVEN IF MICROCHIP HAS BEEN ADVISED
+// OF THE POSSIBILITY OR THE DAMAGES ARE FORESEEABLE. TO THE FULLEST EXTENT ALLOWED BY LAW, MICROCHIP'S TOTAL LIABILITY
+// ON ALL CLAIMS IN ANY WAY RELATED TO THIS SOFTWARE WILL NOT EXCEED THE AMOUNT OF FEES, IF ANY, THAT YOU HAVE
+// PAID DIRECTLY TO MICROCHIP FOR THIS SOFTWARE.
+//======================================================================================================================
+
+//======================================================================================================================
+// @file dummy_compensator.c
+//
+// @brief as long we do not have the real compensator merged into this project this file will provide dummy functions for that
+//
+//======================================================================================================================
+
+#include "stdint.h"
+
+// TODO: This is a dummy function to fake the ADC values as long as they are not implemented
+double GetVoltageBuck(void)     //fake, just for testing
+{
+//    return BUCKVOLTAGE_GET(buckVoltage);
+    return 3.3;
+}
+// TODO: This is a dummy functions to fake the ADC values as long as they are not implemented
+double GetVoltageBoost(void)     //fake, just for testing
+{
+//    return BOOSTVOLTAGE_GET(boostVoltage);
+    return 15.1;
+}
+// TODO: This is a dummy functions to fake the ADC values as long as they are not implemented
+double GetVoltageInput(void)     //fake, just for testing
+{
+//    return INPUTVOLTAGE_GET(inputVoltage);
+    return 9.1;
+}
+
+// TODO: This is a dummy functions to fake the ADC values as long as they are not implemented
+uint16_t GetDacBuck(void)
+{
+//    return PDMDAC_GetValue(DAC_BUCK_INSTANCE);
+    return 254;     // hopefully a right estimation near 25% if the value is 10 bit
+}
+
+// TODO: This is a dummy functions to fake the ADC values as long as they are not implemented
+uint16_t GetDacBoost(void)
+{
+//    return PDMDAC_GetValue(DAC_BOOST_INSTANCE);
+    return 257;     // hopefully a right estimation near 25% if the value is 10 bit
+}
