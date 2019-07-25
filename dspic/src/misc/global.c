@@ -24,6 +24,7 @@
 #include "misc/global.h"
 #include "misc/helpers.h"
 #include "misc/dummy_compensator.h"
+#include "driver/drv_buck_power_controller.h"
 
 GlobalData_t    global_data;
 protocol_data_t global_proto24data;
@@ -59,7 +60,7 @@ double GetLoadBoost(uint8_t bits)
 
 void Global_UpdateBoardData(void)
 {
-    global_data.buck.output_voltage  = GetVoltageBuck();
+    global_data.buck.output_voltage  = Drv_BuckPowerController_GetOutputVoltage();
     global_data.boost.output_voltage = GetVoltageBoost();
     global_data.board.input_voltage = GetVoltageInput();
 //    global_data.fault_reg_buck  = buck_event; 

@@ -23,6 +23,25 @@
 #include "stdbool.h"
 #include "stdint.h"
 #include "app/app_fault_handling.h"
+#include "driver/drv_buck_power_controller.h"
+
+typedef struct
+{
+    volatile uint16_t trip_cnt_threshold;           // Fault counter threshold triggering fault exception
+    volatile uint16_t trip_cnt;                     // Fault trip counter
+    volatile uint16_t reset_cnt_threshold;          // Fault counter threshold resetting fault exception
+    volatile uint16_t reset_cnt;                    // Fault reset counter
+}__attribute__((packed))FAULTBIT_CONDITION_SETTINGS_t;
+
+typedef struct
+{
+    volatile uint16_t trip_level;                   // Input signal fault trip level/fault trip point
+    volatile uint16_t trip_cnt_threshold;           // Fault counter threshold triggering fault exception
+    volatile uint16_t trip_cnt;                     // Fault trip counter
+    volatile uint16_t reset_level;                  // Input signal fault reset level/fault reset point
+    volatile uint16_t reset_cnt_threshold;          // Fault counter threshold resetting fault exception
+    volatile uint16_t reset_cnt;                    // Fault reset counter
+}__attribute__((packed))FAULTVALUE_CONDITION_SETTINGS_t;
 
 
 uint16_t active_faults = 0;
@@ -40,10 +59,14 @@ bool check_boostcurrent_peak = true;    //check boost current in peak or average
 // voltages: in millivolt
 // currents: in milliampere
 
-// the buck voltage can be programmed from  1V to 3,8V,
-// buck default programmed voltages is 3,3V ==> 3300 mV
-// ==> buck voltage fault trip level        105% ==> 3465 mV for 20 milliseconds
-// ==> buck voltage fault reset level       102% ==> 3366 mV for 100 milliseconds
+// ==> buck overvoltage fault triggered after 5 milliseconds
+// ==> buck overvoltage fault reset after 100 milliseconds
+FAULTBIT_CONDITION_SETTINGS_t fault_handling_data_buck_overvoltage = {5, 0, 100, 0};
+
+// ==> buck undervoltage fault triggered after 5 milliseconds
+// ==> buck undervoltage fault reset after 100 milliseconds
+FAULTBIT_CONDITION_SETTINGS_t fault_handling_data_buck_undervoltage = {5, 0, 100, 0};
+
 
 // buck max. current is 1A ==> 1000 mA
 // ==> buck peak current fault trip level   150% ==> 1500 mA for 10 milliseconds
@@ -53,11 +76,12 @@ bool check_boostcurrent_peak = true;    //check boost current in peak or average
 // ==> buck avg. current fault trip level   105% ==> 1050 mA for 20 milliseconds
 // ==> buck avg. current fault reset level  102% ==> 1020 mA for 100 milliseconds
 
+//FAULT_CONDITION_SETTINGS_t  fault_handling_data_buck_voltage        = { 0, 3465, 20, 3366, 100 };
+FAULTVALUE_CONDITION_SETTINGS_t  fault_handling_data_buck_peak_current   = { 0, 1500, 20, 1100, 100 };
+FAULTVALUE_CONDITION_SETTINGS_t  fault_handling_data_buck_avg_current    = { 0, 1050, 20, 1020, 100 };
 
-FAULT_CONDITION_SETTINGS_t  fault_handling_data_buck_voltage        = { 0, 3465, 20, 3366, 100 };
-FAULT_CONDITION_SETTINGS_t  fault_handling_data_buck_peak_current   = { 0, 1500, 20, 1100, 100 };
-FAULT_CONDITION_SETTINGS_t  fault_handling_data_buck_avg_current    = { 0, 1050, 20, 1020, 100 };
-
+//uint16_t fh_buck_overvoltage_trip = 0;
+uint16_t fh_buck_overvoltage_timer = 0;
 
 // the boost voltage can be programmed from  10V to 17,8V,
 // boost default programmed voltages is 15,0V ==> 15000 mV
@@ -71,18 +95,18 @@ FAULT_CONDITION_SETTINGS_t  fault_handling_data_buck_avg_current    = { 0, 1050,
 // boost max. current is 0,2A ==> 200 mA
 // ==> boost avg. current fault trip level   105% ==> 210 mA for 20 milliseconds
 // ==> boost avg. current fault reset level  102% ==> 204 mA for 100 milliseconds
-FAULT_CONDITION_SETTINGS_t  fault_handling_data_boost_voltage       = { 0, 15750, 20, 15300, 100 };
-FAULT_CONDITION_SETTINGS_t  fault_handling_data_boost_peak_current  = { 0,   300, 20,   220, 100 };
-FAULT_CONDITION_SETTINGS_t  fault_handling_data_boost_avg_current   = { 0,   210, 20,   204, 100 };
+FAULTVALUE_CONDITION_SETTINGS_t  fault_handling_data_boost_voltage       = { 0, 15750, 20, 15300, 100 };
+FAULTVALUE_CONDITION_SETTINGS_t  fault_handling_data_boost_peak_current  = { 0,   300, 20,   220, 100 };
+FAULTVALUE_CONDITION_SETTINGS_t  fault_handling_data_boost_avg_current   = { 0,   210, 20,   204, 100 };
 
 //temperature: tenth degrees Celsius (TODO: or hundredth degrees???)
 //
-FAULT_CONDITION_SETTINGS_t  fault_handling_data_board_temperature   = { 0,   750, 100,  650, 100 };
+FAULTVALUE_CONDITION_SETTINGS_t  fault_handling_data_board_temperature   = { 0,   750, 100,  650, 100 };
 
 // input voltage    minimum     typical     maximum
 //                    6V          9V          13,8V     reset levels: +/- 5%
-FAULT_CONDITION_SETTINGS_t  fault_handling_data_input_overvoltage   = { 0, 13800, 20, 13110, 100 };
-FAULT_CONDITION_SETTINGS_t  fault_handling_data_input_undervoltage  = { 0,  6000, 20,  6300, 100 };
+FAULTVALUE_CONDITION_SETTINGS_t  fault_handling_data_input_overvoltage   = { 0, 13800, 20, 13110, 100 };
+FAULTVALUE_CONDITION_SETTINGS_t  fault_handling_data_input_undervoltage  = { 0,  6000, 20,  6300, 100 };
 
 //======================================================================================================================
 //  @brief  this function initializes the fault handling
@@ -117,10 +141,7 @@ uint16_t Dummy_GetBoardTemperatur(void)
 {
     return 500;     //50,0 degree
 }
-uint16_t Dummy_GetBuckVoltage(void)
-{
-    return 3300;     //3300 mV
-}
+
 uint16_t Dummy_GetBuckCurrent(void)
 {
     return 500;     //500 mA
@@ -139,7 +160,7 @@ uint16_t Dummy_GetBoostCurrent(void)
 //  @brief  this function does the fault monitoring for one value
 //  @note   it can handle maximum checks (like overvoltage) or minimum checks (like undervoltage)
 //======================================================================================================================
-void App_Fault_Handling_CheckFault(FAULT_CONDITION_SETTINGS_t* faultdata, const uint16_t value, uint16_t faultbit)
+void App_Fault_Handling_CheckFaultValue(FAULTVALUE_CONDITION_SETTINGS_t* faultdata, const uint16_t value, uint16_t faultbit)
 {
     if (faultdata->trip_level > faultdata->reset_level)
     {
@@ -195,6 +216,30 @@ void App_Fault_Handling_CheckFault(FAULT_CONDITION_SETTINGS_t* faultdata, const 
     }
 }
 
+//======================================================================================================================
+//  @brief  this function does the fault monitoring for one fault flag
+//======================================================================================================================
+void App_Fault_Handling_CheckFaultBit(FAULTBIT_CONDITION_SETTINGS_t* faultdata, bool faultflag, uint16_t faultbit)
+{
+    //check for maximum
+    if (faultflag)
+    {
+        faultdata->reset_cnt = 0;
+        if (faultdata->trip_cnt < UINT16_MAX)
+            faultdata->trip_cnt++;
+        if (faultdata->trip_cnt > faultdata->trip_cnt_threshold)
+            active_faults |= faultbit;      //set fault bit
+    }
+    else
+    {
+        faultdata->trip_cnt = 0;
+        if (faultdata->reset_cnt < UINT16_MAX)
+            faultdata->reset_cnt++;
+        if (faultdata->reset_cnt > faultdata->reset_cnt_threshold)
+            active_faults &= ~faultbit;     //clear fault bit
+    }
+}
+
 
 //======================================================================================================================
 //  @brief  this function does the fault handling every 1 ms
@@ -204,32 +249,34 @@ void App_Fault_Handling_Task_1ms(void)
 {
     uint16_t    value;
 
+    //check buck overvoltage and undervoltage
+    App_Fault_Handling_CheckFaultBit(&fault_handling_data_buck_overvoltage, buckPC_OverVoltageFlag, FAULT_BUCK_OVERVOLTAGE);
+    App_Fault_Handling_CheckFaultBit(&fault_handling_data_buck_undervoltage, buckPC_UnderVoltageFlag, FAULT_BUCK_UNDERVOLTAGE);
+
+    //check buck overcurrent
+//    if (check_buckcurrent_peak)
+//        App_Fault_Handling_CheckFaultValue(&fault_handling_data_buck_peak_current, value, FAULT_BUCK_OVERCURRENT);
+//    else
+//        App_Fault_Handling_CheckFaultValue(&fault_handling_data_buck_avg_current, value, FAULT_BUCK_OVERCURRENT);
+    
     //check supply voltages:
     value = Dummy_GetSupplyVoltage();
-    App_Fault_Handling_CheckFault(&fault_handling_data_input_overvoltage, value, FAULT_SUPPLY_OVERVOLTAGE);
-    App_Fault_Handling_CheckFault(&fault_handling_data_input_undervoltage, value, FAULT_SUPPLY_UNDERVOLTAGE);
+    App_Fault_Handling_CheckFaultValue(&fault_handling_data_input_overvoltage, value, FAULT_SUPPLY_OVERVOLTAGE);
+    App_Fault_Handling_CheckFaultValue(&fault_handling_data_input_undervoltage, value, FAULT_SUPPLY_UNDERVOLTAGE);
 
     //check board temperature:
     value = Dummy_GetBoardTemperatur();
-    App_Fault_Handling_CheckFault(&fault_handling_data_board_temperature, value, FAULT_OVERTEMPERATURE);
+    App_Fault_Handling_CheckFaultValue(&fault_handling_data_board_temperature, value, FAULT_OVERTEMPERATURE);
     
-    //check buck voltage and current
-    value = Dummy_GetBuckVoltage();
-    App_Fault_Handling_CheckFault(&fault_handling_data_buck_voltage, value, FAULT_BUCK_OVERVOLTAGE);
-    value = Dummy_GetBuckCurrent();
-    if (check_buckcurrent_peak)
-        App_Fault_Handling_CheckFault(&fault_handling_data_buck_peak_current, value, FAULT_BUCK_OVERCURRENT);
-    else
-        App_Fault_Handling_CheckFault(&fault_handling_data_buck_avg_current, value, FAULT_BUCK_OVERCURRENT);
 
     //check boost voltage and current
     value = Dummy_GetBoostVoltage();
-    App_Fault_Handling_CheckFault(&fault_handling_data_boost_voltage, value, FAULT_BOOST_OVERVOLTAGE);
+    App_Fault_Handling_CheckFaultValue(&fault_handling_data_boost_voltage, value, FAULT_BOOST_OVERVOLTAGE);
     value = Dummy_GetBoostCurrent();
     if (check_boostcurrent_peak)
-        App_Fault_Handling_CheckFault(&fault_handling_data_boost_peak_current, value, FAULT_BOOST_OVERCURRENT);
+        App_Fault_Handling_CheckFaultValue(&fault_handling_data_boost_peak_current, value, FAULT_BOOST_OVERCURRENT);
     else
-        App_Fault_Handling_CheckFault(&fault_handling_data_boost_avg_current, value, FAULT_BOOST_OVERCURRENT);
+        App_Fault_Handling_CheckFaultValue(&fault_handling_data_boost_avg_current, value, FAULT_BOOST_OVERCURRENT);
 
     //set or clear the general fault bit
     if (active_faults & ~FAULT_GENERAL) //is one of the fault bits active?

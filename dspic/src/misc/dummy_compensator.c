@@ -22,12 +22,6 @@
 
 #include "stdint.h"
 
-// TODO: This is a dummy function to fake the ADC values as long as they are not implemented
-double GetVoltageBuck(void)     //fake, just for testing
-{
-//    return BUCKVOLTAGE_GET(buckVoltage);
-    return 3.3;
-}
 // TODO: This is a dummy functions to fake the ADC values as long as they are not implemented
 double GetVoltageBoost(void)     //fake, just for testing
 {

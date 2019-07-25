@@ -14,57 +14,71 @@
 //======================================================================================================================
 
 //======================================================================================================================
-// @file app_fault_handling.h
+// @file drv_buck_power_controller.c
 //
-// @brief fault monitoring and handling
+// @brief power controller functions for buck converter
 //
+// @author M91406
+// @author M52409
+// @author M91281
+//
+// @date July 9, 2019, 1:10 PM
 //======================================================================================================================
 
-
-#ifndef _APP_FAULT_HANDLING_H_
-#define _APP_FAULT_HANDLING_H_
+#ifndef _DRV_BUCK_POWER_CONTROLLER_H_
+#define	_DRV_BUCK_POWER_CONTROLLER_H_
 
 #include <stdint.h>
+#include <stdbool.h>
 
-#ifdef __cplusplus  // Provide C++ Compatibility
-    extern "C" {
-#endif
-
-//======================================================================================================================
-//  @brief  these defines are the fault bits that are combined in a uint16 value
-//  @note   use the function App_Fault_Handling_GetFaults to retrieve the whole uint16 value
-//======================================================================================================================
-#define FAULT_GENERAL                   1
-#define FAULT_SUPPLY_OVERVOLTAGE        2
-#define FAULT_SUPPLY_UNDERVOLTAGE       4
-#define FAULT_OVERTEMPERATURE           8
-#define FAULT_BUCK_OVERVOLTAGE          16
-#define FAULT_BUCK_UNDERVOLTAGE         32
-#define FAULT_BUCK_OVERCURRENT          32
-#define FAULT_BOOST_OVERVOLTAGE         64
-#define FAULT_BOOST_UNDERVOLTAGE        128
-#define FAULT_BOOST_OVERCURRENT         256
+#ifdef	__cplusplus
+extern "C" {
+#endif // __cplusplus
 
 //======================================================================================================================
-//  @brief  this function initializes the fault handling
-//  @note   
+// adjust these defines to have the right under- and overvoltage borders for monitoring the output voltage
 //======================================================================================================================
-void App_Fault_Handling_Init(void);
+#define BUCK_OVERVOLTAGE_PERCENT     103
+#define BUCK_UNDERVOLTAGE_PERCENT     97
 
 //======================================================================================================================
-//  @brief  this function returns the combined fault bits
-//  @note   use the defined fault bit defines above to filter out the bit of interest
+// these flags can be used to detect some over(/under voltage and to implement some fault handling
+// they are set by the power controller after the output voltage is ramped up and stable
 //======================================================================================================================
-uint16_t App_Fault_Handling_GetFaults(void);
+extern volatile bool buckPC_OverVoltageFlag;
+extern volatile bool buckPC_UnderVoltageFlag;
 
 //======================================================================================================================
-//  @brief  this function does the fault handling every 1 ms
-//  @note   call this function in your main scheduler every 1ms
+// @brief   Initializes all peripherals and data structures of the buck controller like PWN, ADC, DAC, CMP etc.
+// @note    call this during booting up the system before you call anything else or the Power Controller
 //======================================================================================================================
-void App_Fault_Handling_Task_1ms(void);
+extern void     Drv_BuckPowerController_Init(void);
 
-#ifdef __cplusplus  // Provide C++ Compatibility
-    }
-#endif
+//======================================================================================================================
+// @brief   sets the Output Voltage Reference in Volts
+// @note    call this function after calling the Init function to tell power controller the needed reference voltage 
+//======================================================================================================================
+extern void     Drv_BuckPowerController_SetOutputVoltageReference(double newVoltRef);
 
-#endif  //_APP_FAULT_HANDLING_H_
+//======================================================================================================================
+// @brief   returns the raw ADC value for the Output Voltage
+//======================================================================================================================
+extern uint16_t Drv_BuckPowerController_GetOutputVoltageRaw(void);
+
+//======================================================================================================================
+// @brief   returns the Output Voltage in Volts as a double
+//======================================================================================================================
+extern double   Drv_BuckPowerController_GetOutputVoltage(void);
+
+//======================================================================================================================
+// @brief   Task that runs all the necessary things to do like soft start and voltage monitoring
+// @note    call this every 100us from your main scheduler to ensure the right timing
+//======================================================================================================================
+extern void     Drv_BuckPowerController_Task_100us(void);
+
+#ifdef	__cplusplus
+}
+#endif // __cplusplus
+
+#endif	// _DRV_BUCK_POWER_CONTROLLER_H_
+

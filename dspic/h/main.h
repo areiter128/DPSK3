@@ -46,7 +46,6 @@
 #include "init/init_adc.h"
 #include "init/init_pwm.h"
 
-#include "buck_pwr_control.h"
 #include "boost_pwr_control.h"
 
 
@@ -54,7 +53,7 @@
 typedef struct {
     volatile uint16_t vout_boost; 
     volatile uint16_t boost_vref;
-    volatile uint16_t vout_buck;
+//    volatile uint16_t vout_buck;
     volatile uint16_t buck_vref;
 }MY_DATA_POINTS_t;
 

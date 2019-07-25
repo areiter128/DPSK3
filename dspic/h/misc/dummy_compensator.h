@@ -20,9 +20,6 @@
 //
 //======================================================================================================================
 
-
-double GetVoltageBuck(void);
-
 double GetVoltageBoost(void);
 
 double GetVoltageInput(void);

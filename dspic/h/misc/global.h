@@ -33,7 +33,7 @@ extern "C" {
 typedef struct
 {
     uint16_t    output_current;     // this is the output current of the buck/boost converter
-    uint16_t    reference_voltage;  // this is the target voltage for the control loop
+//    uint16_t    reference_voltage;  // this is the target voltage for the control loop
     double      output_voltage;     // this is the output voltage of the buck/boost converter
     double      load;               // data is coming from the pic24 communication
     double      step_load;          // data is coming from the pic24 communication

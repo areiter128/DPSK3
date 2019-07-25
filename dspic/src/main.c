@@ -31,6 +31,7 @@
 #include "device/dev_lcd.h"
 #include "device/dev_button.h"
 #include "device/dev_uart1.h"
+#include "driver/drv_buck_power_controller.h"
 #include "app/app_display.h"
 #include "app/app_proto24.h"
 #include "app/app_logger.h"
@@ -82,14 +83,13 @@ int main(void)
     //TODO: is that delay for sending the SYS_RESET information after about one second to make sure that the pic24 is also ready?
     //TODO: this could also be integrated in the App_Proto24_Task_10ms function where we have a more accurate timing
     __delay_ms(200); // due to heavy workload on ISR, delays take ~3.7 times longer than normal
-    // Initialize peripheral modules of individual power controllers
-//    init_boost_pwr_control();   // Initialize all peripherals and data structures of the boost controller
 
+    Drv_BuckPowerController_Init();                 //Init the power controller of the buck converter
+    Drv_BuckPowerController_SetOutputVoltageReference(3.3);  //Set Buck Controller Output to 3.3 Volt
+
+//    init_boost_pwr_control();   // Initialize all peripherals and data structures of the boost controller
 //    launch_boost_pwr_control(); // Start Buck Power Controller
 
-    // Reset Soft-Start Phase to Initialization
-    buck_soft_start.phase = BUCK_SS_INIT;
-    
     // the PROTO_SYS_RESET message was eliminated because the pic24 does reset itself too which it should not do
     //App_Proto24_Send(PROTO_SYS_RESET);
 
@@ -142,7 +142,7 @@ inline void Tasks_100us(void)
 {
     DBGPIN_1_TOGGLE; // Toggle DEBUG-PIN
 
-    exec_buck_pwr_control();
+    Drv_BuckPowerController_Task_100us();
     //exec_boos_pwr_control();
 
     if (tasks_1ms_counter++ >= 10)
