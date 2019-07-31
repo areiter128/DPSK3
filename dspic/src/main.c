@@ -46,16 +46,14 @@
 
 volatile MY_DATA_POINTS_t data;
 
-volatile uint16_t counter_100us_leader = 0;     // local counter for 100us interrupt - leader
-volatile uint16_t counter_100us_follower = 0;   // local counter for 100us interrupt - follower
-volatile uint16_t tasks_1ms_counter = 0;        // local counter for 1ms tasks
-volatile uint16_t tasks_10ms_counter = 0;       // local counter for 10ms tasks
-volatile uint16_t tasks_100ms_counter = 0;      // local counter for 100ms tasks
+volatile uint16_t scheduler_interrupt_leader_100us = 0;     // counter for the scheduler: 100us interrupt leader
+volatile uint16_t scheduler_interrupt_follower_100us = 0;   // counter for the scheduler: 100us interrupt follower
+
 volatile uint16_t time_counter_logger = 0;      // for the timing of the logger
 volatile uint16_t timer1_timeout_counter = 0;
 volatile uint32_t timer1_isdead_counter = 0;
 
-inline void Tasks_MainTaskLoop(void);
+inline void Simple_Scheduler_MainLoop(void);
 inline void Tasks_100us(void);
 inline void Tasks_1ms(void);
 inline void Tasks_10ms(void);
@@ -99,37 +97,61 @@ int main(void)
     //Dev_Lcd_WriteStringXY(0,0,"MICROCHIP  dsPIC");
     //Dev_Lcd_WriteStringXY(0,1,"  33CK256MP505  ");
     
-    counter_100us_follower = 0;
-    counter_100us_leader = 0;
-    
 #ifdef TEST_ENABLED
     App_Test();
 #else
-    Tasks_MainTaskLoop();
+    Simple_Scheduler_MainLoop();
 #endif  // TEST_ENABLED
     return (0);
 }
 
 //======================================================================================================================
-//  @brief  Timer 1 interrupt routine for generating the main highres timing for all the tasks
+//  @brief  Timer 1 interrupt routine for generating the main highres timing for the simple scheduler
 //  @note   with this simple implementation we do not lose any tick from timer 1, even when the tasks in the main loop
 //  @note   take longer than 100 µs
 //======================================================================================================================
 void __attribute__((__interrupt__,no_auto_psv)) _T1Interrupt(void)
 {
-    counter_100us_leader++;     //increment our counter, no tick gets lost this way
-    _T1IF = 0;                  //clear Timer1 interrupt flag
+    scheduler_interrupt_leader_100us++; //increment our counter for the scheduler, no tick gets lost this way
+    _T1IF = 0;                          //clear Timer1 interrupt flag
 }
 
-inline void Tasks_MainTaskLoop(void)
+//======================================================================================================================
+//  @brief  Simple Scheduler for calling Tasks regularly ( 100us, 1ms, 10ms, 100ms)
+//  @note   please consider that the timing of the calls are dependent on the duration of the last call
+//  @note   the resulting jitter therefore depends on the timing of the calls before
+//======================================================================================================================
+inline void Simple_Scheduler_MainLoop(void)
 {
+    volatile static uint16_t scheduler_1ms_timer = 0;        // local counter for 1ms tasks
+    volatile static uint16_t scheduler_10ms_timer = 0;       // local counter for 10ms tasks
+    volatile static uint16_t scheduler_100ms_timer = 0;      // local counter for 100ms tasks
+
     //TODO: should we implement a Watchdog that gets triggered in one of the Task-Routines?
+    
+    scheduler_interrupt_leader_100us = 0;   // reset directly before calling the Scheduler Loop
+    scheduler_interrupt_follower_100us = 0; // reset directly before calling the Scheduler Loop
     while (1)   //100µs scheduler
     {
-        if (counter_100us_leader != counter_100us_follower)
+        if (scheduler_interrupt_follower_100us != scheduler_interrupt_leader_100us)
         {
-            counter_100us_follower++;
-            Tasks_100us();
+            scheduler_interrupt_follower_100us++;
+            Tasks_100us();                              //call 100µs tasks
+            if (scheduler_1ms_timer++ >= 10)
+            {
+                scheduler_1ms_timer = 0;                //reset 1 ms timer
+                Tasks_1ms();                            //call 1 ms tasks
+                if (scheduler_10ms_timer++ >= 10)
+                {
+                    scheduler_10ms_timer = 0;           //reset 10 ms timer
+                    Tasks_10ms();                       //call 10 ms tasks
+                    if (scheduler_100ms_timer++ >= 10)
+                    {
+                        scheduler_100ms_timer = 0;      //reset 100 ms timer
+                        Tasks_100ms();                  //call 100 ms tasks
+                    }
+                }
+            }
         }
     }
 }
@@ -144,12 +166,6 @@ inline void Tasks_100us(void)
 
     Drv_BuckPowerController_Task_100us();
     //exec_boos_pwr_control();
-
-    if (tasks_1ms_counter++ >= 10)
-    {
-        tasks_1ms_counter = 0; //reset toggle counter
-        Tasks_1ms();
-    }
 }
 
 //======================================================================================================================
@@ -165,11 +181,6 @@ inline void Tasks_1ms(void)
         App_Proto24_GetData(&global_proto24data);
         Global_UpdateProto24Data();
     }
-    if (tasks_10ms_counter++ >= 10)
-    {
-        tasks_10ms_counter = 0; //reset toggle counter
-        Tasks_10ms();
-    }
 }
 
 //======================================================================================================================
@@ -179,12 +190,6 @@ inline void Tasks_1ms(void)
 inline void Tasks_10ms(void)
 {
     Dev_Button_Task_10ms();
-    
-    if (tasks_100ms_counter++ >= 10)
-    {
-        tasks_100ms_counter = 0; //reset toggle counter
-        Tasks_100ms();
-    }
 }
 
 //======================================================================================================================
