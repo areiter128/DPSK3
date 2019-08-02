@@ -36,7 +36,7 @@
 #include <stdint.h>
 #include <stdbool.h>
 
-#include "main.h"
+//#include "main.h"
 
 #ifdef DPSK3_R30
 // DPSK3 Debug Pins 

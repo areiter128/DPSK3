@@ -46,7 +46,7 @@ extern "C" {
 //  @brief  this function initialized the lcd interface driver
 //  @note   use this one time after booting up your system to initialize before calling something else
 //======================================================================================================================
-inline void Lcd_Interface_Init(void);
+extern void Lcd_Interface_Init(void);
 
 //======================================================================================================================
 //  @brief  this function resets the lcd controller

@@ -11,7 +11,7 @@
 #include <stdbool.h>
 
 #include "init_pwm.h"
-#include "../../h/main.h"
+#include "init_gpio.h"
 
 volatile uint16_t softstart_counter     = 0;
 volatile uint16_t SoftStartDC           = FINAL_DUTY_CYCLE; // This effectively disables the openloop soft start routine

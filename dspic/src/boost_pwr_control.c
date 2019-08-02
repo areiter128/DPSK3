@@ -10,8 +10,12 @@
 #include <stdint.h>
 #include <stdbool.h>
 
-#include "main.h"
 #include "npnz16b.h"
+#include "boost_pwr_control.h"
+#include "init/init_pwm.h"
+#include "init/init_acmp.h"
+#include "init/init_adc.h"
+#include "misc/global.h"
 
 volatile BOOST_SOFT_START_t boost_soft_start;
 
@@ -23,7 +27,7 @@ volatile uint16_t init_boost_pwr_control(void) {
     init_boost_adc();       // Set up boost converter ADC (voltage feedback only)
     
     boost_soft_start.counter = 0;            // Reset Soft-Start Counter
-    boost_soft_start.phase = BOOST_SS_INIT;   // Reset Soft-Start Phase to Initialization
+    boost_soft_start.phase = BOOST_SS_INIT;  // Reset Soft-Start Phase to Initialization
     boost_soft_start.pwr_good_delay = 999;   // Soft-Start Power-On Delay = 100 ms
     boost_soft_start.ramp_period = 499;      // Soft-Start Ramp Period = 500 ms
     boost_soft_start.pwr_good_delay = 1999;  // Soft-Start Power Good Delay = 200 ms

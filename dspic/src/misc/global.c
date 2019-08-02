@@ -31,6 +31,7 @@ protocol_data_t global_proto24data;
 //uint16_t        global_debug_uart2_rx_counter = 0;
 //uint16_t        global_debug_uart2_tx_counter = 0;
 
+volatile MY_DATA_POINTS_t data;
 
 //returns 1/ohms, because the loads are in parallel
 double GetLoadBuck(uint8_t bits)

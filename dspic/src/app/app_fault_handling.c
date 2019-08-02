@@ -262,8 +262,9 @@ void App_Fault_Handling_Task_1ms(void)
     //check supply voltages:
     value = Dummy_GetSupplyVoltage();
     App_Fault_Handling_CheckFaultValue(&fault_handling_data_input_overvoltage, value, FAULT_SUPPLY_OVERVOLTAGE);
-    App_Fault_Handling_CheckFaultValue(&fault_handling_data_input_undervoltage, value, FAULT_SUPPLY_UNDERVOLTAGE);
-
+    App_Fault_Handling_CheckFaultValue(&fault_handling_data_input_undervoltage, value, FAULT_SUPPLY_UNDERVOLTAGE);    
+    
+    
     //check board temperature:
     value = Dummy_GetBoardTemperatur();
     App_Fault_Handling_CheckFaultValue(&fault_handling_data_board_temperature, value, FAULT_OVERTEMPERATURE);

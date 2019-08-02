@@ -26,11 +26,14 @@
       </logicalFolder>
       <logicalFolder name="f1" displayName="init" projectFiles="true">
         <itemPath>h/init/init_fosc.h</itemPath>
-        <itemPath>h/init/init_timer1.h</itemPath>
         <itemPath>h/init/init_gpio.h</itemPath>
         <itemPath>h/init/init_pwm.h</itemPath>
         <itemPath>h/init/init_acmp.h</itemPath>
         <itemPath>h/init/init_adc.h</itemPath>
+      </logicalFolder>
+      <logicalFolder name="f6" displayName="main" projectFiles="true">
+        <itemPath>h/main/main.h</itemPath>
+        <itemPath>h/main/main_scheduler.h</itemPath>
       </logicalFolder>
       <logicalFolder name="f5" displayName="misc" projectFiles="true">
         <itemPath>h/misc/global.h</itemPath>
@@ -40,7 +43,6 @@
         <itemPath>h/misc/interrupt.h</itemPath>
         <itemPath>h/misc/proto_data.h</itemPath>
       </logicalFolder>
-      <itemPath>h/main.h</itemPath>
       <itemPath>h/boost_pwr_control.h</itemPath>
       <itemPath>h/c2p2z_buck.h</itemPath>
     </logicalFolder>
@@ -72,18 +74,20 @@
       </logicalFolder>
       <logicalFolder name="f1" displayName="init" projectFiles="true">
         <itemPath>src/init/init_fosc.c</itemPath>
-        <itemPath>src/init/init_timer1.c</itemPath>
         <itemPath>src/init/init_gpio.c</itemPath>
         <itemPath>src/init/init_pwm.c</itemPath>
         <itemPath>src/init/init_acmp.c</itemPath>
         <itemPath>src/init/init_adc.c</itemPath>
+      </logicalFolder>
+      <logicalFolder name="f6" displayName="main" projectFiles="true">
+        <itemPath>src/main/main.c</itemPath>
+        <itemPath>src/main/main_scheduler.c</itemPath>
       </logicalFolder>
       <logicalFolder name="f5" displayName="misc" projectFiles="true">
         <itemPath>src/misc/global.c</itemPath>
         <itemPath>src/misc/helpers.c</itemPath>
         <itemPath>src/misc/dummy_compensator.c</itemPath>
       </logicalFolder>
-      <itemPath>src/main.c</itemPath>
       <itemPath>src/config_bits.c</itemPath>
       <itemPath>src/boost_pwr_control.c</itemPath>
       <itemPath>src/c2p2z_buck.c</itemPath>
@@ -159,7 +163,7 @@
         <property key="enable-short-double" value="false"/>
         <property key="enable-symbols" value="true"/>
         <property key="enable-unroll-loops" value="false"/>
-        <property key="extra-include-directories" value="h;h\init;src;src\init"/>
+        <property key="extra-include-directories" value="h"/>
         <property key="isolate-each-function" value="false"/>
         <property key="keep-inline" value="false"/>
         <property key="oXC16gcc-align-arr" value="false"/>
@@ -183,6 +187,7 @@
         <property key="scalar-model" value="default"/>
         <property key="use-cci" value="false"/>
         <property key="use-iar" value="false"/>
+        <appendMe value="-std=c99 -finline-functions"/>
       </C30>
       <C30-AR>
         <property key="additional-options-chop-files" value="false"/>
@@ -660,6 +665,7 @@
         <property key="scalar-model" value="default"/>
         <property key="use-cci" value="false"/>
         <property key="use-iar" value="false"/>
+        <appendMe value="-std=c99-std=c99 -finline-functions"/>
       </C30>
       <C30-AR>
         <property key="additional-options-chop-files" value="false"/>

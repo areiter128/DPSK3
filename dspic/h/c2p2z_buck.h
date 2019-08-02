@@ -53,19 +53,19 @@
 
 // Function call prototypes for initialization routines and control loops
 
-extern inline uint16_t c2p2z_buck_Init(void); // Loads default coefficients into 2P2Z controller and resets histories to zero
+extern uint16_t c2p2z_buck_Init(void); // Loads default coefficients into 2P2Z controller and resets histories to zero
 
-extern inline void c2p2z_buck_Reset( // Resets the 2P2Z controller histories
+extern void c2p2z_buck_Reset( // Resets the 2P2Z controller histories
 	volatile cNPNZ16b_t* controller // Pointer to nPnZ data structure
 	);
 
-extern inline void c2p2z_buck_Precharge( // Pre-charges histories of the 2P2Z with defined steady-state data
+extern void c2p2z_buck_Precharge( // Pre-charges histories of the 2P2Z with defined steady-state data
 	volatile cNPNZ16b_t* controller, // Pointer to nPnZ data structure
 	volatile uint16_t ctrl_input, // user-defined, constant error history value
 	volatile uint16_t ctrl_output // user-defined, constant control output history value
 	);
 
-extern inline void c2p2z_buck_Update( // Calls the 2P2Z controller
+extern void c2p2z_buck_Update( // Calls the 2P2Z controller
 	volatile cNPNZ16b_t* controller // Pointer to nPnZ data structure
 	);
 

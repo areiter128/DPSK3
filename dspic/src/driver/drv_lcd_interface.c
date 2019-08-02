@@ -73,7 +73,7 @@
 //  @brief  this function initialized the lcd interface driver
 //  @note   use this one time after booting up your system to initialize before calling something else
 //======================================================================================================================
-inline void Lcd_Interface_Init(void)
+void Lcd_Interface_Init(void)
 {
     LCD_RST_SetHigh();
     LCD_CS_nSELECTED();
@@ -92,7 +92,7 @@ inline void Lcd_Interface_Init(void)
 //  @brief  this function sends data through the spi interface to the lcd controller
 //  @note   local function
 //======================================================================================================================
-inline void Lcd_Interface_Spi_Send(uint8_t data)
+void Lcd_Interface_Spi_Send(uint8_t data)
 {
     uint8_t mask;
 
@@ -118,7 +118,7 @@ inline void Lcd_Interface_Spi_Send(uint8_t data)
 //  @brief  this function resets the lcd controller
 //  @note   use this one time after booting up your system to reset the lcd controller and get into a defined state
 //======================================================================================================================
-inline void Lcd_Interface_Reset(void)
+void Lcd_Interface_Reset(void)
 {
     LCD_RST_SetLow();
     __delay_ms(25);

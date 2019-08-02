@@ -20,31 +20,44 @@
  */
 
 /* 
- * File:   init_timer1.h
+ * File:   main.h
  * Author: M91406
- * Comments: header file of the Timer1 initialization
+ * Comments: main header file of this application
  * Revision history: 
- * 1.0  initial version
+ * v1.0 initial version
  */
 
-// This is a guard condition so that contents of this file are not included
-// more than once.  
-#ifndef INITIALIZE_TIMER1_H
-#define	INITIALIZE_TIMER1_H
 
-#include <xc.h> // include processor files - each processor file is guarded.  
-#include <stdint.h>
-#include <stdbool.h>
+#ifndef _MAIN_H_
+#define	_MAIN_H_
+
+//#include <xc.h> // include processor files - each processor file is guarded.  
+//#include <stdint.h>
+//#include <stdbool.h>
+
+// List of user included header files
+//#include "init/init_fosc.h"
+//#include "init/init_timer1.h"
+//#include "init/init_gpio.h"
+//#include "c2P2Z_boost.h"
+
+//#include "init/init_acmp.h"
+//#include "init/init_adc.h"
+//#include "init/init_pwm.h"
+
+//#include "boost_pwr_control.h"
+
+
+
 
 #ifdef	__cplusplus
 extern "C" {
 #endif /* __cplusplus */
 
-extern volatile uint16_t init_timer1(void);
-
+    
 #ifdef	__cplusplus
 }
 #endif /* __cplusplus */
 
-#endif	/* INITIALIZE_TIMER1_H */
+#endif	/* APPLICATION_MAIN_HEADER_H */
 

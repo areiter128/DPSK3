@@ -60,6 +60,14 @@ typedef struct
     uint8_t :2;
 } GlobalData_t;
 
+typedef struct {
+    volatile uint16_t vout_boost; 
+    volatile uint16_t boost_vref;
+//    volatile uint16_t vout_buck;
+    volatile uint16_t buck_vref;
+}MY_DATA_POINTS_t;
+
+extern volatile MY_DATA_POINTS_t data;
 extern GlobalData_t     global_data;
 extern protocol_data_t  global_proto24data;
 

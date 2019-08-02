@@ -14,7 +14,7 @@
 //======================================================================================================================
 
 //======================================================================================================================
-// @file drv_buck_power_controller.c
+// @file drv_buck_power_controller.h
 //
 // @brief power controller functions for buck converter
 //
@@ -38,8 +38,8 @@ extern "C" {
 //======================================================================================================================
 // adjust these defines to have the right under- and overvoltage borders for monitoring the output voltage
 //======================================================================================================================
-#define BUCK_OVERVOLTAGE_PERCENT     103
-#define BUCK_UNDERVOLTAGE_PERCENT     97
+#define BUCK_OVERVOLTAGE_PERCENT     105
+#define BUCK_UNDERVOLTAGE_PERCENT     95
 
 //======================================================================================================================
 // these flags can be used to detect some over(/under voltage and to implement some fault handling

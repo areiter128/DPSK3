@@ -101,7 +101,7 @@ void Drv_BuckPowerController_SetOutputVoltageReference(double newVoltRef)
 // @brief   internal helping function for the state machine to set the new state
 // @note    the also resets the timer automatically
 //======================================================================================================================
-inline void buckPC_GotoState(BUCK_SM_STATES_e newState)
+void buckPC_GotoState(BUCK_SM_STATES_e newState)
 {
     buckPC_State_TimeCounter = 0;
     buckPC_State = newState;
@@ -149,6 +149,7 @@ void Drv_BuckPowerController_Init(void)
 //======================================================================================================================
 void Drv_BuckPowerController_Task_100us(void)
 {
+    //TODO Monitor Over Undervoltage every time before calling the statemachine
     switch (buckPC_State)
     {
         // Fire up all peripherals used by this power controller
