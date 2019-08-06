@@ -157,6 +157,17 @@ static inline void Tasks_1s(void)
     // put your application specific code here that needs to be called every second
 }
 
+//=======================================================================================================
+//  @brief  Tasks_Background gets called all the time when no other of the above tasks are being called
+//  @note   call this function when you want to implement your own timing or get code called as often
+//          as possible. You can also put your timing variables into Tasks_Realtime_100us or
+//          Tasks_Realtime_1ms. This way you get accurate timing variables that you can use here.
+//=======================================================================================================
+static inline void Tasks_Background(void)
+{
+    // put your application specific code here that needs to be called in the background
+    // your application needs to take care of it's timing.
+}
 
 
 
@@ -265,6 +276,10 @@ void Main_Scheduler_RunForever(void)
                     }
                 }
             }
+        }
+        else
+        {
+            Tasks_Background();                         // run the background tasks with their own timing
         }
     }
 }
