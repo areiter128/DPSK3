@@ -32,7 +32,7 @@ MICROCHIP FOR THIS SOFTWARE.
 //#include "compensator.h"
 #include "misc/dummy_compensator.h"
 #include "app/app_proto24.h"
-#include "driver/drv_buck_power_controller.h"
+#include "driver/power_controllers/drv_power_controller_buck_custom.h"
 
 
 #define SIZE_OF(X)      (sizeof(X)/sizeof(X[0]))
@@ -288,7 +288,7 @@ static bool testNoLoad(void)
     if(_analizeSamples_dbl(GetVoltageInput, 6.0, 14.0, 2.0, 9.0, 0.6, 100))
     {   PrintSerial(" !");  ret_code |= 1;  }
     PrintSerial("\n\rbuck voltage:  ");
-    if(_analizeSamples_dbl(Drv_BuckPowerController_GetOutputVoltage, 3.0, 3.5, 1.0, 3.3, 0.2, 100))
+    if(_analizeSamples_dbl(Drv_PowerControllerBuck1_GetOutputVoltage, 3.0, 3.5, 1.0, 3.3, 0.2, 100))
     {   PrintSerial(" !");  ret_code |= 1;  }
     PrintSerial("\n\rboost voltage: ");
     if(_analizeSamples_dbl(GetVoltageBoost, 14.4, 15.4, 1.0, 15.0, 0.3, 100))
@@ -321,7 +321,7 @@ static bool testFullLoad(void)
     if(_analizeSamples_dbl(GetVoltageInput, 6.0, 14.0, 2.0, 9.0, 0.6, 100))
     {   PrintSerial(" !");  ret_code |= 1;  }
     PrintSerial("\n\rbuck voltage:  ");
-    if(_analizeSamples_dbl(Drv_BuckPowerController_GetOutputVoltage, 3.0, 3.5, 1.0, 3.3, 0.2, 100))
+    if(_analizeSamples_dbl(Drv_PowerControllerBuck1_GetOutputVoltage, 3.0, 3.5, 1.0, 3.3, 0.2, 100))
     {   PrintSerial(" !");  ret_code |= 1;  }
     PrintSerial("\n\rboost voltage: ");
     if(_analizeSamples_dbl(GetVoltageBoost, 14.4, 15.4, 1.0, 15.0, 0.3, 100))
@@ -355,7 +355,7 @@ static bool testStepLoad(void)
     if(_analizeSamples_dbl(GetVoltageInput, 6.0, 14.0, 2.0, 9.0, 0.6, 100))
     {   PrintSerial(" !");  ret_code |= 1;  }
     PrintSerial("\n\rbuck voltage:  ");
-    if(_analizeSamples_dbl(Drv_BuckPowerController_GetOutputVoltage, 3.0, 3.5, 1.0, 3.3, 0.2, 100))
+    if(_analizeSamples_dbl(Drv_PowerControllerBuck1_GetOutputVoltage, 3.0, 3.5, 1.0, 3.3, 0.2, 100))
     {   PrintSerial(" !");  ret_code |= 1;  }
     PrintSerial("\n\rboost voltage: ");
     if(_analizeSamples_dbl(GetVoltageBoost, 14.4, 15.4, 1.0, 15.0, 0.3, 100))

@@ -19,10 +19,12 @@
         <itemPath>h/device/dev_uart.h</itemPath>
       </logicalFolder>
       <logicalFolder name="f2" displayName="driver" projectFiles="true">
+        <logicalFolder name="f1" displayName="power_controllers" projectFiles="true">
+          <itemPath>h/driver/power_controllers/drv_power_controller_buck_custom.h</itemPath>
+          <itemPath>h/driver/power_controllers/drv_power_controller_buck_generic.h</itemPath>
+          <itemPath>h/driver/power_controllers/drv_power_controllers.h</itemPath>
+        </logicalFolder>
         <itemPath>h/driver/drv_lcd_interface.h</itemPath>
-        <itemPath>h/c2P2Z_boost.h</itemPath>
-        <itemPath>h/npnz16b.h</itemPath>
-        <itemPath>h/driver/drv_buck_power_controller.h</itemPath>
       </logicalFolder>
       <logicalFolder name="f1" displayName="init" projectFiles="true">
         <itemPath>h/init/init_fosc.h</itemPath>
@@ -33,7 +35,7 @@
       </logicalFolder>
       <logicalFolder name="f6" displayName="main" projectFiles="true">
         <itemPath>h/main/main.h</itemPath>
-        <itemPath>h/main/main_scheduler.h</itemPath>
+        <itemPath>h/main/main_scheduler_100us.h</itemPath>
       </logicalFolder>
       <logicalFolder name="f5" displayName="misc" projectFiles="true">
         <itemPath>h/misc/global.h</itemPath>
@@ -67,10 +69,14 @@
         <itemPath>src/device/dev_uart1.c</itemPath>
       </logicalFolder>
       <logicalFolder name="f2" displayName="driver" projectFiles="true">
+        <logicalFolder name="f1" displayName="power_controllers" projectFiles="true">
+          <itemPath>src/driver/power_controllers/c2p2z_buck.c</itemPath>
+          <itemPath>src/driver/power_controllers/c2p2z_buck_asm.s</itemPath>
+          <itemPath>src/driver/power_controllers/drv_power_controllers.c</itemPath>
+          <itemPath>src/driver/power_controllers/drv_power_controller_buck_custom.c</itemPath>
+          <itemPath>src/driver/power_controllers/drv_power_controller_buck_generic.c</itemPath>
+        </logicalFolder>
         <itemPath>src/driver/drv_lcd_interface.c</itemPath>
-        <itemPath>src/c2P2Z_boost.c</itemPath>
-        <itemPath>src/c2P2Z_boost_asm.s</itemPath>
-        <itemPath>src/driver/drv_buck_power_controller.c</itemPath>
       </logicalFolder>
       <logicalFolder name="f1" displayName="init" projectFiles="true">
         <itemPath>src/init/init_fosc.c</itemPath>
@@ -81,7 +87,7 @@
       </logicalFolder>
       <logicalFolder name="f6" displayName="main" projectFiles="true">
         <itemPath>src/main/main.c</itemPath>
-        <itemPath>src/main/main_scheduler.c</itemPath>
+        <itemPath>src/main/main_scheduler_100us.c</itemPath>
       </logicalFolder>
       <logicalFolder name="f5" displayName="misc" projectFiles="true">
         <itemPath>src/misc/global.c</itemPath>
@@ -89,9 +95,6 @@
         <itemPath>src/misc/dummy_compensator.c</itemPath>
       </logicalFolder>
       <itemPath>src/config_bits.c</itemPath>
-      <itemPath>src/boost_pwr_control.c</itemPath>
-      <itemPath>src/c2p2z_buck.c</itemPath>
-      <itemPath>src/c2p2z_buck_asm.s</itemPath>
     </logicalFolder>
     <logicalFolder name="ExternalFiles"
                    displayName="Important Files"

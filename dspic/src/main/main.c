@@ -1,19 +1,20 @@
-//======================================================================================================================
-// Copyright(c) 2018 Microchip Technology Inc. and its subsidiaries.
-// Subject to your compliance with these terms, you may use Microchip software and any derivatives exclusively with
-// Microchip products. It is your responsibility to comply with third party license terms applicable to your use of
-// third-party software (including open source software) that may accompany Microchip software.
-// THIS SOFTWARE IS SUPPLIED BY MICROCHIP "AS IS". NO WARRANTIES, WHETHER EXPRESS, IMPLIED OR STATUTORY, APPLY TO
-// THIS SOFTWARE, INCLUDING ANY IMPLIED WARRANTIES OF NON-INFRINGEMENT, MERCHANTABILITY, AND FITNESS FOR A PARTICULAR
-// PURPOSE.
-// IN NO EVENT WILL MICROCHIP BE LIABLE FOR ANY INDIRECT, SPECIAL, PUNITIVE, INCIDENTAL OR CONSEQUENTIAL LOSS, DAMAGE,
-// COST OR EXPENSE OF ANY KIND WHATSOEVER RELATED TO THE SOFTWARE, HOWEVER CAUSED, EVEN IF MICROCHIP HAS BEEN ADVISED
-// OF THE POSSIBILITY OR THE DAMAGES ARE FORESEEABLE. TO THE FULLEST EXTENT ALLOWED BY LAW, MICROCHIP'S TOTAL LIABILITY
-// ON ALL CLAIMS IN ANY WAY RELATED TO THIS SOFTWARE WILL NOT EXCEED THE AMOUNT OF FEES, IF ANY, THAT YOU HAVE
-// PAID DIRECTLY TO MICROCHIP FOR THIS SOFTWARE.
-//======================================================================================================================
+//=======================================================================================================
+// Copyright(c) 2019 Microchip Technology Inc. and its subsidiaries.
+// Subject to your compliance with these terms, you may use Microchip software and any derivatives
+// exclusively with Microchip products. It is your responsibility to comply with third party license
+// terms applicable to your use of third-party software (including open source software) that may
+// accompany Microchip software.
+// THIS SOFTWARE IS SUPPLIED BY MICROCHIP "AS IS". NO WARRANTIES, WHETHER EXPRESS, IMPLIED OR STATUTORY,
+// APPLY TO THIS SOFTWARE, INCLUDING ANY IMPLIED WARRANTIES OF NON-INFRINGEMENT, MERCHANTABILITY, AND
+// FITNESS FOR A PARTICULAR PURPOSE.
+// IN NO EVENT WILL MICROCHIP BE LIABLE FOR ANY INDIRECT, SPECIAL, PUNITIVE, INCIDENTAL OR CONSEQUENTIAL
+// LOSS, DAMAGE, COST OR EXPENSE OF ANY KIND WHATSOEVER RELATED TO THE SOFTWARE, HOWEVER CAUSED, EVEN IF
+// MICROCHIP HAS BEEN ADVISED OF THE POSSIBILITY OR THE DAMAGES ARE FORESEEABLE. TO THE FULLEST EXTENT
+// ALLOWED BY LAW, MICROCHIP'S TOTAL LIABILITY ON ALL CLAIMS IN ANY WAY RELATED TO THIS SOFTWARE WILL NOT
+// EXCEED THE AMOUNT OF FEES, IF ANY, THAT YOU HAVE PAID DIRECTLY TO MICROCHIP FOR THIS SOFTWARE.
+//=======================================================================================================
 
-//======================================================================================================================
+//=======================================================================================================
 // @file main.c
 //
 // @brief contains the main function for the Digital Power Starter Kit Version 3 (aka DPSK3)
@@ -23,7 +24,7 @@
 // @author M52409
 //
 // @date July 8, 2019, 1:52 PM
-//======================================================================================================================
+//=======================================================================================================
 
 #include <xc.h>
 #include <stdbool.h>
@@ -31,7 +32,7 @@
 #include "device/dev_lcd.h"
 #include "device/dev_button.h"
 #include "device/dev_uart1.h"
-#include "driver/drv_buck_power_controller.h"
+#include "driver/power_controllers/drv_power_controllers.h"
 #include "app/app_display.h"
 #include "app/app_proto24.h"
 #include "app/app_logger.h"
@@ -43,18 +44,15 @@
 #include "init/init_acmp.h"
 #include "init/init_adc.h"
 
-#include "main/main_scheduler.h"
+#include "main/main_scheduler_100us.h"
 
 #ifdef TEST_ENABLED
 #include "app/app_test.h"
 #endif  // TEST_ENABLED
 #include "misc/delay.h"
 #include "misc/global.h"
-#include "misc/dummy_compensator.h"
-//#include "main.h"
+//#include "misc/dummy_compensator.h"
 
-volatile uint16_t timer1_timeout_counter = 0;
-volatile uint32_t timer1_isdead_counter = 0;
 
 int main(void)
 {
@@ -82,20 +80,11 @@ int main(void)
     //TODO: this could also be integrated in the App_Proto24_Task_10ms function where we have a more accurate timing
     __delay_ms(200); // due to heavy workload on ISR, delays take ~3.7 times longer than normal
 
-    Drv_BuckPowerController_Init();                 //Init the power controller of the buck converter
-    Drv_BuckPowerController_SetOutputVoltageReference(3.3);  //Set Buck Controller Output to 3.3 Volt
-
-//    init_boost_pwr_control();   // Initialize all peripherals and data structures of the boost controller
-//    launch_boost_pwr_control(); // Start Buck Power Controller
-
-    // the PROTO_SYS_RESET message was eliminated because the pic24 does reset itself too which it should not do
-    //App_Proto24_Send(PROTO_SYS_RESET);
+    Drv_PowerControllers_Init();    // Initialize all Power Controllers (Buck Converter and Boost Converter)
 
     Global_UpdateBoardData();
     global_data.pic24_packet_counter = 0;
 
-    //Dev_Lcd_WriteStringXY(0,0,"MICROCHIP  dsPIC");
-    //Dev_Lcd_WriteStringXY(0,1,"  33CK256MP505  ");
     
 #ifdef TEST_ENABLED
     App_Test();

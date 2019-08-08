@@ -23,7 +23,8 @@
 #include "stdbool.h"
 #include "stdint.h"
 #include "app/app_fault_handling.h"
-#include "driver/drv_buck_power_controller.h"
+#include "driver/power_controllers/drv_power_controllers.h"
+#include "driver/power_controllers/drv_power_controller_buck_custom.h"
 
 typedef struct
 {
@@ -250,8 +251,8 @@ void App_Fault_Handling_Task_1ms(void)
     uint16_t    value;
 
     //check buck overvoltage and undervoltage
-    App_Fault_Handling_CheckFaultBit(&fault_handling_data_buck_overvoltage, buckPC_OverVoltageFlag, FAULT_BUCK_OVERVOLTAGE);
-    App_Fault_Handling_CheckFaultBit(&fault_handling_data_buck_undervoltage, buckPC_UnderVoltageFlag, FAULT_BUCK_UNDERVOLTAGE);
+    App_Fault_Handling_CheckFaultBit(&fault_handling_data_buck_overvoltage, pwrCtrlBuck1_Data.flags.bits.overvoltage_fault, FAULT_BUCK_OVERVOLTAGE);
+    App_Fault_Handling_CheckFaultBit(&fault_handling_data_buck_undervoltage, pwrCtrlBuck1_Data.flags.bits.undervoltage_fault, FAULT_BUCK_UNDERVOLTAGE);
 
     //check buck overcurrent
 //    if (check_buckcurrent_peak)

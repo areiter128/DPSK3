@@ -39,7 +39,7 @@
 
 #include <stdint.h>
 #include "init/init_gpio.h"
-#include "driver/drv_buck_power_controller.h"
+#include "driver/power_controllers/drv_power_controllers.h"
 #include "device/dev_button.h"
 #include "app/app_fault_handling.h"
 #include "app/app_proto24.h"
@@ -100,7 +100,7 @@ static inline void Tasks_100us(void)
 {
     DBGPIN_1_TOGGLE; // Toggle DEBUG-PIN
 
-    Drv_BuckPowerController_Task_100us();
+    Drv_PowerControllers_Task_100us();
     //exec_boos_pwr_control();
 }
 

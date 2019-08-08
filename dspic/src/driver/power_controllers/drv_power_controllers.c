@@ -1,5 +1,5 @@
 //=======================================================================================================
-// Copyright(c) 2019 Microchip Technology Inc. and its subsidiaries.
+// Copyright(c) 2018 Microchip Technology Inc. and its subsidiaries.
 // Subject to your compliance with these terms, you may use Microchip software and any derivatives
 // exclusively with Microchip products. It is your responsibility to comply with third party license
 // terms applicable to your use of third-party software (including open source software) that may
@@ -15,38 +15,40 @@
 //=======================================================================================================
 
 //=======================================================================================================
-// @file main.h
+// @file drv_power_controllers.c
 //
-// @brief main header file
+// @brief instances of the various power controllers that are needed in the project
 //
-// @author M91406
-// @author M91281
+// @ntoe    in this application we have two power converters
+//          1. Buck converter
+//          2. Boost converter
+//          all the instances of the data structures for that converters are placed in this file
 //
-// @date July 8, 2019, 1:52 PM
+// @author M52409
+//
+// @date 2019-08-06
 //=======================================================================================================
 
-#ifndef _MAIN_H_
-#define	_MAIN_H_
-#ifdef	__cplusplus
-extern "C" {
-#endif  // __cplusplus
+#include <stdbool.h>
+#include "driver/power_controllers/drv_power_controllers.h"
+#include "driver/power_controllers/drv_power_controller_buck_custom.h"
+#include "driver/power_controllers/drv_power_controller_buck_generic.h"
 
+void Drv_PowerControllers_Init(void)
+{
+    // Init all Buck Converter instances
+    Drv_PowerControllerBuck1_Init(true);                       // Init Buck Convert 1
+    Drv_PowerControllerBuck1_SetOutputVoltageReference_mV(3300); //Set Buck Converter Output to 3.3 Volt
 
-    
-    
-//=======================================================================================================
-//
-//                              Nothing to see here. Please disperse.
-//
-//              Sharing data from main.c is possible but bad behavior - use global.c/h instead
-//
-//=======================================================================================================
-
-
-
-    
-#ifdef	__cplusplus
+    // Init all Boost Converter instances
+    //TODO: Boost needs to be implemented
+    //Drv_PowerControllerBoost1_Init(true );                       // Init Boost Convert 1
+    //Drv_PowerControllerBoost1_SetOutputVoltageReference_mV(15000); //Set Boost Converter Output to 15 Volt
 }
-#endif  // __cplusplus
-#endif  // _MAIN_H_
 
+void Drv_PowerControllers_Task_100us(void)
+{
+    Drv_PowerControllerBuck_Task_100us(&pwrCtrlBuck1_Data);
+    //TODO:
+    //Drv_PowerControllerBoost_Task_100us(&pwrCtrlBoost1_Data);
+}
