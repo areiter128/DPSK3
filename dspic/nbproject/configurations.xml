@@ -45,8 +45,6 @@
         <itemPath>h/misc/interrupt.h</itemPath>
         <itemPath>h/misc/proto_data.h</itemPath>
       </logicalFolder>
-      <itemPath>h/boost_pwr_control.h</itemPath>
-      <itemPath>h/c2p2z_buck.h</itemPath>
     </logicalFolder>
     <logicalFolder name="LinkerScript"
                    displayName="Linker Files"
