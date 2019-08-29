@@ -44,7 +44,7 @@
 #include "init/init_acmp.h"
 #include "init/init_adc.h"
 
-#include "main/main_scheduler_100us.h"
+#include "os/os_scheduler.h"
 
 #ifdef TEST_ENABLED
 #include "app/app_test.h"
@@ -75,7 +75,7 @@ int main(void)
     App_Fault_Handling_Init();
     App_Proto24_Init();
     App_Proto24_GetData(&global_proto24data);
-    Main_Scheduler_Init();
+    OS_Scheduler_Init();
     //TODO: is that delay for sending the SYS_RESET information after about one second to make sure that the pic24 is also ready?
     //TODO: this could also be integrated in the App_Proto24_Task_10ms function where we have a more accurate timing
     __delay_ms(200); // due to heavy workload on ISR, delays take ~3.7 times longer than normal
@@ -89,7 +89,7 @@ int main(void)
 #ifdef TEST_ENABLED
     App_Test();
 #else
-    Main_Scheduler_RunForever();
+    OS_Scheduler_RunForever();
 #endif  // TEST_ENABLED
     return (0);
 }

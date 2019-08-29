@@ -35,7 +35,6 @@
       </logicalFolder>
       <logicalFolder name="f6" displayName="main" projectFiles="true">
         <itemPath>h/main/main.h</itemPath>
-        <itemPath>h/main/main_scheduler_100us.h</itemPath>
       </logicalFolder>
       <logicalFolder name="f5" displayName="misc" projectFiles="true">
         <itemPath>h/misc/global.h</itemPath>
@@ -44,6 +43,9 @@
         <itemPath>h/misc/dummy_compensator.h</itemPath>
         <itemPath>h/misc/interrupt.h</itemPath>
         <itemPath>h/misc/proto_data.h</itemPath>
+      </logicalFolder>
+      <logicalFolder name="f7" displayName="os" projectFiles="true">
+        <itemPath>h/os/os_scheduler.h</itemPath>
       </logicalFolder>
     </logicalFolder>
     <logicalFolder name="LinkerScript"
@@ -85,12 +87,15 @@
       </logicalFolder>
       <logicalFolder name="f6" displayName="main" projectFiles="true">
         <itemPath>src/main/main.c</itemPath>
-        <itemPath>src/main/main_scheduler_100us.c</itemPath>
+        <itemPath>src/main/main_tasks.c</itemPath>
       </logicalFolder>
       <logicalFolder name="f5" displayName="misc" projectFiles="true">
         <itemPath>src/misc/global.c</itemPath>
         <itemPath>src/misc/helpers.c</itemPath>
         <itemPath>src/misc/dummy_compensator.c</itemPath>
+      </logicalFolder>
+      <logicalFolder name="f7" displayName="os" projectFiles="true">
+        <itemPath>src/os/os_scheduler_100us.c</itemPath>
       </logicalFolder>
       <itemPath>src/config_bits.c</itemPath>
     </logicalFolder>
