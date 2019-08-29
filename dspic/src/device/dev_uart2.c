@@ -38,9 +38,16 @@ static UART_OBJECT uart2_obj ;
 //======================================================================================================================
 // @brief UART2 Driver Queue, defines the Transmit and Receive Buffers
 //======================================================================================================================
-static uint8_t uart2_txByteQ[UART2_CONFIG_TX_BYTEQ_LENGTH] ;
-static uint8_t uart2_rxByteQ[UART2_CONFIG_RX_BYTEQ_LENGTH] ;
+static uint8_t uart2_txByteQ[UART2_CONFIG_TX_BYTEQ_LENGTH];
+static uint8_t uart2_rxByteQ[UART2_CONFIG_RX_BYTEQ_LENGTH];
 
+static inline void Dev_UART2_Init_PeripheralPinMapping(void)
+{
+//    RPINR19bits.U2RXR = 0x003B;   //RC11->UART2:U2RX;
+//    RPOR13bits.RP58R = 0x0003;   //RC10->UART2:U2TX;
+    _U2RXR = 59;    // Uart2 RX connects to Port Pin RP59 / RC11
+    _RP58R = 3;     // Port Pin RPRP58 / RC10 connects to Uart2 TX
+}
 
 //======================================================================================================================
 // @brief   initializes the UART2 Driver
@@ -48,10 +55,8 @@ static uint8_t uart2_rxByteQ[UART2_CONFIG_RX_BYTEQ_LENGTH] ;
 //======================================================================================================================
 void Dev_UART2_Init(void)
 {
-    //Pin Configuration
-    RPINR19bits.U2RXR = 0x003B;   //RC11->UART2:U2RX;
-    RPOR13bits.RP58R = 0x0003;   //RC10->UART2:U2TX;
-
+    Dev_UART2_Init_PeripheralPinMapping();
+        
     IPC47bits.U2EVTIP = 1;      // UART2 Event Interrupt Priority 1
     IPC12bits.U2EIP = 1;        // UART2 Error Interrupt Priority 1
     IPC6bits.U2RXIP = 1;        // UART2 RX Interrupt Priority 1

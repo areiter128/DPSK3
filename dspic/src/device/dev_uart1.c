@@ -39,9 +39,16 @@ static UART_OBJECT uart1_obj;
 //======================================================================================================================
 // @brief UART1 Driver Queue, defines the Transmit and Receive Buffers
 //======================================================================================================================
-static uint8_t uart1_txByteQ[UART1_CONFIG_TX_BYTEQ_LENGTH] ;
-static uint8_t uart1_rxByteQ[UART1_CONFIG_RX_BYTEQ_LENGTH] ;
+static uint8_t uart1_txByteQ[UART1_CONFIG_TX_BYTEQ_LENGTH];
+static uint8_t uart1_rxByteQ[UART1_CONFIG_RX_BYTEQ_LENGTH];
 
+static inline void Dev_UART1_Init_PeripheralPinMapping(void)
+{
+//    RPINR18bits.U1RXR = 0x003D;   //RC13->UART1:U1RX;
+//    RPOR14bits.RP60R = 0x0001;   //RC12->UART1:U1TX;
+    _U1RXR = 61;    // Uart1 RX connects to Port Pin RP61 / RC13
+    _RP60R = 1;     // Port Pin RP60 / RC12 connects to Uart1 TX
+}
 
 //======================================================================================================================
 // @brief   initializes the UART1 Driver
@@ -49,9 +56,7 @@ static uint8_t uart1_rxByteQ[UART1_CONFIG_RX_BYTEQ_LENGTH] ;
 //======================================================================================================================
 void Dev_UART1_Init(void)
 {
-    //Pin Configuration
-    RPINR18bits.U1RXR = 0x003D;   //RC13->UART1:U1RX;
-    RPOR14bits.RP60R = 0x0001;   //RC12->UART1:U1TX;
+    Dev_UART1_Init_PeripheralPinMapping();
 
     IPC47bits.U1EVTIP = 1;      // UART1 Event Interrupt Priority 1
     IPC12bits.U1EIP = 1;        // UART1 Error Interrupt Priority 1
