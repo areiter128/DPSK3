@@ -34,9 +34,10 @@
 
 //#include "driver/drv_power_controller_buck.h"
 #include "driver/power_controllers/drv_power_controllers.h"
-#include "init_pwm.h"
-#include "init_acmp.h"
-#include "init_adc.h"
+#include "driver/power_controllers/drv_power_controller_buck_generic.h"
+//#include "init_pwm.h"
+//#include "init_acmp.h"
+//#include "init_adc.h"
 //#include "npnz16b.h"
 //#include "c2p2z_buck.h"
 
@@ -72,7 +73,7 @@ void buckPC_GotoState(POWER_CONTROLLER_DATA_t* pPCData, PWR_CTRL_STATE_e newStat
 }
 
 //=======================================================================================================
-// @brief   Initializes all peripherals and data structures of the buck controller like PWN, ADC, DAC, CMP etc.
+// @brief   Initializes all peripherals and data structures of the buck controller like PWM, ADC, DAC, CMP etc.
 // @note    call this during booting up the system before you call anything else or the Power Controller
 //=======================================================================================================
 void Drv_PowerControllerBuck_Init(POWER_CONTROLLER_DATA_t* pPCData, bool autostart)
@@ -100,10 +101,10 @@ void Drv_PowerControllerBuck_Task_100us(POWER_CONTROLLER_DATA_t* pPCData)
     {
         // Fire up all peripherals used by this power controller
         case PCS_STARTUP_PERIPHERALS:
-            launch_adc();                                   // Start ADC Module
-            launch_buck_acmp();                             // Start analog comparator/DAC module
-            launch_buck_trig_pwm();                         // Start auxiliary PWM 
-            launch_buck_pwm();                              // Start PWM
+            Drv_PowerControllerBuck1_LaunchADC();           // Start ADC Module
+            Drv_PowerControllerBuck1_LaunchACMP();          // Start analog comparator/DAC module
+            Drv_PowerControllerBuck1_LaunchAuxiliaryPWM();  // Start auxiliary PWM 
+            Drv_PowerControllerBuck1_LaunchPWM();           // Start PWM
 
             //status.flags.op_status = SEPIC_STAT_OFF; // Set SEPIC status to OFF
             buckPC_GotoState(pPCData, PCS_WAIT_FOR_POWER_IN_GOOD);           //Goto next state

@@ -30,14 +30,15 @@
 
 #include <stdint.h>
 #include <stdbool.h>
-#include "driver/power_controllers/drv_power_controllers.h"
+//#include "driver/power_controllers/drv_power_controllers.h"
+
 #ifdef	__cplusplus
 extern "C" {
 #endif // __cplusplus
 
 
 //======================================================================================================================
-// @brief   Initializes all peripherals and data structures of the buck controller like PWN, ADC, DAC, CMP etc.
+// @brief   Initializes all peripherals and data structures of the buck controller like PWM, ADC, DAC, CMP etc.
 // @note    call this during booting up the system before you call anything else or the Power Controller
 //          you must have an object with initialized data!
 //======================================================================================================================

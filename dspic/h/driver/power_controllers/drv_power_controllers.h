@@ -31,6 +31,29 @@
 #include <stdbool.h>
 #include <stdint.h>
 
+//#include "driver/power_controllers/drv_power_controller_buck_custom.h"
+
+#define ADC_POWRUP_TIMEOUT         5000
+#define VOUT_ADC_TRIGGER_DELAY       80  // With respect to the start of the PWM cycle
+
+#define BOOST_OFFSET                500  // With respect to the buck converter 
+#define PWM_PERIOD                 1000  // Measured in [tick = 2ns]
+#define LEB_PERIOD                  100  // Leading Edge Blanking = n x PWM resolution (here: 50 x 2ns = 100ns)
+#define TDR                          25  // Rising edge dead time [2ns]
+#define TDF                          40  // Falling edge dead time [2ns]
+
+
+#define TMOD_DURATION                75  // Transition Mode Duration
+#define SS_DURATION                  85  // Time from Start of Transition Mode until Steady-State Filter is Enabled
+#define SLOPE_START_DELAY           100  // With respect to the start of the PWM cycle
+#define SLOPE_STOP_DELAY            800  // With respect to the start of the PWM cycle
+#define LEB_PER_COMP                 50  // Leading edge period for the comparator when slope re-settles to its initial value
+#define SLOPE_RATE                   43  // Slope Ramp Rate Value
+#define DACDATH_BUCK                  0  // DAC value for the buck the slope starts from
+#define DACDATH_BOOST                 0  // DAC value for the boost the slope starts from
+#define DACDATL_BUCK                205  // Set this to minimum in Slope mode
+#define DACDATL_BOOST               205  // Set this to minimum in Slope mode
+
 typedef enum
 {
     PCS_STARTUP_PERIPHERALS      = 1,    // Fire up all the peripherals that are involved
@@ -95,5 +118,10 @@ typedef struct
 
 extern void Drv_PowerControllers_Init(void);
 extern void Drv_PowerControllers_Task_100us(void);
+
+extern void Drv_PowerControllers_InitPWM(void);
+extern void Drv_PowerControllers_InitACMP(void);
+extern void Drv_PowerControllers_InitADC(void);
+extern void Drv_PowerControllers_InitVinADC(void);
 
 #endif  //_DRV_POWER_CONTROLLERS_H_

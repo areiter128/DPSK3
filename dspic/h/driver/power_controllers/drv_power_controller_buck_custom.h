@@ -31,10 +31,12 @@
 
 #include <stdbool.h>
 #include <stdint.h>
-#include "driver/power_controllers/drv_power_controllers.h"
+
 #ifdef	__cplusplus
 extern "C" {
 #endif // __cplusplus
+    
+#define INIT_DUTY_CYCLE             800         // Initial value for soft-start routine
 
 extern POWER_CONTROLLER_DATA_t pwrCtrlBuck1_Data;      // data instance for the buck converter
 
@@ -47,13 +49,13 @@ double Drv_PowerControllerBuck1_GetOutputVoltage();
 // @brief   sets the Output Voltage Reference in Volts
 // @note    call this function after calling the Init function to tell power controller the needed reference voltage 
 //=======================================================================================================
-void Drv_PowerControllerBuck1_SetOutputVoltageReference(double newVoltRef);
+void Drv_PowerControllerBuck1_SetOutputVoltageReference(POWER_CONTROLLER_DATA_t* pPCData, double newVoltRef);
 
 //=======================================================================================================
 // @brief   sets the Output Voltage Reference in Millivolts
 // @note    call this function after calling the Init function to tell power controller the needed reference voltage
 //=======================================================================================================
-void Drv_PowerControllerBuck1_SetOutputVoltageReference_mV(uint32_t newVoltRef_mV);
+void Drv_PowerControllerBuck1_SetOutputVoltageReference_mV(POWER_CONTROLLER_DATA_t* pPCData, uint32_t newVoltRef_mV);
 
 //=======================================================================================================
 // @brief   Initializes the Buck Power Converter - Instance 1
@@ -61,6 +63,31 @@ void Drv_PowerControllerBuck1_SetOutputVoltageReference_mV(uint32_t newVoltRef_m
 //=======================================================================================================
 void Drv_PowerControllerBuck1_Init(bool autostart);
 
+//=======================================================================================================
+volatile uint16_t Drv_PowerControllerBuck1_InitPWM(void);
+
+//=======================================================================================================
+volatile uint16_t Drv_PowerControllerBuck1_InitAuxiliaryPWM(void);
+
+//=======================================================================================================
+volatile uint16_t Drv_PowerControllerBuck1_InitACMP(void);
+
+//=======================================================================================================
+volatile uint16_t Drv_PowerControllerBuck1_InitADC(void);
+
+//=======================================================================================================
+volatile uint16_t Drv_PowerControllerBuck1_LaunchPWM(void);
+
+//=======================================================================================================
+volatile uint16_t Drv_PowerControllerBuck1_LaunchAuxiliaryPWM(void);
+
+//=======================================================================================================
+volatile uint16_t Drv_PowerControllerBuck1_LaunchACMP(void);
+
+//=======================================================================================================
+volatile uint16_t Drv_PowerControllerBuck1_LaunchADC(void);
+
+           
 #ifdef	__cplusplus
 }
 #endif // __cplusplus
