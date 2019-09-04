@@ -63,9 +63,9 @@ double Drv_PowerControllerBuck1_GetOutputVoltage()
 // @brief   sets the Output Voltage Reference in Volts
 // @note    call this function after calling the Init function to tell power controller the needed reference voltage 
 //=======================================================================================================
-void Drv_PowerControllerBuck1_SetOutputVoltageReference(POWER_CONTROLLER_DATA_t* pPCData, double newVoltRef)
+void Drv_PowerControllerBuck1_SetOutputVoltageReference(double newVoltRef)
 {
-    pPCData->voltageRef_softStart = ((newVoltRef * BUCK1_ADC_RESOLUTION * BUCK1_FEEDBACK_BGAIN) / BUCK1_ADC_REFERENCE);
+    pwrCtrlBuck1_Data.voltageRef_softStart = ((newVoltRef * BUCK1_ADC_RESOLUTION * BUCK1_FEEDBACK_BGAIN) / BUCK1_ADC_REFERENCE);
 }
 
 
@@ -73,9 +73,9 @@ void Drv_PowerControllerBuck1_SetOutputVoltageReference(POWER_CONTROLLER_DATA_t*
 // @brief   sets the Output Voltage Reference in Millivolts
 // @note    call this function after calling the Init function to tell power controller the needed reference voltage
 //=======================================================================================================
-void Drv_PowerControllerBuck1_SetOutputVoltageReference_mV(POWER_CONTROLLER_DATA_t* pPCData, uint32_t newVoltRef_mV)
+void Drv_PowerControllerBuck1_SetOutputVoltageReference_mV(uint32_t newVoltRef_mV)
 {
-    pPCData->voltageRef_softStart = ((((uint32_t)newVoltRef_mV * BUCK1_ADC_RESOLUTION) * BUCK1_FEEDBACK_BGAIN) / BUCK1_ADC_REFERENCE) / 1000;
+    pwrCtrlBuck1_Data.voltageRef_softStart = ((((uint32_t)newVoltRef_mV * BUCK1_ADC_RESOLUTION) * BUCK1_FEEDBACK_BGAIN) / BUCK1_ADC_REFERENCE) / 1000;
 }
 
 void Drv_PowerControllerBuck1_EnableControlLoop(void)
@@ -91,6 +91,13 @@ void Drv_PowerControllerBuck1_DisableControlLoop(void)
     PG1IOCONLbits.OVRENH = 1;           // User override disabled for PWMxH Pin
     PG1IOCONLbits.OVRENL = 1;           // User override disabled for PWMxL Pin
     //TODO: should we set some output pin for safety reasons???
+}
+
+void Drv_PowerControllerBuck1_LaunchPeripherals(void)
+{
+    Drv_PowerControllerBuck1_LaunchACMP();          // Start analog comparator/DAC module
+    Drv_PowerControllerBuck1_LaunchAuxiliaryPWM();  // Start auxiliary PWM 
+    Drv_PowerControllerBuck1_LaunchPWM();           // Start PWM
 }
 
 //=======================================================================================================
@@ -115,13 +122,14 @@ void Drv_PowerControllerBuck1_Init(bool autostart)
     pwrCtrlBuck1_Data.voltageRef_rampStep = 4;              // 4 adc values per 100µs
     pwrCtrlBuck1_Data.powerInputOk_waitTime_100us = 1000;   // 100ms input power stabilization delay
     pwrCtrlBuck1_Data.powerOutputOk_waitTime_100us = 1000;  // 100ms output power stabilization delay
-    pwrCtrlBuck1_Data.ftkEnableControlLoop = Drv_PowerControllerBuck1_EnableControlLoop;
+    pwrCtrlBuck1_Data.ftkEnableControlLoop  = Drv_PowerControllerBuck1_EnableControlLoop;
     pwrCtrlBuck1_Data.ftkDisableControlLoop = Drv_PowerControllerBuck1_DisableControlLoop;
+    pwrCtrlBuck1_Data.ftkLaunchPeripherals  = Drv_PowerControllerBuck1_LaunchPeripherals;
     
-    Drv_PowerControllerBuck1_InitAuxiliaryPWM(); // Set up auxiliary PWM for buck converter
-    Drv_PowerControllerBuck1_InitPWM();          // Set up buck converter PWM
-    Drv_PowerControllerBuck1_InitACMP();         // Set up buck converter peak current comparator/DAC
-    Drv_PowerControllerBuck1_InitADC();          // Set up buck converter ADC (voltage feedback only)
+    Drv_PowerControllerBuck1_InitAuxiliaryPWM(); // Set up auxiliary PWM 
+    Drv_PowerControllerBuck1_InitPWM();          // Set up primary PWM 
+    Drv_PowerControllerBuck1_InitACMP();         // Set up comparator/DAC for PCMC
+    Drv_PowerControllerBuck1_InitADC();          // Set up ADC (voltage feedback only)
    
     c2p2z_buck_Init();
     c2p2z_buck.ADCTriggerOffset = VOUT_ADC_TRIGGER_DELAY;
@@ -399,7 +407,7 @@ volatile uint16_t Drv_PowerControllerBuck1_LaunchAuxiliaryPWM(void)
     Nop();
     Nop();
         
-    PG3CONLbits.ON = 1; // PWM Generator #2 Enable: PWM Generator is enabled
+    PG3CONLbits.ON = 1; // PWM Generator #3 Enable: PWM Generator is enabled
     while(PG3STATbits.UPDATE);
     PG3STATbits.UPDREQ = 1; // Update all PWM registers
 
@@ -520,47 +528,7 @@ volatile uint16_t Drv_PowerControllerBuck1_InitADC(void)
     return(1); 
 }
 
-volatile uint16_t Drv_PowerControllerBuck1_LaunchADC(void)
-{
-    volatile uint16_t timeout=0;
-    
-    // If ADC Module is already turned on, ADC is running => skip launch_adc())
-    if(ADCON1Lbits.ADON) return(1); 
-    
-    ADCON1Lbits.ADON = 1; // ADC Enable: ADC module is enabled first
 
-    ADCON5Lbits.SHRPWR = 1; // Enabling Shared ADC Core analog circuits power
-    while((!ADCON5Lbits.SHRRDY) && (timeout++<ADC_POWRUP_TIMEOUT));
-    if((!ADCON5Lbits.SHRRDY) || (timeout>=ADC_POWRUP_TIMEOUT)) return(0);
-    ADCON3Hbits.SHREN  = 1; // Enable Shared ADC digital circuitry
-        
-    ADCON5Lbits.C0PWR = 0; // Dedicated ADC Core 0 Power Enable: ADC core is off
-//    while((!ADCON5Lbits.C0RDY) && (timeout++<ADC_POWRUP_TIMEOUT));
-//    if((!ADCON5Lbits.C0RDY) || (timeout>=ADC_POWRUP_TIMEOUT)) return(0);
-    ADCON3Hbits.C0EN  = 0; // Dedicated Core 0 is not enabled
-
-    ADCON5Lbits.C1PWR = 0; // Dedicated ADC Core 1 Power Enable: ADC core is off
-//    while((!ADCON5Lbits.C1RDY) && (timeout++<ADC_POWRUP_TIMEOUT));
-//    if((!ADCON5Lbits.C1RDY) || (timeout>=ADC_POWRUP_TIMEOUT)) return(0);
-    ADCON3Hbits.C1EN  = 0; // Dedicated Core 1 is not enabled
-
-    // INITIALIZE AN12 INTERRUPTS (Board Input Voltage)
-    IPC25bits.ADCAN12IP = 0;   // Interrupt Priority Level 0
-    IFS6bits.ADCAN12IF = 0;    // Reset Interrupt Flag Bit
-    IEC6bits.ADCAN12IE = 0;    // Disable ADCAN12 Interrupt 
-
-     // INITIALIZE AN13 INTERRUPTS (Buck Output Voltage)
-    IPC26bits.ADCAN13IP = 5;   // Interrupt Priority Level 5
-    IFS6bits.ADCAN13IF = 0;    // Reset Interrupt Flag Bit
-    IEC6bits.ADCAN13IE = 1;    // Enable ADCAN13 Interrupt 
-    
-    // INITIALIZE AN18 INTERRUPTS (Boost Output Voltage)
-    IPC27bits.ADCAN18IP = 5;   // Interrupt Priority Level 5
-    IFS6bits.ADCAN18IF = 0;    // Reset Interrupt Flag Bit
-    IEC6bits.ADCAN18IE = 1;    // Enable ADCAN18 Interrupt 
-    
-    return(1);
-}
 
 //=======================================================================================================
 // @brief   Interrupt routine for calling the buck c2p2z compensator and sampling the Output Voltage

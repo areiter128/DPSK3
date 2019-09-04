@@ -30,6 +30,8 @@
 //=======================================================================================================
 
 #include <stdbool.h>
+#include <xc.h>
+
 #include "driver/power_controllers/drv_power_controllers.h"
 #include "driver/power_controllers/drv_power_controller_buck_generic.h"
 #include "driver/power_controllers/drv_power_controller_buck_custom.h"
@@ -37,7 +39,7 @@
 void Drv_PowerControllers_Init(void)
 {
     // Init all Buck Converter instances
-    Drv_PowerControllerBuck1_Init(true);                       // Init Buck Convert 1
+    Drv_PowerControllerBuck1_Init(true);                       // Init Buck Converter 1
     Drv_PowerControllerBuck1_SetOutputVoltageReference_mV(3300); //Set Buck Converter Output to 3.3 Volt
 
     // Init all Boost Converter instances
@@ -53,7 +55,7 @@ void Drv_PowerControllers_Task_100us(void)
     //Drv_PowerControllerBoost_Task_100us(&pwrCtrlBoost1_Data);
 }
 
-void Drv_PowerControllers_InitPWM(void)
+volatile uint16_t Drv_PowerControllers_InitPWM(void)
 {
     // Make sure power to the peripheral is enabled
     PMD1bits.PWMMD = 0; // PWM Module Disable: PWM module is enabled
@@ -137,7 +139,7 @@ void Drv_PowerControllers_InitPWM(void)
     return(1);
 }
 
-void Drv_PowerControllers_InitACMP(void)
+volatile uint16_t Drv_PowerControllers_InitACMP(void)
 {
     // Make sure power is turned on to comparator module #1 & #2
     PMD7bits.CMP1MD = 0; // Comparator 1 Module Powetr Disable: Comparator 1 module is enabled
@@ -169,7 +171,7 @@ void Drv_PowerControllers_InitACMP(void)
     return(1);
 }
 
-void Drv_PowerControllers_InitADC(void)
+volatile uint16_t Drv_PowerControllers_InitADC(void)
 {
      // Make sure power to peripheral is enabled
     PMD1bits.ADC1MD = 0; // ADC Module Power Disable: ADC module power is enabled
@@ -251,7 +253,7 @@ void Drv_PowerControllers_InitADC(void)
     return(1);
 }
 
-void Drv_PowerControllers_InitVinADC(void)
+volatile uint16_t Drv_PowerControllers_InitVinADC(void)
 {
     // ANSELx: ANALOG SELECT FOR PORTx REGISTER
     ANSELCbits.ANSELC0 = 1; // Analog input is enabled and digital input is disabled for RC0 (Buck converter input voltage feedback)
@@ -301,3 +303,44 @@ void Drv_PowerControllers_InitVinADC(void)
     return(1);
 }
 
+volatile uint16_t Drv_PowerControllers_LaunchADC(void)
+{
+    volatile uint16_t timeout=0;
+    
+    // If ADC Module is already turned on, ADC is running => skip launch_adc())
+    if(ADCON1Lbits.ADON) return(1); 
+    
+    ADCON1Lbits.ADON = 1; // ADC Enable: ADC module is enabled first
+
+    ADCON5Lbits.SHRPWR = 1; // Enabling Shared ADC Core analog circuits power
+    while((!ADCON5Lbits.SHRRDY) && (timeout++<ADC_POWRUP_TIMEOUT));
+    if((!ADCON5Lbits.SHRRDY) || (timeout>=ADC_POWRUP_TIMEOUT)) return(0);
+    ADCON3Hbits.SHREN  = 1; // Enable Shared ADC digital circuitry
+        
+    ADCON5Lbits.C0PWR = 0; // Dedicated ADC Core 0 Power Enable: ADC core is off
+//    while((!ADCON5Lbits.C0RDY) && (timeout++<ADC_POWRUP_TIMEOUT));
+//    if((!ADCON5Lbits.C0RDY) || (timeout>=ADC_POWRUP_TIMEOUT)) return(0);
+    ADCON3Hbits.C0EN  = 0; // Dedicated Core 0 is not enabled
+
+    ADCON5Lbits.C1PWR = 0; // Dedicated ADC Core 1 Power Enable: ADC core is off
+//    while((!ADCON5Lbits.C1RDY) && (timeout++<ADC_POWRUP_TIMEOUT));
+//    if((!ADCON5Lbits.C1RDY) || (timeout>=ADC_POWRUP_TIMEOUT)) return(0);
+    ADCON3Hbits.C1EN  = 0; // Dedicated Core 1 is not enabled
+
+    // INITIALIZE AN12 INTERRUPTS (Board Input Voltage)
+    IPC25bits.ADCAN12IP = 0;   // Interrupt Priority Level 0
+    IFS6bits.ADCAN12IF = 0;    // Reset Interrupt Flag Bit
+    IEC6bits.ADCAN12IE = 0;    // Disable ADCAN12 Interrupt 
+
+     // INITIALIZE AN13 INTERRUPTS (Buck Output Voltage)
+    IPC26bits.ADCAN13IP = 5;   // Interrupt Priority Level 5
+    IFS6bits.ADCAN13IF = 0;    // Reset Interrupt Flag Bit
+    IEC6bits.ADCAN13IE = 1;    // Enable ADCAN13 Interrupt 
+    
+    // INITIALIZE AN18 INTERRUPTS (Boost Output Voltage)
+    IPC27bits.ADCAN18IP = 5;   // Interrupt Priority Level 5
+    IFS6bits.ADCAN18IF = 0;    // Reset Interrupt Flag Bit
+    IEC6bits.ADCAN18IE = 1;    // Enable ADCAN18 Interrupt 
+    
+    return(1);
+}

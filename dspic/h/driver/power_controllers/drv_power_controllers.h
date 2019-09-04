@@ -31,8 +31,6 @@
 #include <stdbool.h>
 #include <stdint.h>
 
-//#include "driver/power_controllers/drv_power_controller_buck_custom.h"
-
 #define ADC_POWRUP_TIMEOUT         5000
 #define VOUT_ADC_TRIGGER_DELAY       80  // With respect to the start of the PWM cycle
 
@@ -41,6 +39,7 @@
 #define LEB_PERIOD                  100  // Leading Edge Blanking = n x PWM resolution (here: 50 x 2ns = 100ns)
 #define TDR                          25  // Rising edge dead time [2ns]
 #define TDF                          40  // Falling edge dead time [2ns]
+#define INIT_DUTY_CYCLE             800  // Initial value for soft-start routine
 
 
 #define TMOD_DURATION                75  // Transition Mode Duration
@@ -114,14 +113,16 @@ typedef struct
     volatile POWER_CONTROLLER_FLAGS_t flags;    // status flags
     volatile pCallback_t ftkEnableControlLoop;  // Controller calls this function to enable the control Loop
     volatile pCallback_t ftkDisableControlLoop; // Controller calls this function to disable the control Loop
+    volatile pCallback_t ftkLaunchPeripherals;  // Controller calls this function to launch the peripherals
 }POWER_CONTROLLER_DATA_t;                       // power control soft-start settings and variables
 
 extern void Drv_PowerControllers_Init(void);
 extern void Drv_PowerControllers_Task_100us(void);
 
-extern void Drv_PowerControllers_InitPWM(void);
-extern void Drv_PowerControllers_InitACMP(void);
-extern void Drv_PowerControllers_InitADC(void);
-extern void Drv_PowerControllers_InitVinADC(void);
+extern volatile uint16_t Drv_PowerControllers_InitPWM(void);
+extern volatile uint16_t Drv_PowerControllers_InitACMP(void);
+extern volatile uint16_t Drv_PowerControllers_InitADC(void);
+extern volatile uint16_t Drv_PowerControllers_InitVinADC(void);
+extern volatile uint16_t Drv_PowerControllers_LaunchADC(void);
 
 #endif  //_DRV_POWER_CONTROLLERS_H_

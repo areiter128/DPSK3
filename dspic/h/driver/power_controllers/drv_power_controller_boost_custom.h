@@ -15,19 +15,20 @@
 //=======================================================================================================
 
 //=======================================================================================================
-// @file drv_power_controller_buck_custom.h
+// @file drv_power_controller_boost_custom.h
 //
-// @brief power controller functions for buck converter
+// @brief power controller functions for boost converter
 //
 // @author M91406
 // @author M52409
 // @author M91281
 //
-// @date July 9, 2019, 1:10 PM
+// @date September 4, 2019, 1:10 PM
 //=======================================================================================================
 
-#ifndef _DRV_POWER_CONTROLLER_BUCK_CUSTOM_H_
-#define	_DRV_POWER_CONTROLLER_BUCK_CUSTOM_H_
+
+#ifndef _DRV_POWER_CONTROLLER_BOOST_CUSTOM_H_
+#define	_DRV_POWER_CONTROLLER_BOOST_CUSTOM_H_
 
 #include <stdbool.h>
 #include <stdint.h>
@@ -35,58 +36,56 @@
 #ifdef	__cplusplus
 extern "C" {
 #endif // __cplusplus
-    
 
-
-extern POWER_CONTROLLER_DATA_t pwrCtrlBuck1_Data;      // data instance for the buck converter
+extern POWER_CONTROLLER_DATA_t pwrCtrlBoost1_Data;      // data instance for the boost converter
 
 //=======================================================================================================
 // @brief   returns the Output Voltage in Volts as a double
 //=======================================================================================================
-double Drv_PowerControllerBuck1_GetOutputVoltage();
+double Drv_PowerControllerBoost1_GetOutputVoltage();
 
 //=======================================================================================================
 // @brief   sets the Output Voltage Reference in Volts
 // @note    call this function after calling the Init function to tell power controller the needed reference voltage 
 //=======================================================================================================
-void Drv_PowerControllerBuck1_SetOutputVoltageReference(double newVoltRef);
+void Drv_PowerControllerBoost1_SetOutputVoltageReference(double newVoltRef);
 
 //=======================================================================================================
 // @brief   sets the Output Voltage Reference in Millivolts
 // @note    call this function after calling the Init function to tell power controller the needed reference voltage
 //=======================================================================================================
-void Drv_PowerControllerBuck1_SetOutputVoltageReference_mV(uint32_t newVoltRef_mV);
-
+void Drv_PowerControllerBoost1_SetOutputVoltageReference_mV(uint32_t newVoltRef_mV);
+    
 //=======================================================================================================
-// @brief   Initializes the Buck Power Converter - Instance 1
+// @brief   Initializes the Boost Power Converter - Instance 1
 // @note    In this routine all the application specific custom functions are implemented
 //=======================================================================================================
-void Drv_PowerControllerBuck1_Init(bool autostart);
+void Drv_PowerControllerBoost1_Init(bool autostart);
+    
+//=======================================================================================================
+volatile uint16_t Drv_PowerControllerBoost1_InitPWM(void);    
+ 
+//=======================================================================================================
+volatile uint16_t Drv_PowerControllerBoost1_LaunchPWM(void);
 
 //=======================================================================================================
-volatile uint16_t Drv_PowerControllerBuck1_InitPWM(void);
+volatile uint16_t Drv_PowerControllerBoost1_InitAuxiliaryPWM(void);
 
 //=======================================================================================================
-volatile uint16_t Drv_PowerControllerBuck1_InitAuxiliaryPWM(void);
+volatile uint16_t Drv_PowerControllerBoost1_LaunchAuxiliaryPWM(void);
 
 //=======================================================================================================
-volatile uint16_t Drv_PowerControllerBuck1_InitACMP(void);
+volatile uint16_t Drv_PowerControllerBoost1_InitACMP(void);
 
 //=======================================================================================================
-volatile uint16_t Drv_PowerControllerBuck1_InitADC(void);
+volatile uint16_t Drv_PowerControllerBoost1_LaunchACMP(void);
 
 //=======================================================================================================
-volatile uint16_t Drv_PowerControllerBuck1_LaunchPWM(void);
+volatile uint16_t Drv_PowerControllerBoost1_InitADC(void);
 
-//=======================================================================================================
-volatile uint16_t Drv_PowerControllerBuck1_LaunchAuxiliaryPWM(void);
-
-//=======================================================================================================
-volatile uint16_t Drv_PowerControllerBuck1_LaunchACMP(void);
-
-           
 #ifdef	__cplusplus
 }
-#endif // __cplusplus
-#endif	// _DRV_POWER_CONTROLLER_BUCK_CUSTOM_H_
+#endif // __cplusplus 
+
+#endif	// _DRV_POWER_CONTROLLER_BOOST_CUSTOM_H_
 

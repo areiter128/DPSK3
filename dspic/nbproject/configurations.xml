@@ -23,15 +23,14 @@
           <itemPath>h/driver/power_controllers/drv_power_controller_buck_custom.h</itemPath>
           <itemPath>h/driver/power_controllers/drv_power_controller_buck_generic.h</itemPath>
           <itemPath>h/driver/power_controllers/drv_power_controllers.h</itemPath>
+          <itemPath>h/driver/power_controllers/drv_power_controller_boost_custom.h</itemPath>
+          <itemPath>h/driver/power_controllers/drv_power_controller_boost_generic.h</itemPath>
         </logicalFolder>
         <itemPath>h/driver/drv_lcd_interface.h</itemPath>
       </logicalFolder>
       <logicalFolder name="f1" displayName="init" projectFiles="true">
         <itemPath>h/init/init_fosc.h</itemPath>
         <itemPath>h/init/init_gpio.h</itemPath>
-        <itemPath>h/init/init_pwm.h</itemPath>
-        <itemPath>h/init/init_acmp.h</itemPath>
-        <itemPath>h/init/init_adc.h</itemPath>
       </logicalFolder>
       <logicalFolder name="f6" displayName="main" projectFiles="true">
         <itemPath>h/main/main.h</itemPath>
@@ -75,15 +74,14 @@
           <itemPath>src/driver/power_controllers/drv_power_controllers.c</itemPath>
           <itemPath>src/driver/power_controllers/drv_power_controller_buck_custom.c</itemPath>
           <itemPath>src/driver/power_controllers/drv_power_controller_buck_generic.c</itemPath>
+          <itemPath>src/driver/power_controllers/drv_power_controller_boost_custom.c</itemPath>
+          <itemPath>src/driver/power_controllers/drv_power_controller_boost_generic.c</itemPath>
         </logicalFolder>
         <itemPath>src/driver/drv_lcd_interface.c</itemPath>
       </logicalFolder>
       <logicalFolder name="f1" displayName="init" projectFiles="true">
         <itemPath>src/init/init_fosc.c</itemPath>
         <itemPath>src/init/init_gpio.c</itemPath>
-        <itemPath>src/init/init_pwm.c</itemPath>
-        <itemPath>src/init/init_acmp.c</itemPath>
-        <itemPath>src/init/init_adc.c</itemPath>
       </logicalFolder>
       <logicalFolder name="f6" displayName="main" projectFiles="true">
         <itemPath>src/main/main.c</itemPath>
