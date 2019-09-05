@@ -44,15 +44,15 @@ void Drv_PowerControllers_Init(void)
 
     // Init all Boost Converter instances
     //TODO: Boost needs to be implemented
-    //Drv_PowerControllerBoost1_Init(true );                       // Init Boost Convert 1
-    //Drv_PowerControllerBoost1_SetOutputVoltageReference_mV(15000); //Set Boost Converter Output to 15 Volt
+    Drv_PowerControllerBoost1_Init(true );                       // Init Boost Convert 1
+    Drv_PowerControllerBoost1_SetOutputVoltageReference_mV(15000); //Set Boost Converter Output to 15 Volt
 }
 
 void Drv_PowerControllers_Task_100us(void)
 {
     Drv_PowerControllerBuck_Task_100us(&pwrCtrlBuck1_Data);
     //TODO:
-    //Drv_PowerControllerBoost_Task_100us(&pwrCtrlBoost1_Data);
+    Drv_PowerControllerBoost_Task_100us(&pwrCtrlBoost1_Data);
 }
 
 volatile uint16_t Drv_PowerControllers_InitPWM(void)
