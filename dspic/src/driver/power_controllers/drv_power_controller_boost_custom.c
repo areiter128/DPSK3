@@ -34,7 +34,7 @@
 #include "driver/power_controllers/drv_power_controller_boost_generic.h"
 #include "driver/power_controllers/drv_power_controller_boost_custom.h"
 #include "driver/power_controllers/npnz16b.h"
-#include "driver/power_controllers/c2p2z_boost.h"
+#include "driver/power_controllers/c2P2Z_boost.h"
 
 //=======================================================================================================
 // local defines
@@ -75,14 +75,14 @@ void Drv_PowerControllerBoost1_SetOutputVoltageReference_mV(uint32_t newVoltRef_
 
 void Drv_PowerControllerBoost1_EnableControlLoop(void)
 {
-    c2p2z_boost.status.flag.enable = 1;  // Start the control loop for boost
+    c2P2Z_boost.status.flag.enable = 1;  // Start the control loop for boost
     PG2IOCONLbits.OVRENH = 0;           // User override disabled for PWMxH Pin
     PG2IOCONLbits.OVRENL = 0;           // User override disabled for PWMxL Pin
 }
 
 void Drv_PowerControllerBoost1_DisableControlLoop(void)
 {
-    c2p2z_boost.status.flag.enable = 0;  // Stop the control loop for boost
+    c2P2Z_boost.status.flag.enable = 0;  // Stop the control loop for boost
     PG2IOCONLbits.OVRENH = 1;           // User override disabled for PWMxH Pin
     PG2IOCONLbits.OVRENL = 1;           // User override disabled for PWMxL Pin
     //TODO: should we set some output pin for safety reasons???
@@ -126,16 +126,16 @@ void Drv_PowerControllerBoost1_Init(bool autostart)
     Drv_PowerControllerBoost1_InitACMP();         // Set up comparator/DAC for PCMC
     Drv_PowerControllerBoost1_InitADC();          // Set up ADC (voltage feedback only)
    
-    c2p2z_boost_Init();
-    c2p2z_boost.ADCTriggerOffset = VOUT_ADC_TRIGGER_DELAY;
-    c2p2z_boost.ptrADCTriggerRegister = &PG2TRIGA;
-    c2p2z_boost.InputOffset = 0;
-    c2p2z_boost.ptrControlReference = &(pwrCtrlBoost1_Data.voltageRef_compensator);    //TODO: wrong pointer!
-    c2p2z_boost.ptrSource = &ADCBUF18;
-    c2p2z_boost.ptrTarget = &DAC2DATH;
-    c2p2z_boost.MaxOutput = 3600;
-    c2p2z_boost.MinOutput = 10;
-    c2p2z_boost.status.flag.enable = 0;
+    c2P2Z_boost_Init();
+    c2P2Z_boost.ADCTriggerOffset = VOUT_ADC_TRIGGER_DELAY;
+    c2P2Z_boost.ptrADCTriggerRegister = &PG4TRIGA;
+    c2P2Z_boost.InputOffset = 0;
+    c2P2Z_boost.ptrControlReference = &(pwrCtrlBoost1_Data.voltageRef_compensator);    //TODO: wrong pointer!
+    c2P2Z_boost.ptrSource = &ADCBUF18;
+    c2P2Z_boost.ptrTarget = &DAC2DATH;
+    c2P2Z_boost.MaxOutput = 3600;
+    c2P2Z_boost.MinOutput = 10;
+    c2P2Z_boost.status.flag.enable = 0;
 }
 
 volatile uint16_t Drv_PowerControllerBoost1_InitPWM(void)
@@ -522,7 +522,7 @@ volatile uint16_t Drv_PowerControllerBoost1_InitADC(void)
 //=======================================================================================================
 void __attribute__((__interrupt__, auto_psv)) _ADCAN18Interrupt(void)
 {
-    c2p2z_boost_Update(&c2p2z_boost);     //call the compensator as soon as possible
+    c2P2Z_boost_Update(&c2P2Z_boost);     //call the compensator as soon as possible
     // the readout of the ADC register is mandatory to make the reset of the interrupt flag stick
     // if we would not read from the ADC register then the interrupt flag would be set immediately after resetting it
     pwrCtrlBoost1_Data.voltageOutput =  ADCBUF18;
