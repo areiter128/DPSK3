@@ -76,6 +76,8 @@
           <itemPath>src/driver/power_controllers/drv_power_controller_buck_generic.c</itemPath>
           <itemPath>src/driver/power_controllers/drv_power_controller_boost_custom.c</itemPath>
           <itemPath>src/driver/power_controllers/drv_power_controller_boost_generic.c</itemPath>
+          <itemPath>src/driver/power_controllers/c2P2Z_boost.c</itemPath>
+          <itemPath>src/driver/power_controllers/c2P2Z_boost_asm.s</itemPath>
         </logicalFolder>
         <itemPath>src/driver/drv_lcd_interface.c</itemPath>
       </logicalFolder>
