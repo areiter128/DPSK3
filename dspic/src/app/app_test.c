@@ -32,7 +32,9 @@ MICROCHIP FOR THIS SOFTWARE.
 //#include "compensator.h"
 #include "misc/dummy_compensator.h"
 #include "app/app_proto24.h"
+#include "driver/power_controllers/drv_power_controllers.h"
 #include "driver/power_controllers/drv_power_controller_buck_custom.h"
+#include "driver/power_controllers/drv_power_controller_boost_custom.h"
 
 
 #define SIZE_OF(X)      (sizeof(X)/sizeof(X[0]))

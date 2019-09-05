@@ -24,7 +24,9 @@
 #include "misc/global.h"
 #include "misc/helpers.h"
 #include "misc/dummy_compensator.h"
+#include "driver/power_controllers/drv_power_controllers.h"
 #include "driver/power_controllers/drv_power_controller_buck_custom.h"
+#include "driver/power_controllers/drv_power_controller_boost_custom.h"
 
 GlobalData_t    global_data;
 protocol_data_t global_proto24data;

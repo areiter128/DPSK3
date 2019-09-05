@@ -40,9 +40,9 @@
 
 #include "init/init_fosc.h"
 #include "init/init_gpio.h"
-#include "init/init_pwm.h"
-#include "init/init_acmp.h"
-#include "init/init_adc.h"
+//#include "init/init_pwm.h"
+//#include "init/init_acmp.h"
+//#include "init/init_adc.h"
 
 #include "os/os_scheduler.h"
 
