@@ -444,7 +444,7 @@ volatile uint16_t Drv_PowerControllerBoost1_InitACMP(void)
     // SLPxCONL: DACx SLOPE CONTROL LOW REGISTER
     SLP2CONLbits.HCFSEL = 0b0000; // Hysteretic Comparator Function Input Selection: (none)
     SLP2CONLbits.SLPSTOPA = 0b0010; // Slope Stop A Signal Selection: PWM2 Trigger 2
-    SLP2CONLbits.SLPSTOPB = 0b0010; // Slope Stop B Signal Selection: CMP2 Out
+    SLP2CONLbits.SLPSTOPB = 0b0000; // Slope Stop B Signal Selection: (none, ramp always resets at max duty cycle)
     SLP2CONLbits.SLPSTRT = 0b0010; // Slope Start Signal Selection: PWM2 Trigger 1
     
     // ToDo: CHECK SLP2DAT in conjunction with DAC2DATH and DAC2DATL
