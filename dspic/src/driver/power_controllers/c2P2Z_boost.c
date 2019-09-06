@@ -1,5 +1,5 @@
 /* ***************************************************************************************
- * z-Domain Control Loop Designer Version 0.9.0.61.
+ * z-Domain Control Loop Designer Version 0.9.0.60.
  * ***************************************************************************************
  * 2p2z compensation filter coefficients derived for following operating conditions:
  * ***************************************************************************************
@@ -8,7 +8,7 @@
  * 	Sampling Frequency:	250000 Hz 
  * 	Fixed Point Format:	15
  * 	Scaling Mode:		3 - Dual Bit-Shift Scaling
- * 	Input Gain:			0.125
+ * 	Input Gain:			1
  * 
  * ***************************************************************************************/
 
@@ -34,9 +34,9 @@
  * 	Pole&Zero Placement:
  * ***************************************************************************************
  *
- * 	fP0:	450 Hz 
- * 	fP1:	60000 Hz 
- * 	fZ1:	1200 Hz 
+ * 	fP0:	650 Hz 
+ * 	fP1:	30000 Hz 
+ * 	fZ1:	3000 Hz 
  *
  * ***************************************************************************************
  * 	Filter Coefficients and Parameters:
@@ -44,21 +44,21 @@
 
 	volatile fractional c2P2Z_boost_ACoefficients [2] = 
 	{
-		0x48FB,	// Coefficient A1 will be multiplied with controller output u(n-1)
-		0xF706	// Coefficient A2 will be multiplied with controller output u(n-2)
+		0x5CF5,	// Coefficient A1 will be multiplied with controller output u(n-1)
+		0xE30C	// Coefficient A2 will be multiplied with controller output u(n-2)
 	};
 
 	volatile fractional c2P2Z_boost_BCoefficients [3] = 
 	{
-		0x53C8,	// Coefficient B0 will be multiplied with error input e(n)
-		0x027E,	// Coefficient B1 will be multiplied with error input e(n-1)
-		0xAEB6	// Coefficient B2 will be multiplied with error input e(n-2)
+		0x7E11,	// Coefficient B0 will be multiplied with error input e(n)
+		0x0929,	// Coefficient B1 will be multiplied with error input e(n-1)
+		0x8B19	// Coefficient B2 will be multiplied with error input e(n-2)
 	};
 
 
 	volatile int16_t c2P2Z_boost_pre_scaler = 3;
 	volatile int16_t c2P2Z_boost_post_shift_A = -1;
-	volatile int16_t c2P2Z_boost_post_shift_B = -1;
+	volatile int16_t c2P2Z_boost_post_shift_B = 4;
 	volatile fractional c2P2Z_boost_post_scaler = 0x0000;
 
 	volatile cNPNZ16b_t c2P2Z_boost; // user-controller data object

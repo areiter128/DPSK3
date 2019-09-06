@@ -173,7 +173,7 @@ volatile uint16_t Drv_PowerControllerBoost1_InitPWM(void)
     PG2IOCONLbits.SWAP = 0;    // Swap PWM Signals to PWMxH and PWMxL Device Pins
     PG2IOCONLbits.OVRENH = 1;  // User Override Enable for PWMxH Pin: OVRDAT1 provides data for output on the PWMxH pin
     PG2IOCONLbits.OVRENL = 1;  // User Override Enable for PWMxL Pin: OVRDAT0 provides data for output on the PWMxL pin
-    PG2IOCONLbits.OVRDAT = 0b00; // Data for PWMxH/PWMxL Pins if Override Event is Active: PWMxL=OVRDAT0, PWMxH=OVRDAR1
+    PG2IOCONLbits.OVRDAT = 0b00; // Data for PWMxH/PWMxL Pins if Override Event is Active: PWMxL=OVRDAT0, PWMxH=OVRDAT1
     PG2IOCONLbits.OSYNC = 0b00; // User Output Override Synchronization Control: User output overrides via the OVRENH/L and OVRDAT[1:0] bits are synchronized to the local PWM time base (next Start-of-Cycle)
     
     PG2IOCONLbits.FLTDAT = 0b00; // Data for PWMxH/PWMxL Pins if Fault Event is Active: PWMxL=FLTDAT0, PWMxH=FLTDAR1
@@ -416,7 +416,7 @@ volatile uint16_t Drv_PowerControllerBoost1_InitACMP(void)
     DAC2CONLbits.DACEN = 0; // Individual DACx Module Enable: Disables DACx module during configuration
     DAC2CONLbits.IRQM = 0b00; // Interrupt Mode Selection: Interrupts are disabled
     DAC2CONLbits.CBE = 1; // Comparator Blank Enable: Enables the analog comparator output to be blanked (gated off) during the recovery transition following the completion of a slope operation
-    DAC2CONLbits.DACOEN = 1; // DACx Output Buffer Enable: disabled for this module
+    DAC2CONLbits.DACOEN = 0; // DACx Output Buffer Enable: disabled for this module
     DAC2CONLbits.FLTREN = 0; // Comparator Digital Filter Enable: Digital filter is disabled
     // DAC2CONLbits.CMPSTAT (read only bit)
     DAC2CONLbits.CMPPOL = 0; // Comparator Output Polarity Control: Output is non-inverted

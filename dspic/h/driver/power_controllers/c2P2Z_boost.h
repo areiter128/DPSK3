@@ -1,5 +1,5 @@
 /* ***************************************************************************************
- * z-Domain Control Loop Designer Version 0.9.0.61.
+ * z-Domain Control Loop Designer Version 0.9.0.60.
  * ***************************************************************************************
  * 2p2z compensation filter coefficients derived for following operating conditions:
  * ***************************************************************************************
@@ -8,7 +8,7 @@
  * 	Sampling Frequency:	250000 Hz 
  * 	Fixed Point Format:	15
  * 	Scaling Mode:		3 - Dual Bit-Shift Scaling
- * 	Input Gain:			0.125
+ * 	Input Gain:			1
  * 
  * ***************************************************************************************/
 
@@ -53,19 +53,19 @@
 
 // Function call prototypes for initialization routines and control loops
 
-extern uint16_t c2P2Z_boost_Init(void); // Loads default coefficients into 2P2Z controller and resets histories to zero
+extern inline uint16_t c2P2Z_boost_Init(void); // Loads default coefficients into 2P2Z controller and resets histories to zero
 
-extern void c2P2Z_boost_Reset( // Resets the 2P2Z controller histories
+extern inline void c2P2Z_boost_Reset( // Resets the 2P2Z controller histories
 	volatile cNPNZ16b_t* controller // Pointer to nPnZ data structure
 	);
 
-extern void c2P2Z_boost_Precharge( // Pre-charges histories of the 2P2Z with defined steady-state data
+extern inline void c2P2Z_boost_Precharge( // Pre-charges histories of the 2P2Z with defined steady-state data
 	volatile cNPNZ16b_t* controller, // Pointer to nPnZ data structure
 	volatile uint16_t ctrl_input, // user-defined, constant error history value
 	volatile uint16_t ctrl_output // user-defined, constant control output history value
 	);
 
-extern void c2P2Z_boost_Update( // Calls the 2P2Z controller
+extern inline void c2P2Z_boost_Update( // Calls the 2P2Z controller
 	volatile cNPNZ16b_t* controller // Pointer to nPnZ data structure
 	);
 
