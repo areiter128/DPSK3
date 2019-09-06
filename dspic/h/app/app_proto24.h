@@ -28,7 +28,7 @@ extern "C" {
 #endif
 
 //#include <xc.h>
-#include "misc/proto_data.h"
+#include "../../../common/h/proto_data.h"
 
 void App_Proto24_Init(void);
 bool App_Proto24_IsNewDataAvailable(void);

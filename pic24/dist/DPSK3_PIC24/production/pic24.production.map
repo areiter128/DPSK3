@@ -1,21 +1,21 @@
-Microchip Technology Inc, v1.36 (B)
+Microchip Technology Inc, v1.40 (A)
 
 Tool Name:
-  c:\program files (x86)\microchip\xc16\v1.36\bin\bin\..\bin/elf-ld.exe
+  c:\program files (x86)\microchip\xc16\v1.40\bin\bin\..\bin/elf-ld.exe
 
 Command:
   -p24FJ64GA004 \
   -o \
   dist/DPSK3_PIC24/production/pic24.production.elf \
-  -Lc:/program files (x86)/microchip/xc16/v1.36/bin/bin/.. \
-  -Lc:/program files (x86)/microchip/xc16/v1.36/bin/bin/../../lib \
-  -Lc:/program files (x86)/microchip/xc16/v1.36/bin/bin/../../support/PIC24E/gld \
-  -Lc:/program files (x86)/microchip/xc16/v1.36/bin/bin/../../support/PIC24F/gld \
-  -Lc:/program files (x86)/microchip/xc16/v1.36/bin/bin/../../support/PIC24H/gld \
-  -Lc:/program files (x86)/microchip/xc16/v1.36/bin/bin/../../support/dsPIC30F/gld \
-  -Lc:/program files (x86)/microchip/xc16/v1.36/bin/bin/../../support/dsPIC33C/gld \
-  -Lc:/program files (x86)/microchip/xc16/v1.36/bin/bin/../../support/dsPIC33E/gld \
-  -Lc:/program files (x86)/microchip/xc16/v1.36/bin/bin/../../support/dsPIC33F/gld \
+  -Lc:/program files (x86)/microchip/xc16/v1.40/bin/bin/.. \
+  -Lc:/program files (x86)/microchip/xc16/v1.40/bin/bin/../../lib \
+  -Lc:/program files (x86)/microchip/xc16/v1.40/bin/bin/../../support/PIC24E/gld \
+  -Lc:/program files (x86)/microchip/xc16/v1.40/bin/bin/../../support/PIC24F/gld \
+  -Lc:/program files (x86)/microchip/xc16/v1.40/bin/bin/../../support/PIC24H/gld \
+  -Lc:/program files (x86)/microchip/xc16/v1.40/bin/bin/../../support/dsPIC30F/gld \
+  -Lc:/program files (x86)/microchip/xc16/v1.40/bin/bin/../../support/dsPIC33C/gld \
+  -Lc:/program files (x86)/microchip/xc16/v1.40/bin/bin/../../support/dsPIC33E/gld \
+  -Lc:/program files (x86)/microchip/xc16/v1.40/bin/bin/../../support/dsPIC33F/gld \
   build/DPSK3_PIC24/production/mcc_generated_files/pin_manager.o \
   build/DPSK3_PIC24/production/mcc_generated_files/interrupt_manager.o \
   build/DPSK3_PIC24/production/mcc_generated_files/traps.o \
@@ -59,37 +59,41 @@ Command:
 Optional library libpPIC24Fxxx.a not found
 Archive member included because of file (symbol)
 
-c:/program files (x86)/microchip/xc16/v1.36/bin/bin/../../lib\liblega-pic30-elf.a(crt0_standard.o)
+c:/program files (x86)/microchip/xc16/v1.40/bin/bin/../../lib\liblega-pic30-elf.a(crt0_standard.o)
                               (__resetPRI)
-c:/program files (x86)/microchip/xc16/v1.36/bin/bin/../../lib\liblega-pic30-elf.a(data_init_standard.o)
-                              c:/program files (x86)/microchip/xc16/v1.36/bin/bin/../../lib\liblega-pic30-elf.a(crt0_standard.o) (__data_init_standard)
-c:/program files (x86)/microchip/xc16/v1.36/bin/bin/../../lib\liblega-pic30-elf.a(crt_start_mode_normal.Leo)
+c:/program files (x86)/microchip/xc16/v1.40/bin/bin/../../lib\liblega-pic30-elf.a(data_init_standard.o)
+                              c:/program files (x86)/microchip/xc16/v1.40/bin/bin/../../lib\liblega-pic30-elf.a(crt0_standard.o) (__data_init_standard)
+c:/program files (x86)/microchip/xc16/v1.40/bin/bin/../../lib\liblega-pic30-elf.a(crt_start_mode_normal.Leo)
                               (__crt_start_mode_normal)
-c:/program files (x86)/microchip/xc16/v1.36/bin/bin/../../lib\liblega-pic30-elf.a(delay32.Leo)
+c:/program files (x86)/microchip/xc16/v1.40/bin/bin/../../lib\liblega-pic30-elf.a(delay32.Leo)
                               build/DPSK3_PIC24/production/src/fault.o (___delay32)
-c:/program files (x86)/microchip/xc16/v1.36/bin/bin/../../lib\libm-elf.a(addsf3.eo)
+c:/program files (x86)/microchip/xc16/v1.40/bin/bin/../../lib\libm-elf.a(addsf3.eo)
                               build/DPSK3_PIC24/production/src/temperature.o (___subsf3)
-c:/program files (x86)/microchip/xc16/v1.36/bin/bin/../../lib\libm-elf.a(divsf3.eo)
+c:/program files (x86)/microchip/xc16/v1.40/bin/bin/../../lib\libm-elf.a(divsf3.eo)
                               build/DPSK3_PIC24/production/src/temperature.o (___divsf3)
-c:/program files (x86)/microchip/xc16/v1.36/bin/bin/../../lib\libm-elf.a(fixunssfsi.eo)
+c:/program files (x86)/microchip/xc16/v1.40/bin/bin/../../lib\libm-elf.a(fixunssfsi.eo)
                               build/DPSK3_PIC24/production/src/temperature.o (___fixunssfsi)
-c:/program files (x86)/microchip/xc16/v1.36/bin/bin/../../lib\libm-elf.a(floatunsisf.eo)
+c:/program files (x86)/microchip/xc16/v1.40/bin/bin/../../lib\libm-elf.a(floatunsisf.eo)
                               build/DPSK3_PIC24/production/src/temperature.o (___floatunsisf)
-c:/program files (x86)/microchip/xc16/v1.36/bin/bin/../../lib\libm-elf.a(fpack.eo)
-                              c:/program files (x86)/microchip/xc16/v1.36/bin/bin/../../lib\libm-elf.a(addsf3.eo) (__fpack)
-c:/program files (x86)/microchip/xc16/v1.36/bin/bin/../../lib\libm-elf.a(funpack.eo)
-                              c:/program files (x86)/microchip/xc16/v1.36/bin/bin/../../lib\libm-elf.a(fixunssfsi.eo) (__funpack)
-c:/program files (x86)/microchip/xc16/v1.36/bin/bin/../../lib\libm-elf.a(funpack2.eo)
-                              c:/program files (x86)/microchip/xc16/v1.36/bin/bin/../../lib\libm-elf.a(addsf3.eo) (__funpack2)
-c:/program files (x86)/microchip/xc16/v1.36/bin/bin/../../lib\libm-elf.a(futil.eo)
-                              c:/program files (x86)/microchip/xc16/v1.36/bin/bin/../../lib\libm-elf.a(addsf3.eo) (__fPropagateNaN)
-c:/program files (x86)/microchip/xc16/v1.36/bin/bin/../../lib\libm-elf.a(mulsf3.eo)
+c:/program files (x86)/microchip/xc16/v1.40/bin/bin/../../lib\libm-elf.a(fpack.eo)
+                              c:/program files (x86)/microchip/xc16/v1.40/bin/bin/../../lib\libm-elf.a(addsf3.eo) (__fpack)
+c:/program files (x86)/microchip/xc16/v1.40/bin/bin/../../lib\libm-elf.a(funpack.eo)
+                              c:/program files (x86)/microchip/xc16/v1.40/bin/bin/../../lib\libm-elf.a(fixunssfsi.eo) (__funpack)
+c:/program files (x86)/microchip/xc16/v1.40/bin/bin/../../lib\libm-elf.a(funpack2.eo)
+                              c:/program files (x86)/microchip/xc16/v1.40/bin/bin/../../lib\libm-elf.a(addsf3.eo) (__funpack2)
+c:/program files (x86)/microchip/xc16/v1.40/bin/bin/../../lib\libm-elf.a(futil.eo)
+                              c:/program files (x86)/microchip/xc16/v1.40/bin/bin/../../lib\libm-elf.a(addsf3.eo) (__fPropagateNaN)
+c:/program files (x86)/microchip/xc16/v1.40/bin/bin/../../lib\libm-elf.a(mulsf3.eo)
                               build/DPSK3_PIC24/production/src/temperature.o (___mulsf3)
-c:/program files (x86)/microchip/xc16/v1.36/bin/bin/../../lib\libm-elf.a(floatundisf.eo)
-                              c:/program files (x86)/microchip/xc16/v1.36/bin/bin/../../lib\libm-elf.a(floatunsisf.eo) (___floatundisf)
+c:/program files (x86)/microchip/xc16/v1.40/bin/bin/../../lib\libm-elf.a(floatundisf.eo)
+                              c:/program files (x86)/microchip/xc16/v1.40/bin/bin/../../lib\libm-elf.a(floatunsisf.eo) (___floatundisf)
 
 
-xc16-ld 1.36 (B)
+xc16-ld 1.40 (A)
+
+Default Code Model: Small
+Default Data Model: Large
+Default Scalar Model: Small
 
 "program" Memory  [Origin = 0x200, Length = 0xa9fc]
 
@@ -128,6 +132,8 @@ heap                             0                                   0  (0)
 stack                        0x8c2                              0x1f3e  (7998)
 
                  Maximum dynamic memory (bytes):         0x1f3e  (7998)
+
+Note: Project is using a large data memory model when small data memory model is sufficient.
 
 
 External Symbols in Data Memory (by address):
@@ -378,7 +384,7 @@ LOAD build/DPSK3_PIC24/production/src/main.o
 LOAD build/DPSK3_PIC24/production/src/reset.o
                     0x0001                  __MPLAB_BUILD = 0x1
 LOAD pPIC24Fxxx
-LOAD c:/program files (x86)/microchip/xc16/v1.36/bin/bin/../../lib\libfx-elf.a
+LOAD c:/program files (x86)/microchip/xc16/v1.40/bin/bin/../../lib\libfx-elf.a
                     0xabfc                  __CONFIG2 = 0xabfc
                     0xabfe                  __CONFIG1 = 0xabfe
                     0x0001                  __NO_HANDLES = 0x1
@@ -397,11 +403,11 @@ LOAD c:/program files (x86)/microchip/xc16/v1.36/bin/bin/../../lib\libfx-elf.a
 
 .text             0x000200        0x500
  *(.init)
- .init            0x000200         0x4c c:/program files (x86)/microchip/xc16/v1.36/bin/bin/../../lib\liblega-pic30-elf.a(crt0_standard.o)
+ .init            0x000200         0x4c c:/program files (x86)/microchip/xc16/v1.40/bin/bin/../../lib\liblega-pic30-elf.a(crt0_standard.o)
                   0x000200                  __resetPRI
                   0x000200                  __reset
                   0x00023c                  __psv_init
- .init            0x00024c         0x7c c:/program files (x86)/microchip/xc16/v1.36/bin/bin/../../lib\liblega-pic30-elf.a(data_init_standard.o)
+ .init            0x00024c         0x7c c:/program files (x86)/microchip/xc16/v1.40/bin/bin/../../lib\liblega-pic30-elf.a(data_init_standard.o)
                   0x000252                  __data_init_standard
                   0x000252                  __data_init
  *(.user_init)
@@ -427,40 +433,40 @@ LOAD c:/program files (x86)/microchip/xc16/v1.36/bin/bin/../../lib\libfx-elf.a
  *(.libdsp)
  *(.lib*)
  .libpic30_crt_start_mode
-                  0x000418          0x2 c:/program files (x86)/microchip/xc16/v1.36/bin/bin/../../lib\liblega-pic30-elf.a(crt_start_mode_normal.Leo)
+                  0x000418          0x2 c:/program files (x86)/microchip/xc16/v1.40/bin/bin/../../lib\liblega-pic30-elf.a(crt_start_mode_normal.Leo)
                   0x000418                  __crt_start_mode
                   0x000418                  __crt_start_mode_normal
- .libm.subsf3     0x00041a         0xbc c:/program files (x86)/microchip/xc16/v1.36/bin/bin/../../lib\libm-elf.a(addsf3.eo)
+ .libm.subsf3     0x00041a         0xbc c:/program files (x86)/microchip/xc16/v1.40/bin/bin/../../lib\libm-elf.a(addsf3.eo)
                   0x00041a                  ___subsf3
                   0x00041c                  ___addsf3
- .libm.divfs3     0x0004d6         0x84 c:/program files (x86)/microchip/xc16/v1.36/bin/bin/../../lib\libm-elf.a(divsf3.eo)
+ .libm.divfs3     0x0004d6         0x84 c:/program files (x86)/microchip/xc16/v1.40/bin/bin/../../lib\libm-elf.a(divsf3.eo)
                   0x0004d6                  ___divsf3
  .libm.fixunssfsi
-                  0x00055a         0x36 c:/program files (x86)/microchip/xc16/v1.36/bin/bin/../../lib\libm-elf.a(fixunssfsi.eo)
+                  0x00055a         0x36 c:/program files (x86)/microchip/xc16/v1.40/bin/bin/../../lib\libm-elf.a(fixunssfsi.eo)
                   0x00055a                  ___fixunssfsi
  .libm.floatunsisf
-                  0x000590          0x4 c:/program files (x86)/microchip/xc16/v1.36/bin/bin/../../lib\libm-elf.a(floatunsisf.eo)
+                  0x000590          0x4 c:/program files (x86)/microchip/xc16/v1.40/bin/bin/../../lib\libm-elf.a(floatunsisf.eo)
                   0x000590                  ___floatunsisf
- .libm.fpack      0x000594         0x4c c:/program files (x86)/microchip/xc16/v1.36/bin/bin/../../lib\libm-elf.a(fpack.eo)
+ .libm.fpack      0x000594         0x4c c:/program files (x86)/microchip/xc16/v1.40/bin/bin/../../lib\libm-elf.a(fpack.eo)
                   0x000594                  __fpack
- .libm.funpack    0x0005e0         0x2a c:/program files (x86)/microchip/xc16/v1.36/bin/bin/../../lib\libm-elf.a(funpack.eo)
+ .libm.funpack    0x0005e0         0x2a c:/program files (x86)/microchip/xc16/v1.40/bin/bin/../../lib\libm-elf.a(funpack.eo)
                   0x0005e0                  __funpack
  .libm.funpack2
-                  0x00060a         0x10 c:/program files (x86)/microchip/xc16/v1.36/bin/bin/../../lib\libm-elf.a(funpack2.eo)
+                  0x00060a         0x10 c:/program files (x86)/microchip/xc16/v1.40/bin/bin/../../lib\libm-elf.a(funpack2.eo)
                   0x00060a                  __funpack2
  .libm.fPropagateNaN
-                  0x00061a         0x12 c:/program files (x86)/microchip/xc16/v1.36/bin/bin/../../lib\libm-elf.a(futil.eo)
+                  0x00061a         0x12 c:/program files (x86)/microchip/xc16/v1.40/bin/bin/../../lib\libm-elf.a(futil.eo)
                   0x00061a                  __fPropagateNaN
  .libm.fbobExit
-                  0x00062c          0x8 c:/program files (x86)/microchip/xc16/v1.36/bin/bin/../../lib\libm-elf.a(futil.eo)
+                  0x00062c          0x8 c:/program files (x86)/microchip/xc16/v1.40/bin/bin/../../lib\libm-elf.a(futil.eo)
                   0x00062c                  __fbopExit
  .libm.fbopReturnNaN
-                  0x000634          0x6 c:/program files (x86)/microchip/xc16/v1.36/bin/bin/../../lib\libm-elf.a(futil.eo)
+                  0x000634          0x6 c:/program files (x86)/microchip/xc16/v1.40/bin/bin/../../lib\libm-elf.a(futil.eo)
                   0x000634                  __fbopReturnNaN
- .libm.mulsf3     0x00063a         0x68 c:/program files (x86)/microchip/xc16/v1.36/bin/bin/../../lib\libm-elf.a(mulsf3.eo)
+ .libm.mulsf3     0x00063a         0x68 c:/program files (x86)/microchip/xc16/v1.40/bin/bin/../../lib\libm-elf.a(mulsf3.eo)
                   0x00063a                  ___mulsf3
  .libm.floatundisf
-                  0x0006a2         0x5e c:/program files (x86)/microchip/xc16/v1.36/bin/bin/../../lib\libm-elf.a(floatundisf.eo)
+                  0x0006a2         0x5e c:/program files (x86)/microchip/xc16/v1.40/bin/bin/../../lib\libm-elf.a(floatundisf.eo)
                   0x0006a2                  ___floatundisf
 
 usercode
@@ -1109,9 +1115,9 @@ __CONFIG1
                     0x0230                  UART2 = 0x230
                     0x0230                  _UART2 = 0x230
 START GROUP
-LOAD c:/program files (x86)/microchip/xc16/v1.36/bin/bin/../../lib\liblega-pic30-elf.a
-LOAD c:/program files (x86)/microchip/xc16/v1.36/bin/bin/../../lib\libm-elf.a
-LOAD c:/program files (x86)/microchip/xc16/v1.36/bin/bin/../../lib\liblega-c-elf.a
+LOAD c:/program files (x86)/microchip/xc16/v1.40/bin/bin/../../lib\liblega-pic30-elf.a
+LOAD c:/program files (x86)/microchip/xc16/v1.40/bin/bin/../../lib\libm-elf.a
+LOAD c:/program files (x86)/microchip/xc16/v1.40/bin/bin/../../lib\liblega-c-elf.a
 END GROUP
 OUTPUT(dist/DPSK3_PIC24/production/pic24.production.elf elf32-pic30)
 LOAD jump_table
@@ -1149,31 +1155,31 @@ __c30_signature
  __c30_signature
                   0x00004e          0x6 build/DPSK3_PIC24/production/src/main.o
  __c30_signature
-                  0x000054          0x6 c:/program files (x86)/microchip/xc16/v1.36/bin/bin/../../lib\liblega-pic30-elf.a(crt0_standard.o)
+                  0x000054          0x6 c:/program files (x86)/microchip/xc16/v1.40/bin/bin/../../lib\liblega-pic30-elf.a(crt0_standard.o)
  __c30_signature
-                  0x00005a          0x6 c:/program files (x86)/microchip/xc16/v1.36/bin/bin/../../lib\liblega-pic30-elf.a(data_init_standard.o)
+                  0x00005a          0x6 c:/program files (x86)/microchip/xc16/v1.40/bin/bin/../../lib\liblega-pic30-elf.a(data_init_standard.o)
  __c30_signature
-                  0x000060          0x6 c:/program files (x86)/microchip/xc16/v1.36/bin/bin/../../lib\liblega-pic30-elf.a(delay32.Leo)
+                  0x000060          0x6 c:/program files (x86)/microchip/xc16/v1.40/bin/bin/../../lib\liblega-pic30-elf.a(delay32.Leo)
  __c30_signature
-                  0x000066          0x6 c:/program files (x86)/microchip/xc16/v1.36/bin/bin/../../lib\libm-elf.a(addsf3.eo)
+                  0x000066          0x6 c:/program files (x86)/microchip/xc16/v1.40/bin/bin/../../lib\libm-elf.a(addsf3.eo)
  __c30_signature
-                  0x00006c          0x6 c:/program files (x86)/microchip/xc16/v1.36/bin/bin/../../lib\libm-elf.a(divsf3.eo)
+                  0x00006c          0x6 c:/program files (x86)/microchip/xc16/v1.40/bin/bin/../../lib\libm-elf.a(divsf3.eo)
  __c30_signature
-                  0x000072          0x6 c:/program files (x86)/microchip/xc16/v1.36/bin/bin/../../lib\libm-elf.a(fixunssfsi.eo)
+                  0x000072          0x6 c:/program files (x86)/microchip/xc16/v1.40/bin/bin/../../lib\libm-elf.a(fixunssfsi.eo)
  __c30_signature
-                  0x000078          0x6 c:/program files (x86)/microchip/xc16/v1.36/bin/bin/../../lib\libm-elf.a(floatunsisf.eo)
+                  0x000078          0x6 c:/program files (x86)/microchip/xc16/v1.40/bin/bin/../../lib\libm-elf.a(floatunsisf.eo)
  __c30_signature
-                  0x00007e          0x6 c:/program files (x86)/microchip/xc16/v1.36/bin/bin/../../lib\libm-elf.a(fpack.eo)
+                  0x00007e          0x6 c:/program files (x86)/microchip/xc16/v1.40/bin/bin/../../lib\libm-elf.a(fpack.eo)
  __c30_signature
-                  0x000084          0x6 c:/program files (x86)/microchip/xc16/v1.36/bin/bin/../../lib\libm-elf.a(funpack.eo)
+                  0x000084          0x6 c:/program files (x86)/microchip/xc16/v1.40/bin/bin/../../lib\libm-elf.a(funpack.eo)
  __c30_signature
-                  0x00008a          0x6 c:/program files (x86)/microchip/xc16/v1.36/bin/bin/../../lib\libm-elf.a(funpack2.eo)
+                  0x00008a          0x6 c:/program files (x86)/microchip/xc16/v1.40/bin/bin/../../lib\libm-elf.a(funpack2.eo)
  __c30_signature
-                  0x000090          0x6 c:/program files (x86)/microchip/xc16/v1.36/bin/bin/../../lib\libm-elf.a(futil.eo)
+                  0x000090          0x6 c:/program files (x86)/microchip/xc16/v1.40/bin/bin/../../lib\libm-elf.a(futil.eo)
  __c30_signature
-                  0x000096          0x6 c:/program files (x86)/microchip/xc16/v1.36/bin/bin/../../lib\libm-elf.a(mulsf3.eo)
+                  0x000096          0x6 c:/program files (x86)/microchip/xc16/v1.40/bin/bin/../../lib\libm-elf.a(mulsf3.eo)
  __c30_signature
-                  0x00009c          0x6 c:/program files (x86)/microchip/xc16/v1.36/bin/bin/../../lib\libm-elf.a(floatundisf.eo)
+                  0x00009c          0x6 c:/program files (x86)/microchip/xc16/v1.40/bin/bin/../../lib\libm-elf.a(floatundisf.eo)
 
 .nbss               0x0800         0x30
  .nbss              0x0800         0x10 build/DPSK3_PIC24/production/mcc_generated_files/adc1.o
@@ -1353,7 +1359,7 @@ __c30_signature
                   0x001500                  _INTERRUPT_Initialize
 
 .init.delay32     0x001530         0x1c
- .init.delay32    0x001530         0x1c c:/program files (x86)/microchip/xc16/v1.36/bin/bin/../../lib\liblega-pic30-elf.a(delay32.Leo)
+ .init.delay32    0x001530         0x1c c:/program files (x86)/microchip/xc16/v1.40/bin/bin/../../lib\liblega-pic30-elf.a(delay32.Leo)
                   0x001530                  ___delay32
 
 .text             0x00154c         0x14
@@ -1365,7 +1371,7 @@ __c30_signature
 Cross Reference Table
 
 Symbol                                            File
-CORCON                                            c:/program files (x86)/microchip/xc16/v1.36/bin/bin/../../lib\liblega-pic30-elf.a(crt0_standard.o)
+CORCON                                            c:/program files (x86)/microchip/xc16/v1.40/bin/bin/../../lib\liblega-pic30-elf.a(crt0_standard.o)
 WREG2                                             build/DPSK3_PIC24/production/src/leds.o
 _AD1CHS                                           build/DPSK3_PIC24/production/mcc_generated_files/adc1.o
 _AD1CON1                                          build/DPSK3_PIC24/production/mcc_generated_files/adc1.o
@@ -1398,7 +1404,7 @@ _ButtonsTask                                      build/DPSK3_PIC24/production/s
 _CLKDIV                                           build/DPSK3_PIC24/production/mcc_generated_files/mcc.o
 _CNPU1                                            build/DPSK3_PIC24/production/mcc_generated_files/pin_manager.o
 _CNPU2                                            build/DPSK3_PIC24/production/mcc_generated_files/pin_manager.o
-_CORCON                                           c:/program files (x86)/microchip/xc16/v1.36/bin/bin/../../lib\liblega-pic30-elf.a(crt0_standard.o)
+_CORCON                                           c:/program files (x86)/microchip/xc16/v1.40/bin/bin/../../lib\liblega-pic30-elf.a(crt0_standard.o)
 _FaultCheck                                       build/DPSK3_PIC24/production/src/fault.o
                                                   build/DPSK3_PIC24/production/src/main.o
 _FaultInit                                        build/DPSK3_PIC24/production/src/fault.o
@@ -1468,7 +1474,7 @@ _PIN_MANAGER_Initialize                           build/DPSK3_PIC24/production/m
 _PORTAbits                                        build/DPSK3_PIC24/production/src/buttons.o
 _PORTCbits                                        build/DPSK3_PIC24/production/src/fault.o
 _PR1                                              build/DPSK3_PIC24/production/mcc_generated_files/tmr1.o
-_PSVPAG                                           c:/program files (x86)/microchip/xc16/v1.36/bin/bin/../../lib\liblega-pic30-elf.a(crt0_standard.o)
+_PSVPAG                                           c:/program files (x86)/microchip/xc16/v1.40/bin/bin/../../lib\liblega-pic30-elf.a(crt0_standard.o)
                                                   build/DPSK3_PIC24/production/mcc_generated_files/adc1.o
 _ProtocolCheck                                    build/DPSK3_PIC24/production/src/protocol.o
                                                   build/DPSK3_PIC24/production/src/main.o
@@ -1482,7 +1488,7 @@ _RCOUNT                                           build/DPSK3_PIC24/production/m
                                                   build/DPSK3_PIC24/production/mcc_generated_files/traps.o
 _RPINR18bits                                      build/DPSK3_PIC24/production/mcc_generated_files/pin_manager.o
 _RPOR3bits                                        build/DPSK3_PIC24/production/mcc_generated_files/pin_manager.o
-_SPLIM                                            c:/program files (x86)/microchip/xc16/v1.36/bin/bin/../../lib\liblega-pic30-elf.a(crt0_standard.o)
+_SPLIM                                            c:/program files (x86)/microchip/xc16/v1.40/bin/bin/../../lib\liblega-pic30-elf.a(crt0_standard.o)
                                                   build/DPSK3_PIC24/production/mcc_generated_files/traps.o
 _SYSTEM_Initialize                                build/DPSK3_PIC24/production/mcc_generated_files/mcc.o
                                                   build/DPSK3_PIC24/production/src/main.o
@@ -1490,7 +1496,7 @@ _SysReset                                         build/DPSK3_PIC24/production/s
                                                   build/DPSK3_PIC24/production/src/main.o
 _T1CON                                            build/DPSK3_PIC24/production/mcc_generated_files/tmr1.o
 _T1CONbits                                        build/DPSK3_PIC24/production/mcc_generated_files/tmr1.o
-_TBLPAG                                           c:/program files (x86)/microchip/xc16/v1.36/bin/bin/../../lib\liblega-pic30-elf.a(data_init_standard.o)
+_TBLPAG                                           c:/program files (x86)/microchip/xc16/v1.40/bin/bin/../../lib\liblega-pic30-elf.a(data_init_standard.o)
 _TMR1                                             build/DPSK3_PIC24/production/mcc_generated_files/tmr1.o
 _TMR1_CallBack                                    build/DPSK3_PIC24/production/src/main.o
                                                   build/DPSK3_PIC24/production/mcc_generated_files/tmr1.o
@@ -1552,76 +1558,76 @@ __MIN_STACK_SIZE                                  dist/DPSK3_PIC24/production/pi
 __MathError                                       build/DPSK3_PIC24/production/mcc_generated_files/traps.o
 __OscillatorFail                                  build/DPSK3_PIC24/production/mcc_generated_files/traps.o
 __SPLIM_init                                      dist/DPSK3_PIC24/production/pic24.production.elf
-                                                  c:/program files (x86)/microchip/xc16/v1.36/bin/bin/../../lib\liblega-pic30-elf.a(crt0_standard.o)
+                                                  c:/program files (x86)/microchip/xc16/v1.40/bin/bin/../../lib\liblega-pic30-elf.a(crt0_standard.o)
 __SP_init                                         dist/DPSK3_PIC24/production/pic24.production.elf
-                                                  c:/program files (x86)/microchip/xc16/v1.36/bin/bin/../../lib\liblega-pic30-elf.a(crt0_standard.o)
+                                                  c:/program files (x86)/microchip/xc16/v1.40/bin/bin/../../lib\liblega-pic30-elf.a(crt0_standard.o)
 __STACKGUARD_SIZE                                 dist/DPSK3_PIC24/production/pic24.production.elf
 __StackError                                      build/DPSK3_PIC24/production/mcc_generated_files/traps.o
 __T1Interrupt                                     build/DPSK3_PIC24/production/mcc_generated_files/tmr1.o
 __U1ErrInterrupt                                  build/DPSK3_PIC24/production/mcc_generated_files/uart1.o
 __U1RXInterrupt                                   build/DPSK3_PIC24/production/mcc_generated_files/uart1.o
 __U1TXInterrupt                                   build/DPSK3_PIC24/production/mcc_generated_files/uart1.o
-___addsf3                                         c:/program files (x86)/microchip/xc16/v1.36/bin/bin/../../lib\libm-elf.a(addsf3.eo)
-___delay32                                        c:/program files (x86)/microchip/xc16/v1.36/bin/bin/../../lib\liblega-pic30-elf.a(delay32.Leo)
+___addsf3                                         c:/program files (x86)/microchip/xc16/v1.40/bin/bin/../../lib\libm-elf.a(addsf3.eo)
+___delay32                                        c:/program files (x86)/microchip/xc16/v1.40/bin/bin/../../lib\liblega-pic30-elf.a(delay32.Leo)
                                                   build/DPSK3_PIC24/production/src/main.o
                                                   build/DPSK3_PIC24/production/src/protocol.o
                                                   build/DPSK3_PIC24/production/src/fault.o
-___divsf3                                         c:/program files (x86)/microchip/xc16/v1.36/bin/bin/../../lib\libm-elf.a(divsf3.eo)
+___divsf3                                         c:/program files (x86)/microchip/xc16/v1.40/bin/bin/../../lib\libm-elf.a(divsf3.eo)
                                                   build/DPSK3_PIC24/production/src/temperature.o
-___fixunssfsi                                     c:/program files (x86)/microchip/xc16/v1.36/bin/bin/../../lib\libm-elf.a(fixunssfsi.eo)
+___fixunssfsi                                     c:/program files (x86)/microchip/xc16/v1.40/bin/bin/../../lib\libm-elf.a(fixunssfsi.eo)
                                                   build/DPSK3_PIC24/production/src/temperature.o
-___floatundisf                                    c:/program files (x86)/microchip/xc16/v1.36/bin/bin/../../lib\libm-elf.a(floatundisf.eo)
-                                                  c:/program files (x86)/microchip/xc16/v1.36/bin/bin/../../lib\libm-elf.a(floatunsisf.eo)
-___floatunsisf                                    c:/program files (x86)/microchip/xc16/v1.36/bin/bin/../../lib\libm-elf.a(floatunsisf.eo)
+___floatundisf                                    c:/program files (x86)/microchip/xc16/v1.40/bin/bin/../../lib\libm-elf.a(floatundisf.eo)
+                                                  c:/program files (x86)/microchip/xc16/v1.40/bin/bin/../../lib\libm-elf.a(floatunsisf.eo)
+___floatunsisf                                    c:/program files (x86)/microchip/xc16/v1.40/bin/bin/../../lib\libm-elf.a(floatunsisf.eo)
                                                   build/DPSK3_PIC24/production/src/temperature.o
-___mulsf3                                         c:/program files (x86)/microchip/xc16/v1.36/bin/bin/../../lib\libm-elf.a(mulsf3.eo)
+___mulsf3                                         c:/program files (x86)/microchip/xc16/v1.40/bin/bin/../../lib\libm-elf.a(mulsf3.eo)
                                                   build/DPSK3_PIC24/production/src/temperature.o
-___subsf3                                         c:/program files (x86)/microchip/xc16/v1.36/bin/bin/../../lib\libm-elf.a(addsf3.eo)
+___subsf3                                         c:/program files (x86)/microchip/xc16/v1.40/bin/bin/../../lib\libm-elf.a(addsf3.eo)
                                                   build/DPSK3_PIC24/production/src/temperature.o
 __bootconst_psvpage                               dist/DPSK3_PIC24/production/pic24.production.elf
 __const_length                                    dist/DPSK3_PIC24/production/pic24.production.elf
-                                                  c:/program files (x86)/microchip/xc16/v1.36/bin/bin/../../lib\liblega-pic30-elf.a(crt0_standard.o)
+                                                  c:/program files (x86)/microchip/xc16/v1.40/bin/bin/../../lib\liblega-pic30-elf.a(crt0_standard.o)
 __const_psvpage                                   dist/DPSK3_PIC24/production/pic24.production.elf
-                                                  c:/program files (x86)/microchip/xc16/v1.36/bin/bin/../../lib\liblega-pic30-elf.a(crt0_standard.o)
+                                                  c:/program files (x86)/microchip/xc16/v1.40/bin/bin/../../lib\liblega-pic30-elf.a(crt0_standard.o)
                                                   build/DPSK3_PIC24/production/mcc_generated_files/adc1.o
-__crt_start_mode                                  c:/program files (x86)/microchip/xc16/v1.36/bin/bin/../../lib\liblega-pic30-elf.a(crt_start_mode_normal.Leo)
-                                                  c:/program files (x86)/microchip/xc16/v1.36/bin/bin/../../lib\liblega-pic30-elf.a(crt0_standard.o)
-__crt_start_mode_normal                           c:/program files (x86)/microchip/xc16/v1.36/bin/bin/../../lib\liblega-pic30-elf.a(crt_start_mode_normal.Leo)
-__data_init                                       c:/program files (x86)/microchip/xc16/v1.36/bin/bin/../../lib\liblega-pic30-elf.a(data_init_standard.o)
-__data_init_standard                              c:/program files (x86)/microchip/xc16/v1.36/bin/bin/../../lib\liblega-pic30-elf.a(data_init_standard.o)
-                                                  c:/program files (x86)/microchip/xc16/v1.36/bin/bin/../../lib\liblega-pic30-elf.a(crt0_standard.o)
+__crt_start_mode                                  c:/program files (x86)/microchip/xc16/v1.40/bin/bin/../../lib\liblega-pic30-elf.a(crt_start_mode_normal.Leo)
+                                                  c:/program files (x86)/microchip/xc16/v1.40/bin/bin/../../lib\liblega-pic30-elf.a(crt0_standard.o)
+__crt_start_mode_normal                           c:/program files (x86)/microchip/xc16/v1.40/bin/bin/../../lib\liblega-pic30-elf.a(crt_start_mode_normal.Leo)
+__data_init                                       c:/program files (x86)/microchip/xc16/v1.40/bin/bin/../../lib\liblega-pic30-elf.a(data_init_standard.o)
+__data_init_standard                              c:/program files (x86)/microchip/xc16/v1.40/bin/bin/../../lib\liblega-pic30-elf.a(data_init_standard.o)
+                                                  c:/program files (x86)/microchip/xc16/v1.40/bin/bin/../../lib\liblega-pic30-elf.a(crt0_standard.o)
 __dinit_tbloffset                                 dist/DPSK3_PIC24/production/pic24.production.elf
-                                                  c:/program files (x86)/microchip/xc16/v1.36/bin/bin/../../lib\liblega-pic30-elf.a(crt0_standard.o)
+                                                  c:/program files (x86)/microchip/xc16/v1.40/bin/bin/../../lib\liblega-pic30-elf.a(crt0_standard.o)
 __dinit_tblpage                                   dist/DPSK3_PIC24/production/pic24.production.elf
-                                                  c:/program files (x86)/microchip/xc16/v1.36/bin/bin/../../lib\liblega-pic30-elf.a(crt0_standard.o)
+                                                  c:/program files (x86)/microchip/xc16/v1.40/bin/bin/../../lib\liblega-pic30-elf.a(crt0_standard.o)
 __eheap                                           dist/DPSK3_PIC24/production/pic24.production.elf
 __enable_fixed                                    dist/DPSK3_PIC24/production/pic24.production.elf
-                                                  c:/program files (x86)/microchip/xc16/v1.36/bin/bin/../../lib\liblega-pic30-elf.a(crt0_standard.o)
-__fPropagateNaN                                   c:/program files (x86)/microchip/xc16/v1.36/bin/bin/../../lib\libm-elf.a(futil.eo)
-                                                  c:/program files (x86)/microchip/xc16/v1.36/bin/bin/../../lib\libm-elf.a(mulsf3.eo)
-                                                  c:/program files (x86)/microchip/xc16/v1.36/bin/bin/../../lib\libm-elf.a(divsf3.eo)
-                                                  c:/program files (x86)/microchip/xc16/v1.36/bin/bin/../../lib\libm-elf.a(addsf3.eo)
-__fbopExit                                        c:/program files (x86)/microchip/xc16/v1.36/bin/bin/../../lib\libm-elf.a(futil.eo)
-                                                  c:/program files (x86)/microchip/xc16/v1.36/bin/bin/../../lib\libm-elf.a(mulsf3.eo)
-                                                  c:/program files (x86)/microchip/xc16/v1.36/bin/bin/../../lib\libm-elf.a(divsf3.eo)
-                                                  c:/program files (x86)/microchip/xc16/v1.36/bin/bin/../../lib\libm-elf.a(addsf3.eo)
-__fbopReturnNaN                                   c:/program files (x86)/microchip/xc16/v1.36/bin/bin/../../lib\libm-elf.a(futil.eo)
-                                                  c:/program files (x86)/microchip/xc16/v1.36/bin/bin/../../lib\libm-elf.a(mulsf3.eo)
-                                                  c:/program files (x86)/microchip/xc16/v1.36/bin/bin/../../lib\libm-elf.a(divsf3.eo)
-                                                  c:/program files (x86)/microchip/xc16/v1.36/bin/bin/../../lib\libm-elf.a(addsf3.eo)
-__fpack                                           c:/program files (x86)/microchip/xc16/v1.36/bin/bin/../../lib\libm-elf.a(fpack.eo)
-                                                  c:/program files (x86)/microchip/xc16/v1.36/bin/bin/../../lib\libm-elf.a(floatundisf.eo)
-                                                  c:/program files (x86)/microchip/xc16/v1.36/bin/bin/../../lib\libm-elf.a(mulsf3.eo)
-                                                  c:/program files (x86)/microchip/xc16/v1.36/bin/bin/../../lib\libm-elf.a(divsf3.eo)
-                                                  c:/program files (x86)/microchip/xc16/v1.36/bin/bin/../../lib\libm-elf.a(addsf3.eo)
-__funpack                                         c:/program files (x86)/microchip/xc16/v1.36/bin/bin/../../lib\libm-elf.a(funpack.eo)
-                                                  c:/program files (x86)/microchip/xc16/v1.36/bin/bin/../../lib\libm-elf.a(funpack2.eo)
-                                                  c:/program files (x86)/microchip/xc16/v1.36/bin/bin/../../lib\libm-elf.a(fixunssfsi.eo)
-__funpack2                                        c:/program files (x86)/microchip/xc16/v1.36/bin/bin/../../lib\libm-elf.a(funpack2.eo)
-                                                  c:/program files (x86)/microchip/xc16/v1.36/bin/bin/../../lib\libm-elf.a(mulsf3.eo)
-                                                  c:/program files (x86)/microchip/xc16/v1.36/bin/bin/../../lib\libm-elf.a(divsf3.eo)
-                                                  c:/program files (x86)/microchip/xc16/v1.36/bin/bin/../../lib\libm-elf.a(addsf3.eo)
-__has_user_init                                   c:/program files (x86)/microchip/xc16/v1.36/bin/bin/../../lib\liblega-pic30-elf.a(crt0_standard.o)
+                                                  c:/program files (x86)/microchip/xc16/v1.40/bin/bin/../../lib\liblega-pic30-elf.a(crt0_standard.o)
+__fPropagateNaN                                   c:/program files (x86)/microchip/xc16/v1.40/bin/bin/../../lib\libm-elf.a(futil.eo)
+                                                  c:/program files (x86)/microchip/xc16/v1.40/bin/bin/../../lib\libm-elf.a(mulsf3.eo)
+                                                  c:/program files (x86)/microchip/xc16/v1.40/bin/bin/../../lib\libm-elf.a(divsf3.eo)
+                                                  c:/program files (x86)/microchip/xc16/v1.40/bin/bin/../../lib\libm-elf.a(addsf3.eo)
+__fbopExit                                        c:/program files (x86)/microchip/xc16/v1.40/bin/bin/../../lib\libm-elf.a(futil.eo)
+                                                  c:/program files (x86)/microchip/xc16/v1.40/bin/bin/../../lib\libm-elf.a(mulsf3.eo)
+                                                  c:/program files (x86)/microchip/xc16/v1.40/bin/bin/../../lib\libm-elf.a(divsf3.eo)
+                                                  c:/program files (x86)/microchip/xc16/v1.40/bin/bin/../../lib\libm-elf.a(addsf3.eo)
+__fbopReturnNaN                                   c:/program files (x86)/microchip/xc16/v1.40/bin/bin/../../lib\libm-elf.a(futil.eo)
+                                                  c:/program files (x86)/microchip/xc16/v1.40/bin/bin/../../lib\libm-elf.a(mulsf3.eo)
+                                                  c:/program files (x86)/microchip/xc16/v1.40/bin/bin/../../lib\libm-elf.a(divsf3.eo)
+                                                  c:/program files (x86)/microchip/xc16/v1.40/bin/bin/../../lib\libm-elf.a(addsf3.eo)
+__fpack                                           c:/program files (x86)/microchip/xc16/v1.40/bin/bin/../../lib\libm-elf.a(fpack.eo)
+                                                  c:/program files (x86)/microchip/xc16/v1.40/bin/bin/../../lib\libm-elf.a(floatundisf.eo)
+                                                  c:/program files (x86)/microchip/xc16/v1.40/bin/bin/../../lib\libm-elf.a(mulsf3.eo)
+                                                  c:/program files (x86)/microchip/xc16/v1.40/bin/bin/../../lib\libm-elf.a(divsf3.eo)
+                                                  c:/program files (x86)/microchip/xc16/v1.40/bin/bin/../../lib\libm-elf.a(addsf3.eo)
+__funpack                                         c:/program files (x86)/microchip/xc16/v1.40/bin/bin/../../lib\libm-elf.a(funpack.eo)
+                                                  c:/program files (x86)/microchip/xc16/v1.40/bin/bin/../../lib\libm-elf.a(funpack2.eo)
+                                                  c:/program files (x86)/microchip/xc16/v1.40/bin/bin/../../lib\libm-elf.a(fixunssfsi.eo)
+__funpack2                                        c:/program files (x86)/microchip/xc16/v1.40/bin/bin/../../lib\libm-elf.a(funpack2.eo)
+                                                  c:/program files (x86)/microchip/xc16/v1.40/bin/bin/../../lib\libm-elf.a(mulsf3.eo)
+                                                  c:/program files (x86)/microchip/xc16/v1.40/bin/bin/../../lib\libm-elf.a(divsf3.eo)
+                                                  c:/program files (x86)/microchip/xc16/v1.40/bin/bin/../../lib\libm-elf.a(addsf3.eo)
+__has_user_init                                   c:/program files (x86)/microchip/xc16/v1.40/bin/bin/../../lib\liblega-pic30-elf.a(crt0_standard.o)
 __heap                                            dist/DPSK3_PIC24/production/pic24.production.elf
 __linked_.aivt._AltADC1Interrupt                  dist/DPSK3_PIC24/production/pic24.production.elf
 __linked_.aivt._AltAddressError                   dist/DPSK3_PIC24/production/pic24.production.elf
@@ -1796,24 +1802,24 @@ __linked_.ndata                                   dist/DPSK3_PIC24/production/pi
 __linked_.reset                                   dist/DPSK3_PIC24/production/pic24.production.elf
 __linked_.text                                    dist/DPSK3_PIC24/production/pic24.production.elf
 __linked___c30_signature                          dist/DPSK3_PIC24/production/pic24.production.elf
-__psv_init                                        c:/program files (x86)/microchip/xc16/v1.36/bin/bin/../../lib\liblega-pic30-elf.a(crt0_standard.o)
-__reset                                           c:/program files (x86)/microchip/xc16/v1.36/bin/bin/../../lib\liblega-pic30-elf.a(crt0_standard.o)
+__psv_init                                        c:/program files (x86)/microchip/xc16/v1.40/bin/bin/../../lib\liblega-pic30-elf.a(crt0_standard.o)
+__reset                                           c:/program files (x86)/microchip/xc16/v1.40/bin/bin/../../lib\liblega-pic30-elf.a(crt0_standard.o)
 __resetALT                                        dist/DPSK3_PIC24/production/pic24.production.elf
-__resetPRI                                        c:/program files (x86)/microchip/xc16/v1.36/bin/bin/../../lib\liblega-pic30-elf.a(crt0_standard.o)
+__resetPRI                                        c:/program files (x86)/microchip/xc16/v1.40/bin/bin/../../lib\liblega-pic30-elf.a(crt0_standard.o)
 __restart_dinit_tbloffset                         dist/DPSK3_PIC24/production/pic24.production.elf
-                                                  c:/program files (x86)/microchip/xc16/v1.36/bin/bin/../../lib\liblega-pic30-elf.a(crt0_standard.o)
+                                                  c:/program files (x86)/microchip/xc16/v1.40/bin/bin/../../lib\liblega-pic30-elf.a(crt0_standard.o)
 __restart_dinit_tblpage                           dist/DPSK3_PIC24/production/pic24.production.elf
-                                                  c:/program files (x86)/microchip/xc16/v1.36/bin/bin/../../lib\liblega-pic30-elf.a(crt0_standard.o)
+                                                  c:/program files (x86)/microchip/xc16/v1.40/bin/bin/../../lib\liblega-pic30-elf.a(crt0_standard.o)
 __restart_shared_dinit_addr                       dist/DPSK3_PIC24/production/pic24.production.elf
 __secureconst_psvpage                             dist/DPSK3_PIC24/production/pic24.production.elf
 __shared_dinit_addr                               dist/DPSK3_PIC24/production/pic24.production.elf
-__user_init                                       c:/program files (x86)/microchip/xc16/v1.36/bin/bin/../../lib\liblega-pic30-elf.a(crt0_standard.o)
+__user_init                                       c:/program files (x86)/microchip/xc16/v1.40/bin/bin/../../lib\liblega-pic30-elf.a(crt0_standard.o)
 _blinks                                           build/DPSK3_PIC24/production/src/loads.o
 _data_boost                                       build/DPSK3_PIC24/production/src/loads.o
 _data_buck                                        build/DPSK3_PIC24/production/src/loads.o
 _fstates                                          build/DPSK3_PIC24/production/src/loads.o
 _main                                             build/DPSK3_PIC24/production/src/main.o
-                                                  c:/program files (x86)/microchip/xc16/v1.36/bin/bin/../../lib\liblega-pic30-elf.a(crt0_standard.o)
+                                                  c:/program files (x86)/microchip/xc16/v1.40/bin/bin/../../lib\liblega-pic30-elf.a(crt0_standard.o)
 _stills                                           build/DPSK3_PIC24/production/src/loads.o
 build/DPSK3_PIC24/production/src/loads.o:__fstate_B1 build/DPSK3_PIC24/production/src/loads.o
                                                   jump_table

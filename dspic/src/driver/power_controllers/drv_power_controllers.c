@@ -53,7 +53,6 @@ void Drv_PowerControllers_Init(void)
 void Drv_PowerControllers_Task_100us(void)
 {
     Drv_PowerControllerBuck_Task_100us(&pwrCtrlBuck1_Data);
-    //TODO:
     Drv_PowerControllerBoost_Task_100us(&pwrCtrlBoost1_Data);
 }
 

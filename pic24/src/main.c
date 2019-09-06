@@ -53,11 +53,11 @@ int main(void)
         volatile protocol_data_t  proto_data;
         volatile therm_event_t    therm_event;
 
-        therm_event = TemperatureCheck(&temperature);
+        therm_event = TemperatureCheck((uint8_t*) &temperature);
         proto_data.temperature = temperature;
         proto_data.load_status.u16 = (test_mode)? 0 : LoadsGetStatus();
         proto_data.fault_status.u8 = (test_mode)? 0 : FaultCheck();
-        proto_event = ProtocolCheck(&proto_data);
+        proto_event = ProtocolCheck((protocol_data_t*) &proto_data);
 
         //protocol events
         switch(proto_event)

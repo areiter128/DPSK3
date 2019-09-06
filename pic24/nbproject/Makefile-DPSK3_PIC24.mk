@@ -70,6 +70,7 @@ OBJECTFILES=${OBJECTDIR}/mcc_generated_files/pin_manager.o ${OBJECTDIR}/mcc_gene
 SOURCEFILES=mcc_generated_files/pin_manager.c mcc_generated_files/interrupt_manager.c mcc_generated_files/traps.c mcc_generated_files/mcc.c mcc_generated_files/tmr1.c mcc_generated_files/adc1.c mcc_generated_files/uart1.c src/leds.c src/fault.c src/loads.c src/buttons.c src/temperature.c src/protocol.c src/main.c src/reset.s
 
 
+
 CFLAGS=
 ASFLAGS=
 LDLIBSOPTIONS=

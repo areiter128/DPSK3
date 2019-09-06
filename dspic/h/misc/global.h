@@ -24,7 +24,7 @@
 #define	_GLOBAL_H_
 
 #include <stdint.h>
-#include "proto_data.h"
+#include "../../../common/h/proto_data.h"
 
 #ifdef	__cplusplus
 extern "C" {
