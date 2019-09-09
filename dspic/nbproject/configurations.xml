@@ -27,6 +27,7 @@
           <itemPath>h/driver/power_controllers/drv_power_controller_boost_generic.h</itemPath>
           <itemPath>h/driver/power_controllers/npnz16b.h</itemPath>
           <itemPath>h/driver/power_controllers/c2P2Z_boost.h</itemPath>
+          <itemPath>h/driver/power_controllers/c2p2z_buck.h</itemPath>
         </logicalFolder>
         <itemPath>h/driver/drv_lcd_interface.h</itemPath>
       </logicalFolder>

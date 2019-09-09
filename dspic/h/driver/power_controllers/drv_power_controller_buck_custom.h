@@ -46,6 +46,18 @@ extern POWER_CONTROLLER_DATA_t pwrCtrlBuck1_Data;      // data instance for the 
 double Drv_PowerControllerBuck1_GetOutputVoltage();
 
 //=======================================================================================================
+// @brief   sets the Initial Output Voltage Reference in Volts
+// @note    call this function after calling the Init function to tell power controller the needed initial reference voltage 
+//=======================================================================================================
+void Drv_PowerControllerBoost1_SetInitialOutputVoltageReference(double newVoltRef);
+
+//=======================================================================================================
+// @brief   sets the Initial Output Voltage Reference in Millivolts
+// @note    call this function after calling the Init function to tell power controller the needed initial reference voltage
+//=======================================================================================================
+void Drv_PowerControllerBoost1_SetInitialOutputVoltageReference_mV(uint32_t newVoltRef_mV);
+
+//=======================================================================================================
 // @brief   sets the Output Voltage Reference in Volts
 // @note    call this function after calling the Init function to tell power controller the needed reference voltage 
 //=======================================================================================================

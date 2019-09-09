@@ -45,15 +45,18 @@ void Drv_PowerControllers_Init(void)
     Drv_PowerControllerBuck1_SetOutputVoltageReference_mV(3300); //Set Buck Converter Output to 3.3 Volt
 
     // Init all Boost Converter instances
-    //TODO: Boost needs to be implemented
-    Drv_PowerControllerBoost1_Init(true );                       // Init Boost Convert 1
+    Drv_PowerControllerBoost1_Init(true);                       // Init Boost Convert 1
     Drv_PowerControllerBoost1_SetOutputVoltageReference_mV(15000); //Set Boost Converter Output to 15 Volt
 }
 
 void Drv_PowerControllers_Task_100us(void)
 {
-    Drv_PowerControllerBuck_Task_100us(&pwrCtrlBuck1_Data);
+    // Boost converter PWM generators are triggered by auxiliary PWM of the buck regulator,
+    // therefore the boost PWM is the first to be enabled. They start running once the buck
+    // PWMs get enabled.
     Drv_PowerControllerBoost_Task_100us(&pwrCtrlBoost1_Data);
+    Drv_PowerControllerBuck_Task_100us(&pwrCtrlBuck1_Data);
+    
 }
 
 volatile uint16_t Drv_PowerControllers_InitPWM(void)
@@ -81,9 +84,9 @@ volatile uint16_t Drv_PowerControllers_InitPWM(void)
     FSMINPER = 0x0000;  // Reset frequency scaling minimum register
     
     // MASTER PHASE, DUTY CYCLE AND PERIOD REGISTERS
-    MPHASE = BOOST_OFFSET;      // Master phase defines the time offset between buck and boost PWM channels
-    MDC = 0x0000;               // Reset master duty cycle
-    MPER = PWM_PERIOD;          // Master period PWM_PERIOD
+    MPHASE = 0;           // Reset master phase
+    MDC = 0x0000;         // Reset master duty cycle
+    MPER = PWM_PERIOD;    // Master period PWM_PERIOD
     
     // LINEAR FEEDBACK SHIFT REGISTER
     LFSR = 0x0000;      // Reset linear feedback shift register

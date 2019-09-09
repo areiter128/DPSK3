@@ -50,8 +50,8 @@
 #define SLOPE_RATE                   43  // Slope Ramp Rate Value
 #define DACDATH_BUCK                  0  // DAC value for the buck the slope starts from
 #define DACDATH_BOOST                 0  // DAC value for the boost the slope starts from
-#define DACDATL_BUCK                205  // Set this to minimum in Slope mode
-#define DACDATL_BOOST               205  // Set this to minimum in Slope mode
+#define DACDATL_BUCK                  0  // Set this to minimum in Slope mode
+#define DACDATL_BOOST                 0  // Set this to minimum in Slope mode
 
 typedef enum
 {

@@ -165,7 +165,7 @@ volatile uint16_t Drv_PowerControllerBuck1_InitPWM(void)
     PG1CONHbits.MPERSEL = 1; // Master Period Register Selection: PWM Generator uses MPER register
     PG1CONHbits.MPHSEL = 0; // Master Phase Register Selection: PWM Generator uses PGxPHASE register
     PG1CONHbits.MSTEN = 0; // Master Update Enable: PWM Generator does not broadcast the UPDREQ status bit state or EOC signal
-    PG1CONHbits.UPDMOD = 0b000; // PWM Buffer Update Mode Selection: Immediate update
+    PG1CONHbits.UPDMOD = 0b000; // PWM Buffer Update Mode Selection: SOC update
     PG1CONHbits.TRGMOD = 0; // PWM Generator Trigger Mode Selection: PWM Generator operates in single trigger mode
     PG1CONHbits.SOCS = 0; // Start-of-Cycle Selection: Local EOC, PWM Generator is self-triggered
 
@@ -293,6 +293,8 @@ volatile uint16_t Drv_PowerControllerBuck1_LaunchPWM(void)
     Nop();
     
     PG1CONLbits.ON = 1; // PWM Generator #1 Enable: PWM Generator is enabled
+    
+    while(PG1STATbits.UPDATE);
     PG1STATbits.UPDREQ = 1; // Update all PWM registers
 
     PG1IOCONHbits.PENH = 1; // PWMxH Output Port Enable: PWM generator controls the PWMxH output pin
@@ -335,11 +337,11 @@ volatile uint16_t Drv_PowerControllerBuck1_InitAuxiliaryPWM(void)
     
     // PWM GENERATOR x EVENT REGISTER LOW 
     PG3EVTLbits.ADTR1PS     = 0b00001;      // ADC Trigger 1 Postscaler Selection = 1:2
-    PG3EVTLbits.ADTR1EN3    = 0b0;          // PG1TRIGC  Compare Event is disabled as trigger source for ADC Trigger 1
-    PG3EVTLbits.ADTR1EN2    = 0b0;          // PG1TRIGB  Compare Event is disabled as trigger source for ADC Trigger 1
-    PG3EVTLbits.ADTR1EN1    = 0b1;          // PG1TRIGA  Compare Event is enabled as trigger source for ADC Trigger 1
+    PG3EVTLbits.ADTR1EN3    = 0b0;          // PG3TRIGC  Compare Event is disabled as trigger source for ADC Trigger 1
+    PG3EVTLbits.ADTR1EN2    = 0b0;          // PG3TRIGB  Compare Event is disabled as trigger source for ADC Trigger 1
+    PG3EVTLbits.ADTR1EN1    = 0b1;          // PG3TRIGA  Compare Event is enabled as trigger source for ADC Trigger 1
     PG3EVTLbits.UPDTRG      = 0b00;         // User must set the UPDATE bit (PG1STAT<4>) manually
-    PG3EVTLbits.PGTRGSEL    = 0b000;        // PWM Generator Trigger Output is EOC (not used in this case)
+    PG3EVTLbits.PGTRGSEL    = 0b011;        // PGxTRIGC compare event is the PWM Generator trigger => This serves as SOC trigger for PG2 (Boost Converter)
     
     // PWM GENERATOR x EVENT REGISTER HIGH
     PG3EVTHbits.FLTIEN      = 0b0;          // PCI Fault interrupt is disabled
@@ -347,9 +349,9 @@ volatile uint16_t Drv_PowerControllerBuck1_InitAuxiliaryPWM(void)
     PG3EVTHbits.FFIEN       = 0b0;          // PCI Feed-Forward interrupt is disabled
     PG3EVTHbits.SIEN        = 0b0;          // PCI Sync interrupt is disabled
     PG3EVTHbits.IEVTSEL     = 0b000;        // Interrupt Event Selection: Time base interrupts are disabled
-    PG3EVTHbits.ADTR2EN3    = 0b0;          // PG1TRIGC register compare event is disabled as trigger source for ADC Trigger 2
-    PG3EVTHbits.ADTR2EN2    = 0b0;          // PG1TRIGB register compare event is disabled as trigger source for ADC Trigger 2
-    PG3EVTHbits.ADTR2EN1    = 0b0;          // PG1TRIGA register compare event is disabled as trigger source for ADC Trigger 2
+    PG3EVTHbits.ADTR2EN3    = 0b0;          // PG3TRIGC register compare event is disabled as trigger source for ADC Trigger 2
+    PG3EVTHbits.ADTR2EN2    = 0b0;          // PG3TRIGB register compare event is disabled as trigger source for ADC Trigger 2
+    PG3EVTHbits.ADTR2EN1    = 0b0;          // PG3TRIGA register compare event is disabled as trigger source for ADC Trigger 2
     PG3EVTHbits.ADTR1OFS    = 0b00000;      // ADC Trigger 1 offset = No offset
     
     // PCI function for current limitation is not used
@@ -388,7 +390,7 @@ volatile uint16_t Drv_PowerControllerBuck1_InitAuxiliaryPWM(void)
     PG3TRIGB    = 0;  
     
     // PGxTRIGC: PWM GENERATOR x TRIGGER C REGISTER        
-    PG3TRIGC    = 0;  
+    PG3TRIGC    = BOOST_OFFSET;  
     
     // PGxDTL: PWM GENERATOR x DEAD-TIME REGISTER LOW        
     PG3DTL      = 0;
@@ -408,13 +410,14 @@ volatile uint16_t Drv_PowerControllerBuck1_LaunchAuxiliaryPWM(void)
     Nop();
         
     PG3CONLbits.ON = 1; // PWM Generator #3 Enable: PWM Generator is enabled
+    
     while(PG3STATbits.UPDATE);
     PG3STATbits.UPDREQ = 1; // Update all PWM registers
 
     PG3IOCONHbits.PENH = 0; // PWMxH Output Port Enable: Disabled
     PG3IOCONHbits.PENL = 0; // PWMxL Output Port Enable: Disabled
-    PG3IOCONLbits.OVRENH = 0;  // User Override Enable for PWMxH Pin: User override disabled
-    PG3IOCONLbits.OVRENL = 0;  // User Override Enable for PWMxL Pin: User override disabled
+    PG3IOCONLbits.OVRENH = 1;  // User Override Enable for PWMxH Pin: User override disabled
+    PG3IOCONLbits.OVRENL = 1;  // User Override Enable for PWMxL Pin: User override disabled
    
     return(1); 
 }
@@ -425,7 +428,7 @@ volatile uint16_t Drv_PowerControllerBuck1_InitACMP(void)
     DAC1CONLbits.DACEN = 0; // Individual DACx Module Enable: Disables DACx module during configuration
     DAC1CONLbits.IRQM = 0b00; // Interrupt Mode Selection: Interrupts are disabled
     DAC1CONLbits.CBE = 1; // Comparator Blank Enable: Enables the analog comparator output to be blanked (gated off) during the recovery transition following the completion of a slope operation
-    DAC1CONLbits.DACOEN = 1; // DACx Output Buffer Enable: DACx analog voltage is connected to the DACOUT1 pin (RA3/TP35 on DPSK3)
+    DAC1CONLbits.DACOEN = 0; // DACx Output Buffer Enable: DACx analog voltage is connected to the DACOUT1 pin (RA3/TP35 on DPSK3)
     DAC1CONLbits.FLTREN = 0; // Comparator Digital Filter Enable: Digital filter is disabled
     // DAC1CONLbits.CMPSTAT (read only bit)
     DAC1CONLbits.CMPPOL = 0; // Comparator Output Polarity Control: Output is non-inverted
@@ -463,7 +466,6 @@ volatile uint16_t Drv_PowerControllerBuck1_InitACMP(void)
     // Previous configurations have shown that this might not be true, so please revisit this setting.
     
     // SLPxDAT: DACx SLOPE DATA REGISTER
-//    SLP1DAT = 500; // Slope Ramp Rate Value
     SLP1DAT = SLOPE_RATE; // Slope Ramp Rate Value
         
     return(1);

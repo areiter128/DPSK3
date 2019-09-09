@@ -56,6 +56,25 @@ double Drv_PowerControllerBoost1_GetOutputVoltage()
 }
 
 //=======================================================================================================
+// @brief   sets the Initial Output Voltage Reference in Volts
+// @note    call this function after calling the Init function to tell power controller the needed initial reference voltage 
+//=======================================================================================================
+void Drv_PowerControllerBoost1_SetInitialOutputVoltageReference(double newVoltRef)
+{
+    pwrCtrlBoost1_Data.voltageRef_softStart = ((newVoltRef * BOOST1_ADC_RESOLUTION * BOOST1_FEEDBACK_BGAIN) / BOOST1_ADC_REFERENCE);
+}
+
+//=======================================================================================================
+// @brief   sets the Initial Output Voltage Reference in Millivolts
+// @note    call this function after calling the Init function to tell power controller the needed initial reference voltage
+//=======================================================================================================
+void Drv_PowerControllerBoost1_SetInitialOutputVoltageReference_mV(uint32_t newVoltRef_mV)
+{
+    pwrCtrlBoost1_Data.voltageRef_softStart = ((((uint32_t)newVoltRef_mV * BOOST1_ADC_RESOLUTION) * BOOST1_FEEDBACK_BGAIN) / BOOST1_ADC_REFERENCE) / 1000;
+}
+
+
+//=======================================================================================================
 // @brief   sets the Output Voltage Reference in Volts
 // @note    call this function after calling the Init function to tell power controller the needed reference voltage 
 //=======================================================================================================
@@ -76,15 +95,15 @@ void Drv_PowerControllerBoost1_SetOutputVoltageReference_mV(uint32_t newVoltRef_
 void Drv_PowerControllerBoost1_EnableControlLoop(void)
 {
     c2P2Z_boost.status.flag.enable = 1;  // Start the control loop for boost
-    PG2IOCONLbits.OVRENH = 0;           // User override disabled for PWMxH Pin
+    PG2IOCONLbits.OVRENH = 0;           // User override enabled for PWMxH Pin
     PG2IOCONLbits.OVRENL = 0;           // User override disabled for PWMxL Pin
 }
 
 void Drv_PowerControllerBoost1_DisableControlLoop(void)
 {
     c2P2Z_boost.status.flag.enable = 0;  // Stop the control loop for boost
-    PG2IOCONLbits.OVRENH = 1;           // User override disabled for PWMxH Pin
-    PG2IOCONLbits.OVRENL = 1;           // User override disabled for PWMxL Pin
+    PG2IOCONLbits.OVRENH = 1;           // User override enabled for PWMxH Pin
+    PG2IOCONLbits.OVRENL = 1;           // User override enabled for PWMxL Pin
     //TODO: should we set some output pin for safety reasons???
 }
 
@@ -162,9 +181,8 @@ volatile uint16_t Drv_PowerControllerBoost1_InitPWM(void)
     PG2CONHbits.MSTEN = 0; // Master Update Enable: PWM Generator does not broadcast the UPDREQ status bit state or EOC signal
     PG2CONHbits.UPDMOD = 0b000; // PWM Buffer Update Mode Selection: SOC update
     PG2CONHbits.TRGMOD = 0; // PWM Generator Trigger Mode Selection: PWM Generator operates in single trigger mode
-    PG2CONHbits.SOCS = 1; // Start-of-Cycle Selection: PG2 is triggered by PG1
+    PG2CONHbits.SOCS = 3;   // Start-of-Cycle Selection: Trigger output selected by PG3 PGTRGSEL<2:0> bits (PGxEVTL<2:0>)
 
-    
     // ************************
     // ToDo: CHECK IF THIS SETTING IS CORRET AND DEAD TIMES ARE STILL INSERTED CORRECTLY
     PG2IOCONLbits.CLMOD = 0;    // If PCI current limit is active, then the CLDAT[1:0] bits define the PWM output levels
@@ -256,7 +274,7 @@ volatile uint16_t Drv_PowerControllerBoost1_InitPWM(void)
     
     // PGxDC: PWM GENERATOR x DUTY CYCLE REGISTER
 //    PG2DC       = 800;      // 80%
-    PG2DC       = INIT_DUTY_CYCLE;      // 8% - This is the initial value for the soft-start 
+    PG2DC       = INIT_DUTY_CYCLE;      
     
     // PGxDCA: PWM GENERATOR x DUTY CYCLE ADJUSTMENT REGISTER
     PG2DCA      =  0x0000;      
@@ -265,13 +283,14 @@ volatile uint16_t Drv_PowerControllerBoost1_InitPWM(void)
     PG2PER      = 0;     // Master defines the period
 
     // PGxTRIGA: PWM GENERATOR x TRIGGER A REGISTER
-    PG2TRIGA    = BOOST_OFFSET + SLOPE_START_DELAY;  // Defining start of slope; ToDo: Check this value on oscilloscope
+    PG2TRIGA    = SLOPE_START_DELAY;  // Defining start of slope; ToDo: Check this value on oscilloscope
     
     // PGxTRIGB: PWM GENERATOR x TRIGGER B REGISTER       
-    PG2TRIGB    = BOOST_OFFSET + SLOPE_STOP_DELAY;  // Defining end of slope
+    PG2TRIGB    = SLOPE_STOP_DELAY;  // Defining end of slope
+//    PG2TRIGB = 2050;
     
     // PGxTRIGC: PWM GENERATOR x TRIGGER C REGISTER        
-    PG2TRIGC    = 0;  
+    PG2TRIGC    = 0; 
     
     // PGxDTL: PWM GENERATOR x DEAD-TIME REGISTER LOW        
     PG2DTL      = 0;
@@ -291,13 +310,13 @@ volatile uint16_t Drv_PowerControllerBoost1_LaunchPWM(void)
     Nop();
     
     PG2CONLbits.ON = 1; // PWM Generator #2 Enable: PWM Generator is enabled
+    
+    while(PG2STATbits.UPDATE);
     PG2STATbits.UPDREQ = 1; // Update all PWM registers
 
     PG2IOCONHbits.PENH = 0; // PWMxH Output Port Enable: Disabled
     PG2IOCONHbits.PENL = 1; // PWMxL Output Port Enable: PWM generator controls the PWMxL output pin
-    PG2IOCONLbits.OVRENH = 1;  // User Override Enable for PWMxH Pin: OVRDAT1 provides data for output on the PWMxH pin
-    PG2IOCONLbits.OVRENL = 0;  // User Override Enable for PWMxL Pin: User override disabled
-
+    
     return(1);
 }
 
@@ -316,7 +335,7 @@ volatile uint16_t Drv_PowerControllerBoost1_InitAuxiliaryPWM(void)
     PG4CONHbits.MSTEN = 0; // Master Update Enable: PWM Generator does not broadcast the UPDREQ status bit state or EOC signal
     PG4CONHbits.UPDMOD = 0b000; // PWM Buffer Update Mode Selection: SOC update
     PG4CONHbits.TRGMOD = 0; // PWM Generator Trigger Mode Selection: PWM Generator operates in single trigger mode
-    PG4CONHbits.SOCS = 1; // Start-of-Cycle Selection: PG1 triggers PG4
+    PG4CONHbits.SOCS = 3;   // Start-of-Cycle Selection: Trigger output selected by PG3 PGTRGSEL<2:0> bits (PGxEVTL<2:0>)
 
     // PGxIOCONH: PWM GENERATOR x I/O CONTROL REGISTER LOW
     PG4IOCONL = 0x0000;
@@ -329,9 +348,9 @@ volatile uint16_t Drv_PowerControllerBoost1_InitAuxiliaryPWM(void)
     
     // PWM GENERATOR x EVENT REGISTER LOW 
     PG4EVTLbits.ADTR1PS     = 0b00001;      // ADC Trigger 1 Postscaler Selection = 1:2
-    PG4EVTLbits.ADTR1EN3    = 0b0;          // PG1TRIGC  Compare Event is disabled as trigger source for ADC Trigger 1
-    PG4EVTLbits.ADTR1EN2    = 0b0;          // PG1TRIGB  Compare Event is disabled as trigger source for ADC Trigger 1
-    PG4EVTLbits.ADTR1EN1    = 0b1;          // PG1TRIGA  Compare Event is enabled as trigger source for ADC Trigger 1
+    PG4EVTLbits.ADTR1EN3    = 0b0;          // PG4TRIGC  Compare Event is disabled as trigger source for ADC Trigger 1
+    PG4EVTLbits.ADTR1EN2    = 0b0;          // PG4TRIGB  Compare Event is disabled as trigger source for ADC Trigger 1
+    PG4EVTLbits.ADTR1EN1    = 0b1;          // PG4TRIGA  Compare Event is enabled as trigger source for ADC Trigger 1
     PG4EVTLbits.UPDTRG      = 0b00;         // User must set the UPDATE bit (PG1STAT<4>) manually
     PG4EVTLbits.PGTRGSEL    = 0b000;        // PWM Generator Trigger Output is EOC (not used in this case)
     
@@ -341,9 +360,9 @@ volatile uint16_t Drv_PowerControllerBoost1_InitAuxiliaryPWM(void)
     PG4EVTHbits.FFIEN       = 0b0;          // PCI Feed-Forward interrupt is disabled
     PG4EVTHbits.SIEN        = 0b0;          // PCI Sync interrupt is disabled
     PG4EVTHbits.IEVTSEL     = 0b00;         // Interrupt Event Selection: Time base interrupts are disabled
-    PG4EVTHbits.ADTR2EN3    = 0b0;          // PG1TRIGC register compare event is disabled as trigger source for ADC Trigger 2
-    PG4EVTHbits.ADTR2EN2    = 0b0;          // PG1TRIGB register compare event is disabled as trigger source for ADC Trigger 2
-    PG4EVTHbits.ADTR2EN1    = 0b0;          // PG1TRIGA register compare event is disabled as trigger source for ADC Trigger 2
+    PG4EVTHbits.ADTR2EN3    = 0b0;          // PG4TRIGC register compare event is disabled as trigger source for ADC Trigger 2
+    PG4EVTHbits.ADTR2EN2    = 0b0;          // PG4TRIGB register compare event is disabled as trigger source for ADC Trigger 2
+    PG4EVTHbits.ADTR2EN1    = 0b0;          // PG4TRIGA register compare event is disabled as trigger source for ADC Trigger 2
     PG4EVTHbits.ADTR1OFS    = 0b00000;      // ADC Trigger 1 offset = no offset 
     
     // Reset PCI control registers
@@ -374,7 +393,7 @@ volatile uint16_t Drv_PowerControllerBoost1_InitAuxiliaryPWM(void)
     PG4PER      = 0;     // Master sets the period
 
     // PGxTRIGA: PWM GENERATOR x TRIGGER A REGISTER
-    PG4TRIGA    = BOOST_OFFSET + VOUT_ADC_TRIGGER_DELAY;  // ToDo: Check this value on oscilloscope
+    PG4TRIGA    = VOUT_ADC_TRIGGER_DELAY;  // ToDo: Check this value on oscilloscope
     
     // PGxTRIGB: PWM GENERATOR x TRIGGER B REGISTER       
     PG4TRIGB    = 0;  
@@ -400,12 +419,14 @@ volatile uint16_t Drv_PowerControllerBoost1_LaunchAuxiliaryPWM(void)
     Nop();
     
     PG4CONLbits.ON = 1;         // PWM Generator #4 Enable: PWM Generator is enabled
+    
+    while(PG4STATbits.UPDATE);
     PG4STATbits.UPDREQ = 1;     // Update all PWM registers
 
     PG4IOCONHbits.PENH = 0;     // PWMxH Output Port Enable: Disabled
     PG4IOCONHbits.PENL = 0;     // PWMxL Output Port Enable: Disabled
-    PG4IOCONLbits.OVRENH = 0;   // User Override Enable for PWMxH Pin: User override disabled
-    PG4IOCONLbits.OVRENL = 0;   // User Override Enable for PWMxL Pin: User override disabled
+    PG4IOCONLbits.OVRENH = 1;   // User Override Enable for PWMxH Pin: User override disabled
+    PG4IOCONLbits.OVRENL = 1;   // User Override Enable for PWMxL Pin: User override disabled
 
     return(1); 
 }
@@ -416,7 +437,7 @@ volatile uint16_t Drv_PowerControllerBoost1_InitACMP(void)
     DAC2CONLbits.DACEN = 0; // Individual DACx Module Enable: Disables DACx module during configuration
     DAC2CONLbits.IRQM = 0b00; // Interrupt Mode Selection: Interrupts are disabled
     DAC2CONLbits.CBE = 1; // Comparator Blank Enable: Enables the analog comparator output to be blanked (gated off) during the recovery transition following the completion of a slope operation
-    DAC2CONLbits.DACOEN = 0; // DACx Output Buffer Enable: disabled for this module
+    DAC2CONLbits.DACOEN = 1; // DACx Output Buffer Enable: disabled for this module
     DAC2CONLbits.FLTREN = 0; // Comparator Digital Filter Enable: Digital filter is disabled
     // DAC2CONLbits.CMPSTAT (read only bit)
     DAC2CONLbits.CMPPOL = 0; // Comparator Output Polarity Control: Output is non-inverted
@@ -455,7 +476,7 @@ volatile uint16_t Drv_PowerControllerBoost1_InitACMP(void)
     
     // SLPxDAT: DACx SLOPE DATA REGISTER
     SLP2DAT = SLOPE_RATE; // Slope Ramp Rate Value
-     
+    
     return(1);
 }
 
