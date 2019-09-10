@@ -38,6 +38,23 @@
 #include "driver/power_controllers/drv_power_controller_boost_generic.h"
 #include "driver/power_controllers/drv_power_controller_boost_custom.h"
 
+//=======================================================================================================
+// local defines
+//=======================================================================================================
+// 
+#define VIN_ADC_REFERENCE     3.3             // 3.3 Volts ==> maximum ADC-Value
+#define VIN_ADC_RESOLUTION    4095UL          // 12 bits
+#define VIN_FEEDBACK_GAIN     0.1253          // 1k /(1k+6.98k)
+
+
+//=======================================================================================================
+// @brief   returns the Input Voltage in Volts as a double
+//=======================================================================================================
+double Drv_PowerController_GetInputVoltage()
+{
+    return (double)(((unsigned long)pwrCtrlBoost1_Data.voltageInput * VIN_ADC_REFERENCE) / (VIN_FEEDBACK_BGAIN * VIN_ADC_RESOLUTION));
+}
+
 void Drv_PowerControllers_Init(void)
 {
     // Init all Buck Converter instances
@@ -292,10 +309,10 @@ volatile uint16_t Drv_PowerControllers_InitVinADC(void)
     ADCMP0ENLbits.CMPEN12 = 1; // Comparator Enable for Corresponding Input Channels: AN11 Enabled
     
     // ADCMPxLO: ADC COMPARARE REGISTER LOWER THRESHOLD VALUE REGISTER
-    ADCMP0LO = 933; // R1=6.98kOhm, R2=1kOhm, G=0.751879699; 6Vin=933 ADC ticks
+    ADCMP0LO = 933; // R1=6.98kOhm, R2=1kOhm, G=0.1253; 6Vin=933 ADC ticks
 
     // ADCMPxHI: ADC COMPARARE REGISTER UPPER THRESHOLD VALUE REGISTER
-    ADCMP0HI = 2488; // R1=6.98kOhm, R2=1kOhm, G=0.751879699; 16Vin=2488 ADC ticks
+    ADCMP0HI = 2146; // R1=6.98kOhm, R2=1kOhm, G=0.1253; 13.8Vin=2146 ADC ticks
     
     // ADFLxCON: ADC DIGITAL FILTER x CONTROL REGISTER
     ADFL0CONbits.FLEN = 0; // Filter Enable: Filter is disabled

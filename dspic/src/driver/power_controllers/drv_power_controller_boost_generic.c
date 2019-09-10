@@ -46,6 +46,8 @@
 #define BOOST_OVERVOLTAGE_PERCENT     105
 #define BOOST_UNDERVOLTAGE_PERCENT     95
 
+volatile uint16_t vin_avg = 0;      // Averaging buffer for Vin measurement
+
 static inline void Drv_PowerControllerBoost_CalculateVoltageLimits(POWER_CONTROLLER_DATA_t* pPCData);
 static inline void Drv_PowerControllerBoost_MonitorVoltageLimits(POWER_CONTROLLER_DATA_t* pPCData);
 
@@ -63,6 +65,7 @@ uint16_t Drv_PowerControllerBoost_GetOutputVoltageRaw(POWER_CONTROLLER_DATA_t* p
 //=======================================================================================================
 void boostPC_GotoState(POWER_CONTROLLER_DATA_t* pPCData, PWR_CTRL_STATE_e newState)
 {
+    pPCData->averageCounter = 0;
     pPCData->timeCounter = 0;
     pPCData->pc_state_internal = newState;
 }
@@ -122,10 +125,29 @@ void Drv_PowerControllerBoost_Task_100us(POWER_CONTROLLER_DATA_t* pPCData)
         case PCS_WAIT_FOR_ADC_ACTIVE:    // wait until the power controller is active
             if (pPCData->flags.bits.adc_active)
             {
-                boostPC_GotoState(pPCData, PCS_RAMP_UP_VOLTAGE);
+                boostPC_GotoState(pPCData, PCS_MEASURE_INPUT_VOLTAGE);
             }
             break;
-                 
+        case PCS_MEASURE_INPUT_VOLTAGE:  // take 8 samples of input voltage and calculate average value  
+        {    
+            volatile uint16_t samp = 0;
+           
+            if (_AN12RDY) 
+            {
+                samp     = ADCBUF12; // Read latest sample
+                vin_avg += samp;
+                _ADCAN12IF = 0;
+                
+                if (++(pPCData->averageCounter) == 8) 
+                {
+                    pPCData->voltageInput = vin_avg >> 3;
+                    vin_avg = 0;    // Reset averaging buffer
+
+                    boostPC_GotoState(pPCData, PCS_RAMP_UP_VOLTAGE);
+                }
+            }
+            break;
+        }         
         case PCS_RAMP_UP_VOLTAGE: // Increasing the voltage reference for boost by ramp_step every scheduler cycle
         {
             uint16_t newReference;

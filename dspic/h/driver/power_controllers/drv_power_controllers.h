@@ -59,9 +59,10 @@ typedef enum
     PCS_STANDBY                  = 2,    // Soft-Start Standby (wait for GO command)
     PCS_WAIT_FOR_POWER_IN_GOOD   = 3,    // Soft-Start wait some time to guarantee a stable power supply
     PCS_WAIT_FOR_ADC_ACTIVE      = 4,    // wait until ADC is running
-    PCS_RAMP_UP_VOLTAGE          = 5,    // Soft-Start Ramp Up Output Voltage
-    PCS_WAIT_FOR_POWER_OUT_GOOD  = 6,    // Soft-Start wait to stabilize
-    PCS_UP_AND_RUNNING           = 7     // Soft-Start is complete, power is up and running
+    PCS_MEASURE_INPUT_VOLTAGE    = 5,    // measure input voltage
+    PCS_RAMP_UP_VOLTAGE          = 6,    // Soft-Start Ramp Up Output Voltage
+    PCS_WAIT_FOR_POWER_OUT_GOOD  = 7,    // Soft-Start wait to stabilize
+    PCS_UP_AND_RUNNING           = 8     // Soft-Start is complete, power is up and running
 }PWR_CTRL_STATE_INT_e;
 
 
@@ -102,8 +103,10 @@ typedef struct
     volatile uint16_t powerOutputOk_waitTime_100us; // amount of 100µs ticks to wait for the output power to be stable
 //    volatile uint16_t precharge_delay;      // Soft-Start Bootstrap Capacitor pre-charge delay if necessary
 //    volatile uint16_t rampUp_period;            // Soft-Start Ramp-Up Duration
+    volatile uint16_t averageCounter;           // average value calculation counter
     volatile uint16_t timeCounter;              // Soft-Start Execution Counter
     volatile PWR_CTRL_STATE_INT_e pc_state_internal;   // state of the power control state machine
+    volatile uint16_t voltageInput;             // Input Voltage measured by the ADC
     volatile uint16_t voltageOutput;            // Output Voltage measured by the ADC
     volatile uint16_t voltageRef_softStart;     // target voltage reference value for soft start
     volatile uint16_t voltageRef_compensator;   // voltage reference for the compensator
