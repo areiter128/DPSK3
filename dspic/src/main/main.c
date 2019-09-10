@@ -29,6 +29,7 @@
 #include <xc.h>
 #include <stdbool.h>
 #include <stdint.h>
+#include "misc/system.h"
 #include "device/dev_lcd.h"
 #include "device/dev_button.h"
 #include "device/dev_uart1.h"
@@ -37,13 +38,6 @@
 #include "app/app_proto24.h"
 #include "app/app_logger.h"
 #include "app/app_fault_handling.h"
-
-#include "init/init_fosc.h"
-#include "init/init_gpio.h"
-//#include "init/init_pwm.h"
-//#include "init/init_acmp.h"
-//#include "init/init_adc.h"
-
 #include "os/os_scheduler.h"
 
 #ifdef TEST_ENABLED
@@ -56,12 +50,7 @@
 
 int main(void)
 {
-    //TODO: general system setup that is not part of some other component of the software like oscillators etc.
-    // should be moved in a drv_system.c file with a Drv_System_Init() function
-    // all other low level peripheral initializations should be moved to the Init-Routine of the corresponding software module(e.g. power controller)
-    init_fosc();        // Set up system oscillator for 100 MIPS operation
-    init_aclk();        // Set up Auxiliary PLL for 500 MHz (source clock to PWM module)
-    init_gpio();        // Initialize common device GPIOs
+    System_Init();      //Init System: Oscillators and GPIOs
     
     // Basic setup of common power controller peripheral modules
     Drv_PowerControllers_InitPWM();    // Set up PWM module (basic module configuration)
@@ -85,7 +74,6 @@ int main(void)
     Global_UpdateBoardData();
     global_data.pic24_packet_counter = 0;
 
-    
 #ifdef TEST_ENABLED
     App_Test();
 #else
