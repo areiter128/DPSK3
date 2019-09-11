@@ -40,7 +40,6 @@
         <itemPath>h/misc/helpers.h</itemPath>
         <itemPath>h/misc/dummy_compensator.h</itemPath>
         <itemPath>h/misc/interrupt.h</itemPath>
-        <itemPath>h/misc/proto_data.h</itemPath>
         <itemPath>h/misc/system.h</itemPath>
       </logicalFolder>
       <logicalFolder name="f7" displayName="os" projectFiles="true">
@@ -80,7 +79,6 @@
           <itemPath>src/driver/power_controllers/c2P2Z_boost_asm.s</itemPath>
         </logicalFolder>
         <itemPath>src/driver/drv_lcd_interface.c</itemPath>
-        <itemPath>src/driver/drv_gpio.c</itemPath>
       </logicalFolder>
       <logicalFolder name="f6" displayName="main" projectFiles="true">
         <itemPath>src/main/main.c</itemPath>
@@ -121,11 +119,11 @@
         <targetPluginBoard></targetPluginBoard>
         <platformTool>snap</platformTool>
         <languageToolchain>XC16</languageToolchain>
-        <languageToolchainVersion>1.40</languageToolchainVersion>
+        <languageToolchainVersion>1.36</languageToolchainVersion>
         <platform>3</platform>
       </toolsSet>
       <packs>
-        <pack name="dsPIC33CK-MP_DFP" vendor="Microchip" version="1.1.51"/>
+        <pack name="dsPIC33CK-MP_DFP" vendor="Microchip" version="1.0.46"/>
       </packs>
       <compileType>
         <linkerTool>
@@ -214,9 +212,6 @@
         <property key="relax" value="false"/>
         <property key="warning-level" value="emit-warnings"/>
       </C30-AS>
-      <C30-CO>
-        <property key="coverage-enable" value=""/>
-      </C30-CO>
       <C30-LD>
         <property key="additional-options-use-response-files" value="false"/>
         <property key="boot-eeprom" value="no_eeprom"/>
@@ -693,7 +688,7 @@
         <property key="programoptions.testmodeentrymethod" value="VDDFirst"/>
       </snap>
     </conf>
-    <conf name="DPSK3_R30_Test" type="2">
+    <conf name="MA330048_R30" type="2">
       <toolsSet>
         <developmentServer>localhost</developmentServer>
         <targetDevice>dsPIC33CK256MP505</targetDevice>
@@ -701,11 +696,11 @@
         <targetPluginBoard></targetPluginBoard>
         <platformTool>pkob4hybrid</platformTool>
         <languageToolchain>XC16</languageToolchain>
-        <languageToolchainVersion>1.40</languageToolchainVersion>
+        <languageToolchainVersion>1.36</languageToolchainVersion>
         <platform>3</platform>
       </toolsSet>
       <packs>
-        <pack name="dsPIC33CK-MP_DFP" vendor="Microchip" version="1.1.51"/>
+        <pack name="dsPIC33CK-MP_DFP" vendor="Microchip" version="1.0.46"/>
       </packs>
       <compileType>
         <linkerTool>
