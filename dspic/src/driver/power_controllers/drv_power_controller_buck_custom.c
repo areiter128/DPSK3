@@ -45,7 +45,7 @@
 // Buck instance 1 specific defines:
 #define BUCK1_ADC_REFERENCE     3.3             // 3.3 Volts ==> maximum ADC-Value
 #define BUCK1_ADC_RESOLUTION    4095UL          // 12 bits
-#define BUCK1_FEEDBACK_BGAIN    0.5             // 1k /(1k+1k)
+#define BUCK1_FEEDBACK_GAIN     0.5             // 1k /(1k+1k)
 
 POWER_CONTROLLER_DATA_t pwrCtrlBuck1_Data;      // data instance for the buck converter
 
@@ -55,7 +55,7 @@ POWER_CONTROLLER_DATA_t pwrCtrlBuck1_Data;      // data instance for the buck co
 //=======================================================================================================
 double Drv_PowerControllerBuck1_GetOutputVoltage()
 {
-    return (double)(((unsigned long)pwrCtrlBuck1_Data.voltageOutput * BUCK1_ADC_REFERENCE) / (BUCK1_FEEDBACK_BGAIN * BUCK1_ADC_RESOLUTION));
+    return (double)(((unsigned long)pwrCtrlBuck1_Data.voltageOutput * BUCK1_ADC_REFERENCE) / (BUCK1_FEEDBACK_GAIN * BUCK1_ADC_RESOLUTION));
 }
 
 
@@ -65,7 +65,7 @@ double Drv_PowerControllerBuck1_GetOutputVoltage()
 //=======================================================================================================
 void Drv_PowerControllerBuck1_SetOutputVoltageReference(double newVoltRef)
 {
-    pwrCtrlBuck1_Data.voltageRef_softStart = ((newVoltRef * BUCK1_ADC_RESOLUTION * BUCK1_FEEDBACK_BGAIN) / BUCK1_ADC_REFERENCE);
+    pwrCtrlBuck1_Data.voltageRef_softStart = ((newVoltRef * BUCK1_ADC_RESOLUTION * BUCK1_FEEDBACK_GAIN) / BUCK1_ADC_REFERENCE);
 }
 
 
@@ -75,7 +75,7 @@ void Drv_PowerControllerBuck1_SetOutputVoltageReference(double newVoltRef)
 //=======================================================================================================
 void Drv_PowerControllerBuck1_SetOutputVoltageReference_mV(uint32_t newVoltRef_mV)
 {
-    pwrCtrlBuck1_Data.voltageRef_softStart = ((((uint32_t)newVoltRef_mV * BUCK1_ADC_RESOLUTION) * BUCK1_FEEDBACK_BGAIN) / BUCK1_ADC_REFERENCE) / 1000;
+    pwrCtrlBuck1_Data.voltageRef_softStart = ((((uint32_t)newVoltRef_mV * BUCK1_ADC_RESOLUTION) * BUCK1_FEEDBACK_GAIN) / BUCK1_ADC_REFERENCE) / 1000;
 }
 
 void Drv_PowerControllerBuck1_EnableControlLoop(void)

@@ -51,7 +51,7 @@
 #define BUCK_OVERVOLTAGE_PERCENT     105
 #define BUCK_UNDERVOLTAGE_PERCENT     95
 
-volatile uint16_t vin_avg = 0;      // Averaging buffer for Vin measurement
+volatile static uint16_t vin_avg = 0;      // Averaging buffer for Vin measurement
 
 static inline void Drv_PowerControllerBuck_CalculateVoltageLimits(POWER_CONTROLLER_DATA_t* pPCData);
 static inline void Drv_PowerControllerBuck_MonitorVoltageLimits(POWER_CONTROLLER_DATA_t* pPCData);

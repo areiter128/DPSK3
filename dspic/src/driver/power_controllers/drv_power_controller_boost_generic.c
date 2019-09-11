@@ -46,7 +46,7 @@
 #define BOOST_OVERVOLTAGE_PERCENT     105
 #define BOOST_UNDERVOLTAGE_PERCENT     95
 
-volatile uint16_t vin_avg = 0;      // Averaging buffer for Vin measurement
+volatile static uint16_t vin_avg = 0;      // Averaging buffer for Vin measurement
 
 static inline void Drv_PowerControllerBoost_CalculateVoltageLimits(POWER_CONTROLLER_DATA_t* pPCData);
 static inline void Drv_PowerControllerBoost_MonitorVoltageLimits(POWER_CONTROLLER_DATA_t* pPCData);
@@ -79,6 +79,7 @@ void Drv_PowerControllerBoost_Init(POWER_CONTROLLER_DATA_t* pPCData, bool autost
     pPCData->voltageRef_compensator = 0;                // 2047 for 3.3V
     pPCData->voltageRef_softStart = 0;                  // 2047 for 3.3V
     pPCData->voltageOutput = 0;
+    pPCData->voltageInput  = 0;
     pPCData->flags.value = 0;                           // reset everything
     pPCData->flags.bits.adc_active = false;
     pPCData->flags.bits.auto_start = autostart;
@@ -143,16 +144,37 @@ void Drv_PowerControllerBoost_Task_100us(POWER_CONTROLLER_DATA_t* pPCData)
                     pPCData->voltageInput = vin_avg >> 3;
                     vin_avg = 0;    // Reset averaging buffer
 
+                    // Recently established input voltage value serves as initial reference value for the output
+                    pPCData->voltageRef_compensator = pPCData->voltageInput;
+                    
+                    // Establishing magnitude of single step for the upcoming ramp-up phase
+                    pPCData->voltageRef_rampStep = (uint16_t)((pPCData->voltageRef_softStart - pPCData->voltageRef_compensator)/(pPCData->voltageRef_rampPeriod_100us + 1));
+                    if(pPCData->voltageRef_rampStep == 0) {         // Protecting startup settings against 
+                        pPCData->voltageRef_rampStep = 1;           // ZERO settings
+                    }               
                     boostPC_GotoState(pPCData, PCS_RAMP_UP_VOLTAGE);
                 }
             }
             break;
         }         
-        case PCS_RAMP_UP_VOLTAGE: // Increasing the voltage reference for boost by ramp_step every scheduler cycle
+        case PCS_RAMP_UP_VOLTAGE: // Increasing the voltage reference and compensator clamp for boost every scheduler cycle
         {
+            int16_t newClamp;
             uint16_t newReference;
-
+            
             Drv_PowerControllerBoost_MonitorVoltageLimits(pPCData);
+           
+            newClamp = *(pPCData->compClampMax) + pPCData->currentClamp_rampStep;
+//            newClamp     = c2P2Z_boost.MaxOutput + pPCData->currentClamp_rampStep;
+            if (newClamp < pPCData->compMaxOutput)
+            {
+                *(pPCData->compClampMax) = newClamp;
+            }
+            else
+            {
+                 *(pPCData->compClampMax) = pPCData->compMaxOutput;
+            }
+            
             newReference = pPCData->voltageRef_compensator + pPCData->voltageRef_rampStep;
             if (newReference < pPCData->voltageRef_softStart)
             {

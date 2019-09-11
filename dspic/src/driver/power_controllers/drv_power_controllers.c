@@ -52,7 +52,7 @@
 //=======================================================================================================
 double Drv_PowerController_GetInputVoltage()
 {
-    return (double)(((unsigned long)pwrCtrlBoost1_Data.voltageInput * VIN_ADC_REFERENCE) / (VIN_FEEDBACK_BGAIN * VIN_ADC_RESOLUTION));
+    return (double)(((unsigned long)pwrCtrlBoost1_Data.voltageInput * VIN_ADC_REFERENCE) / (VIN_FEEDBACK_GAIN * VIN_ADC_RESOLUTION));
 }
 
 void Drv_PowerControllers_Init(void)
@@ -63,7 +63,7 @@ void Drv_PowerControllers_Init(void)
 
     // Init all Boost Converter instances
     Drv_PowerControllerBoost1_Init(true);                       // Init Boost Convert 1
-    Drv_PowerControllerBoost1_SetOutputVoltageReference_mV(15000); //Set Boost Converter Output to 15 Volt
+    Drv_PowerControllerBoost1_SetOutputVoltageReference_mV(15000); //Set Boost Converter Output
 }
 
 void Drv_PowerControllers_Task_100us(void)

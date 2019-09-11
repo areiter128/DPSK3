@@ -40,6 +40,11 @@ extern "C" {
 extern POWER_CONTROLLER_DATA_t pwrCtrlBoost1_Data;      // data instance for the boost converter
 
 //=======================================================================================================
+// @brief   returns the Input Voltage in Volts as a double
+//=======================================================================================================
+double Drv_PowerControllerBoost1_GetInputVoltage();
+
+//=======================================================================================================
 // @brief   returns the Output Voltage in Volts as a double
 //=======================================================================================================
 double Drv_PowerControllerBoost1_GetOutputVoltage();
@@ -76,6 +81,9 @@ volatile uint16_t Drv_PowerControllerBoost1_LaunchAuxiliaryPWM(void);
 
 //=======================================================================================================
 volatile uint16_t Drv_PowerControllerBoost1_InitACMP(void);
+
+//=======================================================================================================
+volatile uint16_t Drv_PowerControllerBoost1_LaunchOPA(void);
 
 //=======================================================================================================
 volatile uint16_t Drv_PowerControllerBoost1_LaunchACMP(void);

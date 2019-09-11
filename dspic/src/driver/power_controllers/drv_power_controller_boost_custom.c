@@ -42,17 +42,40 @@
 // Boost instance 1 specific defines:
 #define BOOST1_ADC_REFERENCE     3.3             // 3.3 Volts ==> maximum ADC-Value
 #define BOOST1_ADC_RESOLUTION    4095UL          // 12 bits
-#define BOOST1_FEEDBACK_BGAIN    0.1253          // 1k /(1k+6.98k)
+#define BOOST1_FEEDBACK_GAIN     0.1253          // 1k /(1k+6.98k)
+#define BOOST1_IIN_FEEDBACK_GAIN 1.0             // 1 V/A
+#define BOOST1_VIN_GAIN 0.1253                   // 1k /(1k+6.98k)
+
+#define BOOST_INIT_PCMC_CLAMP         0  // [A]; Initial clamping value for boost converter input current
+#define BOOST_FINAL_PCMC_CLAMP        2  // [A]; Final clamping value for boost converter input current 
+//#define BOOST_VREF                   15  // [V]; Voltage reference for boost converter
+#define BOOST_CLAMP_RAMPUP_PERIOD 20e-3  // [s]; Current clamp ramp-up period for boost converter
+#define BOOST_VREF_RAMPUP_PERIOD 100e-3  // [s]; Vref ramp-up period for boost converter
+
+#define BOOST_IN_PCMC_CL      (uint16_t)(BOOST_INIT_PCMC_CLAMP * BOOST1_IIN_FEEDBACK_GAIN * BOOST1_ADC_RESOLUTION / BOOST1_ADC_REFERENCE)
+#define BOOST_FN_PCMC_CL      (uint16_t)(BOOST_FINAL_PCMC_CLAMP * BOOST1_IIN_FEEDBACK_GAIN * BOOST1_ADC_RESOLUTION / BOOST1_ADC_REFERENCE)
+#define BOOST_RP_CL_PER       (uint16_t)((BOOST_CLAMP_RAMPUP_PERIOD / MAIN_EXECUTION_PERIOD)-1.0)             
+#define BOOST_RP_CL_STEP      (uint16_t)((BOOST_FN_PCMC_CL - BOOST_IN_PCMC_CL)/(BOOST_RP_CL_PER + 1))
+#define BOOST_RP_VREF_PER     (uint16_t)((BOOST_VREF_RAMPUP_PERIOD / MAIN_EXECUTION_PERIOD)-1.0)
+
 
 POWER_CONTROLLER_DATA_t pwrCtrlBoost1_Data;      // data instance for the boost converter
 
+
+//=======================================================================================================
+// @brief   returns the Input Voltage in Volts as a double
+//=======================================================================================================
+double Drv_PowerControllerBoost1_GetInputVoltage()
+{
+    return (double)(((unsigned long)pwrCtrlBoost1_Data.voltageInput * BOOST1_ADC_REFERENCE) / (BOOST1_VIN_GAIN * BOOST1_ADC_RESOLUTION));
+}
 
 //=======================================================================================================
 // @brief   returns the Output Voltage in Volts as a double
 //=======================================================================================================
 double Drv_PowerControllerBoost1_GetOutputVoltage()
 {
-    return (double)(((unsigned long)pwrCtrlBoost1_Data.voltageOutput * BOOST1_ADC_REFERENCE) / (BOOST1_FEEDBACK_BGAIN * BOOST1_ADC_RESOLUTION));
+    return (double)(((unsigned long)pwrCtrlBoost1_Data.voltageOutput * BOOST1_ADC_REFERENCE) / (BOOST1_FEEDBACK_GAIN * BOOST1_ADC_RESOLUTION));
 }
 
 //=======================================================================================================
@@ -61,7 +84,7 @@ double Drv_PowerControllerBoost1_GetOutputVoltage()
 //=======================================================================================================
 void Drv_PowerControllerBoost1_SetInitialOutputVoltageReference(double newVoltRef)
 {
-    pwrCtrlBoost1_Data.voltageRef_softStart = ((newVoltRef * BOOST1_ADC_RESOLUTION * BOOST1_FEEDBACK_BGAIN) / BOOST1_ADC_REFERENCE);
+    pwrCtrlBoost1_Data.voltageRef_softStart = ((newVoltRef * BOOST1_ADC_RESOLUTION * BOOST1_FEEDBACK_GAIN) / BOOST1_ADC_REFERENCE);
 }
 
 //=======================================================================================================
@@ -70,7 +93,7 @@ void Drv_PowerControllerBoost1_SetInitialOutputVoltageReference(double newVoltRe
 //=======================================================================================================
 void Drv_PowerControllerBoost1_SetInitialOutputVoltageReference_mV(uint32_t newVoltRef_mV)
 {
-    pwrCtrlBoost1_Data.voltageRef_softStart = ((((uint32_t)newVoltRef_mV * BOOST1_ADC_RESOLUTION) * BOOST1_FEEDBACK_BGAIN) / BOOST1_ADC_REFERENCE) / 1000;
+    pwrCtrlBoost1_Data.voltageRef_softStart = ((((uint32_t)newVoltRef_mV * BOOST1_ADC_RESOLUTION) * BOOST1_FEEDBACK_GAIN) / BOOST1_ADC_REFERENCE) / 1000;
 }
 
 
@@ -80,7 +103,7 @@ void Drv_PowerControllerBoost1_SetInitialOutputVoltageReference_mV(uint32_t newV
 //=======================================================================================================
 void Drv_PowerControllerBoost1_SetOutputVoltageReference(double newVoltRef)
 {
-    pwrCtrlBoost1_Data.voltageRef_softStart = ((newVoltRef * BOOST1_ADC_RESOLUTION * BOOST1_FEEDBACK_BGAIN) / BOOST1_ADC_REFERENCE);
+    pwrCtrlBoost1_Data.voltageRef_softStart = ((newVoltRef * BOOST1_ADC_RESOLUTION * BOOST1_FEEDBACK_GAIN) / BOOST1_ADC_REFERENCE);
 }
 
 //=======================================================================================================
@@ -89,7 +112,7 @@ void Drv_PowerControllerBoost1_SetOutputVoltageReference(double newVoltRef)
 //=======================================================================================================
 void Drv_PowerControllerBoost1_SetOutputVoltageReference_mV(uint32_t newVoltRef_mV)
 {
-    pwrCtrlBoost1_Data.voltageRef_softStart = ((((uint32_t)newVoltRef_mV * BOOST1_ADC_RESOLUTION) * BOOST1_FEEDBACK_BGAIN) / BOOST1_ADC_REFERENCE) / 1000;
+    pwrCtrlBoost1_Data.voltageRef_softStart = ((((uint32_t)newVoltRef_mV * BOOST1_ADC_RESOLUTION) * BOOST1_FEEDBACK_GAIN) / BOOST1_ADC_REFERENCE) / 1000;
 }
 
 void Drv_PowerControllerBoost1_EnableControlLoop(void)
@@ -109,6 +132,7 @@ void Drv_PowerControllerBoost1_DisableControlLoop(void)
 
 void Drv_PowerControllerBoost1_LaunchPeripherals(void)
 {
+    Drv_PowerControllerBoost1_LaunchOPA();            // Start operation amplifier module
     Drv_PowerControllerBoost1_LaunchACMP();          // Start analog comparator/DAC module
     Drv_PowerControllerBoost1_LaunchAuxiliaryPWM();  // Start auxiliary PWM 
     Drv_PowerControllerBoost1_LaunchPWM();           // Start PWM
@@ -133,13 +157,23 @@ void Drv_PowerControllerBoost1_Init(bool autostart)
     Drv_PowerControllerBuck_CalculateVoltageLimits(pPCData);
   */
             
-    pwrCtrlBoost1_Data.voltageRef_rampStep = 4;              // 4 adc values per 100µs
+    pwrCtrlBoost1_Data.voltageRef_rampStep = 0; // this will be assigned different value after input voltage gets measured
+    pwrCtrlBoost1_Data.voltageRef_rampPeriod_100us = BOOST_RP_VREF_PER; // voltage reference ramp-up period
     pwrCtrlBoost1_Data.powerInputOk_waitTime_100us = 1000;   // 100ms input power stabilization delay
     pwrCtrlBoost1_Data.powerOutputOk_waitTime_100us = 1000;  // 100ms output power stabilization delay
+    pwrCtrlBoost1_Data.compMaxOutput = BOOST_FN_PCMC_CL;
+    pwrCtrlBoost1_Data.compMinOutput = BOOST_IN_PCMC_CL;
+    
+    pwrCtrlBoost1_Data.currentClamp_rampStep = BOOST_RP_CL_STEP; 
+    if(pwrCtrlBoost1_Data.currentClamp_rampStep == 0) {         // Protecting startup settings against 
+        pwrCtrlBoost1_Data.currentClamp_rampStep = 1;           // ZERO settings
+    }
+        
     pwrCtrlBoost1_Data.ftkEnableControlLoop  = Drv_PowerControllerBoost1_EnableControlLoop;
     pwrCtrlBoost1_Data.ftkDisableControlLoop = Drv_PowerControllerBoost1_DisableControlLoop;
     pwrCtrlBoost1_Data.ftkLaunchPeripherals  = Drv_PowerControllerBoost1_LaunchPeripherals;
-    
+    pwrCtrlBoost1_Data.compClampMax = &(c2P2Z_boost.MaxOutput);
+       
     Drv_PowerControllerBoost1_InitAuxiliaryPWM(); // Set up auxiliary PWM 
     Drv_PowerControllerBoost1_InitPWM();          // Set up primary PWM 
     Drv_PowerControllerBoost1_InitACMP();         // Set up comparator/DAC for PCMC
@@ -152,8 +186,8 @@ void Drv_PowerControllerBoost1_Init(bool autostart)
     c2P2Z_boost.ptrControlReference = &(pwrCtrlBoost1_Data.voltageRef_compensator);    //TODO: wrong pointer!
     c2P2Z_boost.ptrSource = &ADCBUF18;
     c2P2Z_boost.ptrTarget = &DAC2DATH;
-    c2P2Z_boost.MaxOutput = 3600;
-    c2P2Z_boost.MinOutput = 10;
+    c2P2Z_boost.MaxOutput = pwrCtrlBoost1_Data.compMinOutput;
+    c2P2Z_boost.MinOutput = pwrCtrlBoost1_Data.compMinOutput;
     c2P2Z_boost.status.flag.enable = 0;
 }
 
@@ -484,6 +518,14 @@ volatile uint16_t Drv_PowerControllerBoost1_LaunchACMP(void) {
     
     DAC2CONLbits.DACEN = 1; // Individual DACx Module Enable: Enables DAC2 module 
     DACCTRL1Lbits.DACON = 1; // Common DAC Module Enable: Enables all enabled DAC modules
+    
+    return(1);
+}
+
+volatile uint16_t Drv_PowerControllerBoost1_LaunchOPA(void) {
+    
+    AMPCON1Lbits.AMPEN2 = 1; // Enables Op Amp #2 if the AMPON bit is also asserted
+    AMPCON1Lbits.AMPON  = 1; // Enables op amp modules if their respective AMPENx bits are also asserted
     
     return(1);
 }

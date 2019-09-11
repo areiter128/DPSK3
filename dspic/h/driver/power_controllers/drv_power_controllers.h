@@ -31,6 +31,8 @@
 #include <stdbool.h>
 #include <stdint.h>
 
+#define MAIN_EXECUTION_PERIOD    100e-6     // main state machine pace period in [sec]
+
 #define ADC_POWRUP_TIMEOUT         5000
 #define VOUT_ADC_TRIGGER_DELAY       80  // With respect to the start of the PWM cycle
 
@@ -99,6 +101,7 @@ typedef void (*pCallback_t)(void);
 typedef struct
 {
     //TODO: is the reference always voltage or sometimes current?
+    volatile uint16_t voltageRef_rampPeriod_100us;  // amount of 100µs ticks it takes for the reference to ramp up
     volatile uint16_t powerInputOk_waitTime_100us;  // amount of 100µs ticks to wait for the input power to be stable
     volatile uint16_t powerOutputOk_waitTime_100us; // amount of 100µs ticks to wait for the output power to be stable
 //    volatile uint16_t precharge_delay;      // Soft-Start Bootstrap Capacitor pre-charge delay if necessary
@@ -111,13 +114,17 @@ typedef struct
     volatile uint16_t voltageRef_softStart;     // target voltage reference value for soft start
     volatile uint16_t voltageRef_compensator;   // voltage reference for the compensator
     volatile uint16_t voltageRef_rampStep;      // Soft-Start Single Reference Increment per Step
+    volatile int16_t currentClamp_rampStep;    // Soft-Start Single Current Clamp Increment per Step
+    volatile uint16_t compMaxOutput;
+    volatile uint16_t compMinOutput;
     volatile uint16_t OverVoltageLimit;         // Overvoltage Limit, gets calculated automatically
     volatile uint16_t UnderVoltageLimit;        // Overvoltage Limit, gets calculated automatically
     volatile POWER_CONTROLLER_FLAGS_t flags;    // status flags
     volatile pCallback_t ftkEnableControlLoop;  // Controller calls this function to enable the control Loop
     volatile pCallback_t ftkDisableControlLoop; // Controller calls this function to disable the control Loop
     volatile pCallback_t ftkLaunchPeripherals;  // Controller calls this function to launch the peripherals
-}POWER_CONTROLLER_DATA_t;                       // power control soft-start settings and variables
+    volatile int16_t *compClampMax;
+   }POWER_CONTROLLER_DATA_t;                       // power control soft-start settings and variables
 
 extern void Drv_PowerControllers_Init(void);
 extern void Drv_PowerControllers_Task_100us(void);
