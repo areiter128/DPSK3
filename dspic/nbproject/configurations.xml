@@ -31,10 +31,6 @@
         </logicalFolder>
         <itemPath>h/driver/drv_lcd_interface.h</itemPath>
       </logicalFolder>
-      <logicalFolder name="f1" displayName="init" projectFiles="true">
-        <itemPath>h/init/init_fosc.h</itemPath>
-        <itemPath>h/init/init_gpio.h</itemPath>
-      </logicalFolder>
       <logicalFolder name="f6" displayName="main" projectFiles="true">
         <itemPath>h/main/main.h</itemPath>
       </logicalFolder>
@@ -45,6 +41,7 @@
         <itemPath>h/misc/dummy_compensator.h</itemPath>
         <itemPath>h/misc/interrupt.h</itemPath>
         <itemPath>h/misc/proto_data.h</itemPath>
+        <itemPath>h/misc/system.h</itemPath>
       </logicalFolder>
       <logicalFolder name="f7" displayName="os" projectFiles="true">
         <itemPath>h/os/os_scheduler.h</itemPath>
@@ -83,10 +80,7 @@
           <itemPath>src/driver/power_controllers/c2P2Z_boost_asm.s</itemPath>
         </logicalFolder>
         <itemPath>src/driver/drv_lcd_interface.c</itemPath>
-      </logicalFolder>
-      <logicalFolder name="f1" displayName="init" projectFiles="true">
-        <itemPath>src/init/init_fosc.c</itemPath>
-        <itemPath>src/init/init_gpio.c</itemPath>
+        <itemPath>src/driver/drv_gpio.c</itemPath>
       </logicalFolder>
       <logicalFolder name="f6" displayName="main" projectFiles="true">
         <itemPath>src/main/main.c</itemPath>
@@ -96,11 +90,11 @@
         <itemPath>src/misc/global.c</itemPath>
         <itemPath>src/misc/helpers.c</itemPath>
         <itemPath>src/misc/dummy_compensator.c</itemPath>
+        <itemPath>src/misc/system.c</itemPath>
       </logicalFolder>
       <logicalFolder name="f7" displayName="os" projectFiles="true">
         <itemPath>src/os/os_scheduler_100us.c</itemPath>
       </logicalFolder>
-      <itemPath>src/config_bits.c</itemPath>
     </logicalFolder>
     <logicalFolder name="ExternalFiles"
                    displayName="Important Files"
@@ -127,11 +121,11 @@
         <targetPluginBoard></targetPluginBoard>
         <platformTool>snap</platformTool>
         <languageToolchain>XC16</languageToolchain>
-        <languageToolchainVersion>1.36</languageToolchainVersion>
+        <languageToolchainVersion>1.40</languageToolchainVersion>
         <platform>3</platform>
       </toolsSet>
       <packs>
-        <pack name="dsPIC33CK-MP_DFP" vendor="Microchip" version="1.0.46"/>
+        <pack name="dsPIC33CK-MP_DFP" vendor="Microchip" version="1.1.51"/>
       </packs>
       <compileType>
         <linkerTool>
@@ -220,6 +214,9 @@
         <property key="relax" value="false"/>
         <property key="warning-level" value="emit-warnings"/>
       </C30-AS>
+      <C30-CO>
+        <property key="coverage-enable" value=""/>
+      </C30-CO>
       <C30-LD>
         <property key="additional-options-use-response-files" value="false"/>
         <property key="boot-eeprom" value="no_eeprom"/>
@@ -704,11 +701,11 @@
         <targetPluginBoard></targetPluginBoard>
         <platformTool>pkob4hybrid</platformTool>
         <languageToolchain>XC16</languageToolchain>
-        <languageToolchainVersion>1.36</languageToolchainVersion>
+        <languageToolchainVersion>1.40</languageToolchainVersion>
         <platform>3</platform>
       </toolsSet>
       <packs>
-        <pack name="dsPIC33CK-MP_DFP" vendor="Microchip" version="1.0.46"/>
+        <pack name="dsPIC33CK-MP_DFP" vendor="Microchip" version="1.1.51"/>
       </packs>
       <compileType>
         <linkerTool>

@@ -38,7 +38,6 @@
 //=======================================================================================================
 
 #include <stdint.h>
-#include "init/init_gpio.h"
 #include "driver/power_controllers/drv_power_controllers.h"
 #include "device/dev_button.h"
 #include "app/app_fault_handling.h"
@@ -46,6 +45,7 @@
 #include "app/app_display.h"
 #include "app/app_logger.h"
 #include "misc/global.h"
+#include "misc/system.h"
 
 
 //=======================================================================================================
