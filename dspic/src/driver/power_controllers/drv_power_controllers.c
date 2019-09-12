@@ -46,11 +46,42 @@
 #define VIN_ADC_RESOLUTION    4095UL          // 12 bits
 #define VIN_FEEDBACK_GAIN     0.1253          // 1k /(1k+6.98k)
 
+//=======================================================================================================
+// @brief   wrapper function returns the Output Voltage in Volts as a double 
+//=======================================================================================================
+double GetVoltageBoost(void)    
+{
+    return Drv_PowerControllerBoost1_GetOutputVoltage();
+}
+
+//=======================================================================================================
+// @brief   wrapper function returns the Input Voltage in Volts as a double 
+//=======================================================================================================
+double GetVoltageInput(void)     
+{
+    return Drv_PowerController_GetInputVoltage();
+}
+
+//=======================================================================================================
+// @brief   returns the value of the DACxDATH register for the buck regulator
+//=======================================================================================================
+uint16_t GetDacBuck(void)
+{
+    return DAC1DATH;
+}
+
+//=======================================================================================================
+// @brief   returns the value of the DACxDATH register for the boost regulator
+//=======================================================================================================
+uint16_t GetDacBoost(void)
+{
+    return DAC2DATH;
+}
 
 //=======================================================================================================
 // @brief   returns the Input Voltage in Volts as a double
 //=======================================================================================================
-double Drv_PowerController_GetInputVoltage()
+volatile double Drv_PowerController_GetInputVoltage()
 {
     return (double)(((unsigned long)pwrCtrlBoost1_Data.voltageInput * VIN_ADC_REFERENCE) / (VIN_FEEDBACK_GAIN * VIN_ADC_RESOLUTION));
 }
@@ -180,6 +211,7 @@ volatile uint16_t Drv_PowerControllers_InitACMP(void)
 
     // DACCTRL1L: DAC CONTROL 1 LOW REGISTER
     DACCTRL1Lbits.DACSIDL = 0; // DAC Stop in Idle Mode: Continues module operation in Idle mode
+//    DACCTRL1Lbits.CLKSEL = 0b01; // DAC Clock Source Selection: VCODIV
     DACCTRL1Lbits.CLKSEL = 0b10; // DAC Clock Source Selection: AFPLLO
     DACCTRL1Lbits.CLKDIV = 0b00; // DAC Clock Divider: Divider = 1:1
     DACCTRL1Lbits.FCLKDIV = 0b000; // Comparator Filter Clock Divider: Divider = 1:1

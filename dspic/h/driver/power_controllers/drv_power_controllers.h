@@ -126,6 +126,7 @@ typedef struct
     volatile int16_t *compClampMax;
    }POWER_CONTROLLER_DATA_t;                       // power control soft-start settings and variables
 
+
 extern void Drv_PowerControllers_Init(void);
 extern void Drv_PowerControllers_Task_100us(void);
 
@@ -134,5 +135,12 @@ extern volatile uint16_t Drv_PowerControllers_InitACMP(void);
 extern volatile uint16_t Drv_PowerControllers_InitADC(void);
 extern volatile uint16_t Drv_PowerControllers_InitVinADC(void);
 extern volatile uint16_t Drv_PowerControllers_LaunchADC(void);
+
+volatile double Drv_PowerController_GetInputVoltage(void);
+
+double GetVoltageBoost(void);
+double GetVoltageInput(void);
+uint16_t GetDacBuck(void);
+uint16_t GetDacBoost(void);
 
 #endif  //_DRV_POWER_CONTROLLERS_H_

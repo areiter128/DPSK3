@@ -38,7 +38,6 @@
         <itemPath>h/misc/global.h</itemPath>
         <itemPath>h/misc/delay.h</itemPath>
         <itemPath>h/misc/helpers.h</itemPath>
-        <itemPath>h/misc/dummy_compensator.h</itemPath>
         <itemPath>h/misc/interrupt.h</itemPath>
         <itemPath>h/misc/system.h</itemPath>
       </logicalFolder>
@@ -87,7 +86,6 @@
       <logicalFolder name="f5" displayName="misc" projectFiles="true">
         <itemPath>src/misc/global.c</itemPath>
         <itemPath>src/misc/helpers.c</itemPath>
-        <itemPath>src/misc/dummy_compensator.c</itemPath>
         <itemPath>src/misc/system.c</itemPath>
       </logicalFolder>
       <logicalFolder name="f7" displayName="os" projectFiles="true">
