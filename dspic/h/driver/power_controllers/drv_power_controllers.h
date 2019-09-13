@@ -31,17 +31,28 @@
 #include <stdbool.h>
 #include <stdint.h>
 
+/*!Device Clock Settings
+ * *************************************************************************************************
+ * Summary:
+ * Global defines for device clock settings
+ * 
+ * Description:
+ * This section is used to define device specific parameters related to the core clock and 
+ * auxiliary clock used to drive PWM, ADC and DAC.
+ * Pre-compiler macros are used to translate physical values into binary (integer) numbers 
+ * to be written to SFRs
+ * 
+ * *************************************************************************************************/
+
+#define CPU_FREQUENCY       100000000   // CPU frequency in [Hz]
+#define AUX_FREQUENCY       400000000   // Auxiliary Clock Frequency in [Hz]
+#define PWM_FREQUENCY       400000000   // PWM Generator Base Clock Frequency in [Hz]
+
 #define MAIN_EXECUTION_PERIOD    100e-6     // main state machine pace period in [sec]
 
 #define ADC_POWRUP_TIMEOUT         5000
 #define VOUT_ADC_TRIGGER_DELAY       80  // With respect to the start of the PWM cycle
 
-#define BOOST_OFFSET                500  // With respect to the buck converter 
-#define PWM_PERIOD                 1000  // Measured in [tick = 2ns]
-#define LEB_PERIOD                  100  // Leading Edge Blanking = n x PWM resolution (here: 50 x 2ns = 100ns)
-#define TDR                          25  // Rising edge dead time [2ns]
-#define TDF                          40  // Falling edge dead time [2ns]
-#define INIT_DUTY_CYCLE             800  // Initial value for soft-start routine
 
 
 #define TMOD_DURATION                75  // Transition Mode Duration
@@ -54,6 +65,50 @@
 #define DACDATH_BOOST                 0  // DAC value for the boost the slope starts from
 #define DACDATL_BUCK                  0  // Set this to minimum in Slope mode
 #define DACDATL_BOOST                 0  // Set this to minimum in Slope mode
+
+/*!PWM Settings
+ * *************************************************************************************************
+ * Summary:
+ * Global defines for specific parameters of the device PWM
+ * 
+ * Description:
+ * This section is used to define device specific parameters of PWM frequency, may duty ratio, 
+ * leading edge blanking, slope compensation and ADC triggers.
+ * granularity and slope timer frequency to calculate register values representing physical voltages.
+ * Pre-compiler macros are used to translate physical values into binary (integer) numbers 
+ * to be written to SFRs
+ * 
+ * *************************************************************************************************/
+#define SWITCHING_FREQUENCY         500e+3      // Power Supply Switching Frequency in [Hz]
+    
+//------ macros
+#define SWITCHING_PERIOD            (1.0/SWITCHING_FREQUENCY)   // Power Supply Switching Period in [sec]
+#define PWM_RES                     (1.0/AUX_FREQUENCY)         // PWM Resolution
+#define PWM_PERIOD                  (uint16_t)(SWITCHING_PERIOD / PWM_RES)      // Measured in [tick = 2ns]
+//------ 
+
+#define BOOST_TO_BUCK_OFFSET        0.50    // Boost offset with respect to the buck in proportion of the PWM period 
+#define MAXIMUM_DUTY_RATIO          0.80    // Maximum Duty Ratio in [%]
+#define LEB_PERIOD                  100e-9  // Leading Edge Blanking period in [sec]
+#define SLOPE_START_DELAY           100e-9  // Delay in {sec] until the slope compensation ramp starts
+#define SLOPE_STOP_DELAY            0.80    // Delay in [%] until the slope compensation ramp stops
+#define VOUT_ADC_TRIGGER_DELAY      (SWITCHING_PERIOD - 800e-9) // ADC trigger delay in [sec] used to sample output voltage
+#define PWM_MASTER_PHASE_SHIFT      0e-9  // Switching frequency phase shift in [sec]
+#define PWM_AUXILIARY_PHASE_SHIFT   100e-9  // Switching frequency phase shift in [sec]
+
+//------ macros
+#define BOOST_OFFSET                (uint16_t)(PWM_PERIOD * BOOST_TO_BUCK_OFFSET);  // This sets the offset for the boost converter with respect to the buck
+#define MAX_DUTY_CYCLE              (uint16_t)(PWM_PERIOD * MAXIMUM_DUTY_RATIO)     // This sets the maximum duty cycle
+#define PWM_LEB_PERIOD              (uint16_t)(LEB_PERIOD / PWM_RES)  // Leading Edge Blanking = n x PWM resolution (here: 50 x 2ns = 100ns)
+#define PWM_MSTR_PHASE_SHIFT        (uint16_t)(PWM_MASTER_PHASE_SHIFT / PWM_RES)   // Master PWM Phase Shift
+#define PWM_AUX_PHASE_SHIFT         (uint16_t)(PWM_AUXILIARY_PHASE_SHIFT / PWM_RES)   // Auxiliary PWM Phase Shift
+    
+#define VOUT_ADCTRIG                (uint16_t)(VOUT_ADC_TRIGGER_DELAY / PWM_RES)    // ADC trigger delay in [ticks] used to sample output voltage
+#define SLP_TRIG_START              (uint16_t)(SLOPE_START_DELAY / PWM_RES)         // Delay in {sec] until the slope compensation ramp starts
+#define SLP_TRIG_STOP               (uint16_t)(PWM_PERIOD * SLOPE_STOP_DELAY) // Delay in {sec] until the slope compensation ramp stops
+
+#define PWM_DEAD_TIME_RISING        20   // Rising edge dead time [2.5ns]
+#define PWM_DEAD_TIME_FALLING       32   // Falling edge dead time [2.5ns]
 
 typedef enum
 {
