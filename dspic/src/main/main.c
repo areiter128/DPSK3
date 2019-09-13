@@ -45,7 +45,7 @@
 #endif  // TEST_ENABLED
 #include "misc/delay.h"
 #include "misc/global.h"
-//#include "misc/dummy_compensator.h"
+
 
 
 int main(void)
