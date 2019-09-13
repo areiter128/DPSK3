@@ -193,9 +193,10 @@ volatile uint16_t Drv_PowerControllers_InitPWM(void)
 
 volatile uint16_t Drv_PowerControllers_InitACMP(void)
 {
-    // Make sure power is turned on to comparator module #1 & #2
-    PMD7bits.CMP1MD = 0; // Comparator 1 Module Powetr Disable: Comparator 1 module is enabled
-    PMD7bits.CMP2MD = 0; // Comparator 1 Module Powetr Disable: Comparator 1 module is enabled
+    // Make sure power is turned off to comparator modules
+    PMD7bits.CMP1MD = 0; // Comparator 1 Module Power Disable: Comparator 1 module is disabled
+    PMD7bits.CMP2MD = 0; // Comparator 1 Module Power Disable: Comparator 1 module is disabled
+    PMD7bits.CMP3MD = 0; // Comparator 3 Module Power Disable: Comparator 3 module is disabled
     
     // Turn off all Comparator/DAC modules during configuration
     DACCTRL1Lbits.DACON = 0; // Common DAC Module Enable: Disables all DAC modules
@@ -211,15 +212,14 @@ volatile uint16_t Drv_PowerControllers_InitACMP(void)
 
     // DACCTRL1L: DAC CONTROL 1 LOW REGISTER
     DACCTRL1Lbits.DACSIDL = 0; // DAC Stop in Idle Mode: Continues module operation in Idle mode
-//    DACCTRL1Lbits.CLKSEL = 0b01; // DAC Clock Source Selection: VCODIV
     DACCTRL1Lbits.CLKSEL = 0b10; // DAC Clock Source Selection: AFPLLO
     DACCTRL1Lbits.CLKDIV = 0b00; // DAC Clock Divider: Divider = 1:1
     DACCTRL1Lbits.FCLKDIV = 0b000; // Comparator Filter Clock Divider: Divider = 1:1
     
     // DACCTRL2H/L: DAC CONTROL 2 HIGH and DAC CONTROL 2 LOW REGISTER
     // Settings = 2 x 
-    DACCTRL2Lbits.TMODTIME = (TMOD_DURATION  & 0x03FF); // Transition Mode Duration (default 0x55 = 340ns @ 500 MHz)
-    DACCTRL2Hbits.SSTIME = (SS_DURATION & 0x0FFF); // Time from Start of Transition Mode until Steady-State Filter is Enabled (default 0x8A = 552ns @ 500 MHz)
+    DACCTRL2Lbits.TMODTIME = (DAC_TMODTIME  & 0x03FF); // Transition Mode Duration (default 0x55 = 340ns @ 500 MHz)
+    DACCTRL2Hbits.SSTIME = (DAC_SSTIME & 0x0FFF); // Time from Start of Transition Mode until Steady-State Filter is Enabled (default 0x8A = 552ns @ 500 MHz)
     
     return(1);
 }

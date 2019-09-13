@@ -35,9 +35,6 @@
 #include "driver/power_controllers/drv_power_controller_buck_custom.h"
 #include "driver/power_controllers/npnz16b.h"
 #include "driver/power_controllers/c2p2z_buck.h"
-//#include "init_pwm.h"
-//#include "init_acmp.h"
-//#include "init_adc.h"
 
 //=======================================================================================================
 // local defines
@@ -46,6 +43,12 @@
 #define BUCK1_ADC_REFERENCE     3.3             // 3.3 Volts ==> maximum ADC-Value
 #define BUCK1_ADC_RESOLUTION    4095UL          // 12 bits
 #define BUCK1_FEEDBACK_GAIN     0.5             // 1k /(1k+1k)
+
+#define INIT_DACDATH_BUCK       0  // DAC value for the buck the slope starts from
+#define INIT_DACDATL_BUCK       0  // Set this to minimum in Slope mode
+
+#define BUCK_SLEW_RATE          0.100   // Compensation ramp in [V/usec] (SLPxDAT is calculated below)
+#define BUCK_DAC_SLOPE_RATE     (uint16_t)((16.0 * (BUCK_SLEW_RATE / DAC_GRAN) / (1.0e-6/DACCLK)) + 1.0) // SLOPE DATA in [DAC-ticks/CLK-tick]
 
 POWER_CONTROLLER_DATA_t pwrCtrlBuck1_Data;      // data instance for the buck converter
 
@@ -212,8 +215,8 @@ volatile uint16_t Drv_PowerControllerBuck1_InitPWM(void)
     PG1EVTHbits.SIEN        = 0b0;          // PCI Sync interrupt is disabled
     PG1EVTHbits.IEVTSEL     = 0b11;         // Time base interrupts are disabled
     PG1EVTHbits.ADTR2EN1    = 0b0;          // PG1TRIGA register compare event is disabled as trigger source for ADC Trigger 2
-    PG1EVTHbits.ADTR2EN2    = 0b0;          // PG1TRIGB register compare event is enabled as trigger source for ADC Trigger 2 
-    PG1EVTHbits.ADTR2EN3    = 0b1;          // PG1TRIGC register compare event is disabled as trigger source for ADC Trigger 2 -> Slope stop trigger
+    PG1EVTHbits.ADTR2EN2    = 0b0;          // PG1TRIGB register compare event is disabled as trigger source for ADC Trigger 2 
+    PG1EVTHbits.ADTR2EN3    = 0b1;          // PG1TRIGC register compare event is enabled as trigger source for ADC Trigger 2 -> Slope stop trigger
     PG1EVTHbits.ADTR1OFS    = 0b00000;      // ADC Trigger 1 offset = No offset
     
     // PGCLPCIH: PWM GENERATOR CL PCI REGISTER HIGH
@@ -429,23 +432,25 @@ volatile uint16_t Drv_PowerControllerBuck1_InitACMP(void)
     DAC1CONLbits.IRQM = 0b00; // Interrupt Mode Selection: Interrupts are disabled
     DAC1CONLbits.CBE = 1; // Comparator Blank Enable: Enables the analog comparator output to be blanked (gated off) during the recovery transition following the completion of a slope operation
     DAC1CONLbits.DACOEN = 0; // DACx Output Buffer Enable: DACx analog voltage is connected to the DACOUT1 pin (RA3/TP35 on DPSK3)
-    DAC1CONLbits.FLTREN = 0; // Comparator Digital Filter Enable: Digital filter is disabled
     // DAC1CONLbits.CMPSTAT (read only bit)
+    
+    // Comparator filter and hysteresis options
+    DAC1CONLbits.FLTREN = 0; // Comparator Digital Filter Enable: Digital filter is disabled
     DAC1CONLbits.CMPPOL = 0; // Comparator Output Polarity Control: Output is non-inverted
     DAC1CONLbits.INSEL = 0b000; // Comparator Input Source Select: feedback is connected to CMPxA input pin
     DAC1CONLbits.HYSPOL = 0; // Comparator Hysteresis Polarity Selection: Hysteresis is applied to the rising edge of the comparator output
-    DAC1CONLbits.HYSSEL = 0b11; // Comparator Hysteresis Selection: 45 mv hysteresis (0 = 0mV, 1 = 15mV, 2 = 30mV, 3 = 45mV)
+    DAC1CONLbits.HYSSEL = 0b01; // Comparator Hysteresis Selection: 45 mv hysteresis (0 = 0mV, 1 = 15mV, 2 = 30mV, 3 = 45mV)
     
     // DACxCONH: DACx CONTROL HIGH REGISTER
     
     // ***********************************************
     // ToDo: CHECK DAC LEB PERIOD TO BE CORRECT AND DOESN'T CREATE CONFLICTS
-    DAC1CONHbits.TMCB = LEB_PER_COMP; // DACx Leading-Edge Blanking: period for the comparator
+    DAC1CONHbits.TMCB = DAC_TMCB; // DACx Leading-Edge Blanking: period for the comparator
     // ***********************************************
         
     // DACxDATH: DACx DATA HIGH REGISTER
-    DAC1DATH = (DACDATH_BUCK & 0x0FFF); // DACx Data: This register specifies the high DACx data value. Valid values are from 205 to 3890.
-    DAC1DATL = (DACDATL_BUCK & 0x0FFF); // DACx Low Data
+    DAC1DATH = (INIT_DACDATH_BUCK & 0x0FFF); // DACx Data: This register specifies the high DACx data value. Valid values are from 205 to 3890.
+    DAC1DATL = (INIT_DACDATL_BUCK & 0x0FFF); // DACx Low Data
         
     // SLPxCONH: DACx SLOPE CONTROL HIGH REGISTER
     SLP1CONHbits.SLOPEN = 1; // Slope Function Enable/On: Enables slope function
@@ -466,7 +471,7 @@ volatile uint16_t Drv_PowerControllerBuck1_InitACMP(void)
     // Previous configurations have shown that this might not be true, so please revisit this setting.
     
     // SLPxDAT: DACx SLOPE DATA REGISTER
-    SLP1DAT = SLOPE_RATE; // Slope Ramp Rate Value
+    SLP1DAT = BUCK_DAC_SLOPE_RATE; // Slope Ramp Rate Value
         
     return(1);
 }

@@ -58,6 +58,11 @@
 #define BOOST_RP_CL_STEP      (uint16_t)((BOOST_FN_PCMC_CL - BOOST_IN_PCMC_CL)/(BOOST_RP_CL_PER + 1))
 #define BOOST_RP_VREF_PER     (uint16_t)((BOOST_VREF_RAMPUP_PERIOD / MAIN_EXECUTION_PERIOD)-1.0)
 
+#define INIT_DACDATH_BOOST            0  // DAC value for the boost the slope starts from
+#define DINIT_ACDATL_BOOST            0  // Set this to minimum in Slope mode
+
+#define BOOST_SLEW_RATE          0.100   // Compensation ramp in [V/usec] (SLPxDAT is calculated below)
+#define BOOST_DAC_SLOPE_RATE    (uint16_t)((16.0 * (BOOST_SLEW_RATE / DAC_GRAN) / (1.0e-6/DACCLK)) + 1.0) // SLOPE DATA in [DAC-ticks/CLK-tick]
 
 POWER_CONTROLLER_DATA_t pwrCtrlBoost1_Data;      // data instance for the boost converter
 
@@ -472,23 +477,25 @@ volatile uint16_t Drv_PowerControllerBoost1_InitACMP(void)
     DAC2CONLbits.IRQM = 0b00; // Interrupt Mode Selection: Interrupts are disabled
     DAC2CONLbits.CBE = 1; // Comparator Blank Enable: Enables the analog comparator output to be blanked (gated off) during the recovery transition following the completion of a slope operation
     DAC2CONLbits.DACOEN = 1; // DACx Output Buffer Enable: disabled for this module
-    DAC2CONLbits.FLTREN = 0; // Comparator Digital Filter Enable: Digital filter is disabled
     // DAC2CONLbits.CMPSTAT (read only bit)
+    
+    // Comparator filter and hysteresis options
+    DAC2CONLbits.FLTREN = 0; // Comparator Digital Filter Enable: Digital filter is disabled
     DAC2CONLbits.CMPPOL = 0; // Comparator Output Polarity Control: Output is non-inverted
     DAC2CONLbits.INSEL = 0b011; // Comparator Input Source Select: feedback is connected to CMPxD input pin
     DAC2CONLbits.HYSPOL = 0; // Comparator Hysteresis Polarity Selection: Hysteresis is applied to the rising edge of the comparator output
-    DAC2CONLbits.HYSSEL = 0b11; // Comparator Hysteresis Selection: 45 mv hysteresis (0 = 0mV, 1 = 15mV, 2 = 30mV, 3 = 45mV)
+    DAC2CONLbits.HYSSEL = 0b01; // Comparator Hysteresis Selection: 45 mv hysteresis (0 = 0mV, 1 = 15mV, 2 = 30mV, 3 = 45mV)
     
     // DACxCONH: DACx CONTROL HIGH REGISTER
     
     // ***********************************************
     // ToDo: CHECK DAC LEB PERIOD TO BE CORRECT AND DOESN'T CREATE CONFLICTS
-    DAC2CONHbits.TMCB = LEB_PER_COMP; // DACx Leading-Edge Blanking: period for the comparator
+    DAC2CONHbits.TMCB = DAC_TMCB; // DACx Leading-Edge Blanking: period for the comparator
     // ***********************************************
         
     // DACxDATH: DACx DATA HIGH REGISTER
-    DAC2DATH = (DACDATH_BOOST & 0x0FFF); // DACx Data: This register specifies the high DACx data value. Valid values are from 205 to 3890.
-    DAC2DATL = (DACDATL_BOOST & 0x0FFF); // DACx Low Data
+    DAC2DATH = (INIT_DACDATH_BOOST & 0x0FFF); // DACx Data: This register specifies the high DACx data value. Valid values are from 205 to 3890.
+    DAC2DATL = (INIT_DACDATL_BOOST & 0x0FFF); // DACx Low Data
         
     // SLPxCONH: DACx SLOPE CONTROL HIGH REGISTER
     SLP2CONHbits.SLOPEN = 1; // Slope Function Enable/On: Enables slope function
@@ -509,7 +516,7 @@ volatile uint16_t Drv_PowerControllerBoost1_InitACMP(void)
     // Previous configurations have shown that this might not be true, so please revisit this setting.
     
     // SLPxDAT: DACx SLOPE DATA REGISTER
-    SLP2DAT = SLOPE_RATE; // Slope Ramp Rate Value
+    SLP2DAT = BOOST_DAC_SLOPE_RATE; // Slope Ramp Rate Value
     
     return(1);
 }

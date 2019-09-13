@@ -51,20 +51,46 @@
 #define MAIN_EXECUTION_PERIOD    100e-6     // main state machine pace period in [sec]
 
 #define ADC_POWRUP_TIMEOUT         5000
-#define VOUT_ADC_TRIGGER_DELAY       80  // With respect to the start of the PWM cycle
 
 
 
-#define TMOD_DURATION                75  // Transition Mode Duration
-#define SS_DURATION                  85  // Time from Start of Transition Mode until Steady-State Filter is Enabled
-#define SLOPE_START_DELAY           100  // With respect to the start of the PWM cycle
-#define SLOPE_STOP_DELAY            800  // With respect to the start of the PWM cycle
-#define LEB_PER_COMP                 50  // Leading edge period for the comparator when slope re-settles to its initial value
-#define SLOPE_RATE                   43  // Slope Ramp Rate Value
-#define DACDATH_BUCK                  0  // DAC value for the buck the slope starts from
-#define DACDATH_BOOST                 0  // DAC value for the boost the slope starts from
-#define DACDATL_BUCK                  0  // Set this to minimum in Slope mode
-#define DACDATL_BOOST                 0  // Set this to minimum in Slope mode
+
+/*!ACMP Settings
+ * *************************************************************************************************
+ * Summary:
+ * Global defines for specific parameters of the device DAC
+ * 
+ * Description:
+ * This section is used to define device specific parameters of ADC reference, resolution,
+ * granularity and slope timer frequency to calculate register values representing physical voltages.
+ * Pre-compiler macros are used to translate physical values into binary (integer) numbers 
+ * to be written to SFRs
+ * 
+ * *************************************************************************************************/
+
+// Feedback Loop Output Settings
+#define DAC_MINIMUM     0.650   // Minimum DAC voltage in [V]
+#define DAC_MAXIMUM     3.100   // Maximum DAC voltage in [V]
+
+//-------    
+#define DAC_REF         (double)3.300           // DAC reference voltage (usually AVDD)
+#define DAC_RES         (double)12.00           // DAC resolution in [bit]
+#define DAC_GRAN        (double)(DAC_REF / pow(2, DAC_RES))  // DAC granularity in [V/tick]
+#define FDAC            (double)AUX_FREQUENCY   // DAC input clock in Hz
+#define DACCLK          (double)(2.0/FDAC)      // DAC input clock (period) selected in [sec]
+
+//-------    
+#define DAC_CBLANK_TIME 100e-9  // Comparator Blanking Period in [ns] applied when DAC reference changes 
+#define DAC_T_RESET     300e-9  // Transition Mode Duration
+#define DAC_T_SETTLING  350e-9  // Time from Start of Transition Mode until Steady-State Filter is Enabled
+
+// Device-specific DAC settings
+#define DAC_MIN         (uint16_t)(DAC_MINIMUM / DAC_GRAN)
+#define DAC_MAX         (uint16_t)(DAC_MAXIMUM / DAC_GRAN)
+#define DAC_TMCB        (uint16_t)((DAC_CBLANK_TIME * FDAC)/2.0)    // Leading edge period for the comparator when slope re-settles to its initial value
+#define DAC_TMODTIME    (uint16_t)((DAC_T_RESET * FDAC)/2.0)            // Transition Mode Duration
+#define DAC_SSTIME      (uint16_t)((DAC_T_SETTLING * FDAC)/2.0)         // Time from Start of Transition Mode until Steady-State Filter is Enabled
+
 
 /*!PWM Settings
  * *************************************************************************************************
