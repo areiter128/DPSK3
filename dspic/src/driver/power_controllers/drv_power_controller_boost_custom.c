@@ -59,7 +59,7 @@
 #define BOOST_RP_VREF_PER     (uint16_t)((BOOST_VREF_RAMPUP_PERIOD / MAIN_EXECUTION_PERIOD)-1.0)
 
 #define INIT_DACDATH_BOOST            0  // DAC value for the boost the slope starts from
-#define DINIT_ACDATL_BOOST            0  // Set this to minimum in Slope mode
+#define INIT_DACDATL_BOOST            0  // Set this to minimum in Slope mode
 
 #define BOOST_SLEW_RATE          0.100   // Compensation ramp in [V/usec] (SLPxDAT is calculated below)
 #define BOOST_DAC_SLOPE_RATE    (uint16_t)((16.0 * (BOOST_SLEW_RATE / DAC_GRAN) / (1.0e-6/DACCLK)) + 1.0) // SLOPE DATA in [DAC-ticks/CLK-tick]
@@ -185,7 +185,7 @@ void Drv_PowerControllerBoost1_Init(bool autostart)
     Drv_PowerControllerBoost1_InitADC();          // Set up ADC (voltage feedback only)
    
     c2P2Z_boost_Init();
-    c2P2Z_boost.ADCTriggerOffset = VOUT_ADC_TRIGGER_DELAY;
+    c2P2Z_boost.ADCTriggerOffset = VOUT_ADCTRIG;
     c2P2Z_boost.ptrADCTriggerRegister = &PG4TRIGA;
     c2P2Z_boost.InputOffset = 0;
     c2P2Z_boost.ptrControlReference = &(pwrCtrlBoost1_Data.voltageRef_compensator);    //TODO: wrong pointer!
@@ -216,7 +216,7 @@ volatile uint16_t Drv_PowerControllerBoost1_InitPWM(void)
     
     PG2CONHbits.MDCSEL = 0; // Master Duty Cycle Register Selection: PWM Generator uses PGxDC register
     PG2CONHbits.MPERSEL = 1; // Master Period Register Selection: PWM Generator uses MPER register
-    PG2CONHbits.MPHSEL = 1; // Master Phase Register Selection: PWM Generator uses MPHASE register
+    PG2CONHbits.MPHSEL = 0; // Master Phase Register Selection: PWM Generator uses PGxPHASE register
     PG2CONHbits.MSTEN = 0; // Master Update Enable: PWM Generator does not broadcast the UPDREQ status bit state or EOC signal
     PG2CONHbits.UPDMOD = 0b000; // PWM Buffer Update Mode Selection: SOC update
     PG2CONHbits.TRGMOD = 0; // PWM Generator Trigger Mode Selection: PWM Generator operates in single trigger mode
@@ -252,9 +252,9 @@ volatile uint16_t Drv_PowerControllerBoost1_InitPWM(void)
     
     // PWM GENERATOR x EVENT REGISTER LOW 
     PG2EVTLbits.ADTR1PS     = 0b00000;      // ADC Trigger 1 Postscaler Selection = 1:1
-    PG2EVTLbits.ADTR1EN3    = 0b0;          // PG2TRIGC  Compare Event is disabled as trigger source for ADC Trigger 1
-    PG2EVTLbits.ADTR1EN2    = 0b0;          // PG2TRIGB  Compare Event is disabled as trigger source for ADC Trigger 1
-    PG2EVTLbits.ADTR1EN1    = 0b1;          // PG2TRIGA  Compare Event is enabled as trigger source for ADC Trigger 1 -> Slope start trigger
+    PG2EVTLbits.ADTR1EN1    = 0b0;          // PG2TRIGA  Compare Event is disabled as trigger source for ADC Trigger 1
+    PG2EVTLbits.ADTR1EN2    = 0b1;          // PG2TRIGB  Compare Event is enabled as trigger source for ADC Trigger 1  -> Slope start trigger
+    PG2EVTLbits.ADTR1EN3    = 0b0;          // PG2TRIGC  Compare Event is disabled as trigger source for ADC Trigger 1    
     PG2EVTLbits.UPDTRG      = 0b00;         // User must set the UPDATE bit (PG2STAT<4>) manually
     PG2EVTLbits.PGTRGSEL    = 0b000;        // PWM Generator Trigger Output is not used, leave it as default: EOC event is the PWM Generator trigger
     
@@ -264,10 +264,10 @@ volatile uint16_t Drv_PowerControllerBoost1_InitPWM(void)
     PG2EVTHbits.FFIEN       = 0b0;          // PCI Feed-Forward interrupt is disabled
     PG2EVTHbits.SIEN        = 0b0;          // PCI Sync interrupt is disabled
     PG2EVTHbits.IEVTSEL     = 0b11;         // Time base interrupts are disabled
-    PG2EVTHbits.ADTR2EN3    = 0b0;          // PG2TRIGC register compare event is disabled as trigger source for ADC Trigger 2
-    PG2EVTHbits.ADTR2EN2    = 0b1;          // PG2TRIGB register compare event is enabled as trigger source for ADC Trigger 2 -> Slope stop trigger
     PG2EVTHbits.ADTR2EN1    = 0b0;          // PG2TRIGA register compare event is disabled as trigger source for ADC Trigger 2
-    PG2EVTHbits.ADTR1OFS    = 0b00000;      // ADC Trigger 1 offset = 0
+    PG2EVTHbits.ADTR2EN2    = 0b0;          // PG2TRIGB register compare event is disabled as trigger source for ADC Trigger 2 
+    PG2EVTHbits.ADTR2EN3    = 0b1;          // PG2TRIGC register compare event is enabled as trigger source for ADC Trigger 2 -> Slope stop trigger
+    PG2EVTHbits.ADTR1OFS    = 0b00000;      // ADC Trigger 1 offset = No offset
     
     // PGCLPCIH: PWM GENERATOR CL PCI REGISTER HIGH
     PG2CLPCIHbits.BPEN      = 0b0;          // PCI function is not bypassed
@@ -275,15 +275,15 @@ volatile uint16_t Drv_PowerControllerBoost1_InitPWM(void)
     PG2CLPCIHbits.ACP       = 0b011;        // PCI Acceptance Mode: Latched
     PG2CLPCIHbits.SWPCI     = 0b0;          // Drives a '0' to PCI logic assigned to by the SWPCIM<1:0> control bits
     PG2CLPCIHbits.SWPCIM    = 0b00;         // SWPCI bit is assigned to PCI acceptance logic
-    PG2CLPCIHbits.PCIGT     = 0b0;          // SR latch is Set-dominant in Latched Acceptance modes; ToDo: Why is this not called LATMOD?
-    PG2CLPCIHbits.TQPS      = 0b0;          // Termination Qualifier not inverted
-    PG2CLPCIHbits.TQSS      = 0b000;        // No termination qualifier used so terminator will work straight away without any qualifier
+    PG2CLPCIHbits.PCIGT     = 0b1;          // SR latch is Reset-dominant in Latched Acceptance modes; ToDo: Why is this not called LATMOD?
+    PG2CLPCIHbits.TQPS      = 0b1;          // Termination Qualifier (0= not inverted, 1= inverted)
+    PG2CLPCIHbits.TQSS      = 0b100;        // Termination Qualifier Source: PCI Source #1 (PWM Generator output selected by the PWMPCI<2:0> bits)
     
     // PGCLPCIL: PWM GENERATOR CL PCI REGISTER LOW
     PG2CLPCILbits.TSYNCDIS  = 0;            // Termination of latched PCI occurs at PWM EOC
     PG2CLPCILbits.TERM      = 0b001;        // Termination Event: Terminate when Comparator 2 output transitions from active to inactive
-    PG2CLPCILbits.AQPS      = 0b1;          // Acceptance Qualifier (LEB) signal is inverted 
-    PG2CLPCILbits.AQSS      = 0b010;        // Acceptance Qualifier: LEB 
+    PG2CLPCILbits.AQPS      = 0b0;          // Acceptance Qualifier signal is non-inverted
+    PG2CLPCILbits.AQSS      = 0b100;        // Acceptance Qualifier: PCI Source #1 (PWM Generator output selected by the PWMPCI<2:0> bits) 
     PG2CLPCILbits.SWTERM    = 0b0;          // A write of '1' to this location will produce a termination event. This bit location always reads as '0'.
     PG2CLPCILbits.PSYNC     = 0;            // PCI source is not synchronized to PWM EOC
     PG2CLPCILbits.PPS       = 0;            // Non-inverted PCI polarity
@@ -299,21 +299,20 @@ volatile uint16_t Drv_PowerControllerBoost1_InitPWM(void)
     PG2SPCIL        = 0x0000;          // PWM GENERATOR S PCI REGISTER LOW
     
     // PWM GENERATOR x LEADING-EDGE BLANKING REGISTER HIGH 
-    PG2LEBHbits.PWMPCI      = 0b000;        // PWM Generator #1 output is made available to PCI logic
+    PG2LEBHbits.PWMPCI      = 0b011;        // PWM Generator #4 output is made available to PCI logic
     PG2LEBHbits.PHR         = 0b1;          // Rising edge of PWM2H will trigger the LEB duration counter
     PG2LEBHbits.PHF         = 0b0;          // LEB ignores the falling edge of PWM2H
     PG2LEBHbits.PLR         = 0b0;          // LEB ignores the rising edge of PWM2L
     PG2LEBHbits.PLF         = 0b0;          // LEB ignores the falling edge of PWM2L
     
     // PWM GENERATOR x LEADING-EDGE BLANKING REGISTER LOW 
-    PG2LEBL                 = 52;           // ToDo: This value may need further adjustment
+    PG2LEBL                 = PWM_LEB_PERIOD;   // ToDo: This value may need further adjustment
     
     // PG2PHASE: PWM GENERATOR x PHASE REGISTER
     PG2PHASE    = 0;
     
     // PGxDC: PWM GENERATOR x DUTY CYCLE REGISTER
-//    PG2DC       = 800;      // 80%
-    PG2DC       = INIT_DUTY_CYCLE;      
+    PG2DC       = MAX_DUTY_CYCLE;      
     
     // PGxDCA: PWM GENERATOR x DUTY CYCLE ADJUSTMENT REGISTER
     PG2DCA      =  0x0000;      
@@ -322,14 +321,14 @@ volatile uint16_t Drv_PowerControllerBoost1_InitPWM(void)
     PG2PER      = 0;     // Master defines the period
 
     // PGxTRIGA: PWM GENERATOR x TRIGGER A REGISTER
-    PG2TRIGA    = SLOPE_START_DELAY;  // Defining start of slope; ToDo: Check this value on oscilloscope
+    PG2TRIGA    = 0;  
     
     // PGxTRIGB: PWM GENERATOR x TRIGGER B REGISTER       
-    PG2TRIGB    = SLOPE_STOP_DELAY;  // Defining end of slope
+    PG2TRIGB    = SLP_TRIG_START;  // Defining start of slope; ToDo: Check this value on oscilloscope
 //    PG2TRIGB = 2050;
     
     // PGxTRIGC: PWM GENERATOR x TRIGGER C REGISTER        
-    PG2TRIGC    = 0; 
+    PG2TRIGC    = SLP_TRIG_STOP;    // Defining end of slope;  ToDo: Check this value on oscilloscope 
     
     // PGxDTL: PWM GENERATOR x DEAD-TIME REGISTER LOW        
     PG2DTL      = 0;
@@ -398,7 +397,7 @@ volatile uint16_t Drv_PowerControllerBoost1_InitAuxiliaryPWM(void)
     PG4EVTHbits.CLIEN       = 0b0;          // PCI Current-Limit interrupt is disabled
     PG4EVTHbits.FFIEN       = 0b0;          // PCI Feed-Forward interrupt is disabled
     PG4EVTHbits.SIEN        = 0b0;          // PCI Sync interrupt is disabled
-    PG4EVTHbits.IEVTSEL     = 0b00;         // Interrupt Event Selection: Time base interrupts are disabled
+    PG4EVTHbits.IEVTSEL     = 0b11;         // Interrupt Event Selection: Time base interrupts are disabled
     PG4EVTHbits.ADTR2EN3    = 0b0;          // PG4TRIGC register compare event is disabled as trigger source for ADC Trigger 2
     PG4EVTHbits.ADTR2EN2    = 0b0;          // PG4TRIGB register compare event is disabled as trigger source for ADC Trigger 2
     PG4EVTHbits.ADTR2EN1    = 0b0;          // PG4TRIGA register compare event is disabled as trigger source for ADC Trigger 2
@@ -420,10 +419,10 @@ volatile uint16_t Drv_PowerControllerBoost1_InitAuxiliaryPWM(void)
     
         
     // PGxPHASE: PWM GENERATOR x PHASE REGISTER
-    PG4PHASE    = 0;
+    PG4PHASE    = PWM_AUX_PHASE_SHIFT;
     
     // PGxDC: PWM GENERATOR x DUTY CYCLE REGISTER
-    PG4DC       = 800;      // 80%
+    PG4DC       = (MAX_DUTY_CYCLE - PWM_AUX_PHASE_SHIFT);    
     
     // PGxDCA: PWM GENERATOR x DUTY CYCLE ADJUSTMENT REGISTER
     PG4DCA      =  0x0000;      
@@ -432,7 +431,7 @@ volatile uint16_t Drv_PowerControllerBoost1_InitAuxiliaryPWM(void)
     PG4PER      = 0;     // Master sets the period
 
     // PGxTRIGA: PWM GENERATOR x TRIGGER A REGISTER
-    PG4TRIGA    = VOUT_ADC_TRIGGER_DELAY;  // ToDo: Check this value on oscilloscope
+    PG4TRIGA    = VOUT_ADCTRIG;  // ToDo: Check this value on oscilloscope
     
     // PGxTRIGB: PWM GENERATOR x TRIGGER B REGISTER       
     PG4TRIGB    = 0;  

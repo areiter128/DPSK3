@@ -135,7 +135,7 @@ void Drv_PowerControllerBuck1_Init(bool autostart)
     Drv_PowerControllerBuck1_InitADC();          // Set up ADC (voltage feedback only)
    
     c2p2z_buck_Init();
-    c2p2z_buck.ADCTriggerOffset = VOUT_ADC_TRIGGER_DELAY;
+    c2p2z_buck.ADCTriggerOffset = VOUT_ADCTRIG;
     c2p2z_buck.ptrADCTriggerRegister = &PG3TRIGA;
     c2p2z_buck.InputOffset = 0;
     c2p2z_buck.ptrControlReference = &(pwrCtrlBuck1_Data.voltageRef_compensator);    //TODO: wrong pointer!
@@ -168,7 +168,7 @@ volatile uint16_t Drv_PowerControllerBuck1_InitPWM(void)
     PG1CONHbits.MPERSEL = 1; // Master Period Register Selection: PWM Generator uses MPER register
     PG1CONHbits.MPHSEL = 0; // Master Phase Register Selection: PWM Generator uses PGxPHASE register
     PG1CONHbits.MSTEN = 0; // Master Update Enable: PWM Generator does not broadcast the UPDREQ status bit state or EOC signal
-    PG1CONHbits.UPDMOD = 0b001; // PWM Buffer Update Mode Selection: Immediate update
+    PG1CONHbits.UPDMOD = 0b000; // PWM Buffer Update Mode Selection: SOC update
     PG1CONHbits.TRGMOD = 0; // PWM Generator Trigger Mode Selection: PWM Generator operates in single trigger mode
     PG1CONHbits.SOCS = 0; // Start-of-Cycle Selection: Local EOC, PWM Generator is self-triggered
 
@@ -258,7 +258,7 @@ volatile uint16_t Drv_PowerControllerBuck1_InitPWM(void)
     PG1LEBL     = PWM_LEB_PERIOD;   // ToDo: This value may needs further adjustment
     
     // PGxPHASE: PWM GENERATOR x PHASE REGISTER
-    PG1PHASE    = PWM_MSTR_PHASE_SHIFT;
+    PG1PHASE    = 0;
     
     // PGxDC: PWM GENERATOR x DUTY CYCLE REGISTER
     PG1DC       = MAX_DUTY_CYCLE;
@@ -270,7 +270,7 @@ volatile uint16_t Drv_PowerControllerBuck1_InitPWM(void)
     PG1PER      = 0;     // Master defines the period
 
     // PGxTRIGA: PWM GENERATOR x TRIGGER A REGISTER
-    PG1TRIGA    = 0;  // Defining start of slope; ToDo: Check this value on oscilloscope
+    PG1TRIGA    = 0;  
     
     // PGxTRIGB: PWM GENERATOR x TRIGGER B REGISTER       
     PG1TRIGB    = SLP_TRIG_START;   // Defining start of slope; ToDo: Check this value on oscilloscope
