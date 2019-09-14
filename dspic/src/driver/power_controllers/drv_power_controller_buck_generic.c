@@ -32,14 +32,9 @@
 #include <stdint.h>
 #include <xc.h>         // include processor specific defines and functions
 
-//#include "driver/drv_power_controller_buck.h"
+
 #include "driver/power_controllers/drv_power_controllers.h"
 #include "driver/power_controllers/drv_power_controller_buck_generic.h"
-//#include "init_pwm.h"
-//#include "init_acmp.h"
-//#include "init_adc.h"
-//#include "npnz16b.h"
-//#include "c2p2z_buck.h"
 
 //=======================================================================================================
 // local defines

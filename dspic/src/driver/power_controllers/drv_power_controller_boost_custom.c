@@ -46,9 +46,13 @@
 #define BOOST1_IIN_FEEDBACK_GAIN 1.0             // 1 V/A
 #define BOOST1_VIN_GAIN 0.1253                   // 1k /(1k+6.98k)
 
+
+#define INIT_DACDATH_BOOST            0  // DAC value for the boost the slope starts from
+#define INIT_DACDATL_BOOST            0  // Set this to minimum in Slope mode
+
 #define BOOST_INIT_PCMC_CLAMP         0  // [A]; Initial clamping value for boost converter input current
 #define BOOST_FINAL_PCMC_CLAMP        2  // [A]; Final clamping value for boost converter input current 
-//#define BOOST_VREF                   15  // [V]; Voltage reference for boost converter
+
 #define BOOST_CLAMP_RAMPUP_PERIOD 20e-3  // [s]; Current clamp ramp-up period for boost converter
 #define BOOST_VREF_RAMPUP_PERIOD 100e-3  // [s]; Vref ramp-up period for boost converter
 
@@ -57,18 +61,7 @@
 #define BOOST_RP_CL_PER       (uint16_t)((BOOST_CLAMP_RAMPUP_PERIOD / MAIN_EXECUTION_PERIOD)-1.0)             
 #define BOOST_RP_CL_STEP      (uint16_t)((BOOST_FN_PCMC_CL - BOOST_IN_PCMC_CL)/(BOOST_RP_CL_PER + 1))
 #define BOOST_RP_VREF_PER     (uint16_t)((BOOST_VREF_RAMPUP_PERIOD / MAIN_EXECUTION_PERIOD)-1.0)
-
-#define INIT_DACDATH_BOOST            0  // DAC value for the boost the slope starts from
-#define INIT_DACDATL_BOOST            0  // Set this to minimum in Slope mode
-
-#define BOOST_DAC_MINIMUM     0.650   // Minimum DAC voltage in [V]
-#define BOOST_DAC_MAXIMUM     3.100   // Maximum DAC voltage in [V]
-
-#define BOOST_DAC_MIN         (uint16_t)(BOOST_DAC_MINIMUM / DAC_GRAN)
-#define BOOST_DAC_MAX         (uint16_t)(BOOST_DAC_MAXIMUM / DAC_GRAN)
-
-#define BOOST_SLEW_RATE          0.100   // Compensation ramp in [V/usec] (SLPxDAT is calculated below)
-#define BOOST_DAC_SLOPE_RATE    (uint16_t)((16.0 * (BOOST_SLEW_RATE / DAC_GRAN) / (1.0e-6/DACCLK)) + 1.0) // SLOPE DATA in [DAC-ticks/CLK-tick]
+#define BOOST_DAC_SLOPE_RATE  (uint16_t)((16.0 * (BOOST1_SLEW_RATE / DAC_GRAN) / (1.0e-6/DACCLK)) + 1.0) // SLOPE DATA in [DAC-ticks/CLK-tick]
 
 POWER_CONTROLLER_DATA_t pwrCtrlBoost1_Data;      // data instance for the boost converter
 

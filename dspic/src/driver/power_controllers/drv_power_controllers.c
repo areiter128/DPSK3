@@ -90,11 +90,11 @@ void Drv_PowerControllers_Init(void)
 {
     // Init all Buck Converter instances
     Drv_PowerControllerBuck1_Init(true);                       // Init Buck Converter 1
-    Drv_PowerControllerBuck1_SetOutputVoltageReference_mV(3300); //Set Buck Converter Output to 3.3 Volt
+    Drv_PowerControllerBuck1_SetOutputVoltageReference_mV(BUCK1_VREF_mV); //Set Buck Converter Output to 3.3 Volt
 
     // Init all Boost Converter instances
     Drv_PowerControllerBoost1_Init(true);                       // Init Boost Convert 1
-    Drv_PowerControllerBoost1_SetOutputVoltageReference_mV(15000); //Set Boost Converter Output
+    Drv_PowerControllerBoost1_SetOutputVoltageReference_mV(BOOST1_VREF_mV); //Set Boost Converter Output
 }
 
 void Drv_PowerControllers_Task_100us(void)

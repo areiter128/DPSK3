@@ -43,18 +43,22 @@
 #define BUCK1_ADC_REFERENCE     3.3             // 3.3 Volts ==> maximum ADC-Value
 #define BUCK1_ADC_RESOLUTION    4095UL          // 12 bits
 #define BUCK1_FEEDBACK_GAIN     0.5             // 1k /(1k+1k)
+#define BUCK1_IIN_FEEDBACK_GAIN 1.0             // 1 V/A
 
 #define INIT_DACDATH_BUCK       0  // DAC value for the buck the slope starts from
 #define INIT_DACDATL_BUCK       0  // Set this to minimum in Slope mode
 
-#define BUCK_DAC_MINIMUM     0.650   // Minimum DAC voltage in [V]
-#define BUCK_DAC_MAXIMUM     3.100   // Maximum DAC voltage in [V]
+#define BUCK_MIN_PCMC_CLAMP     0  // [A]; Minimum clamping value for buck converter input current
+#define BUCK_MAX_PCMC_CLAMP     2  // [A]; Maximum clamping value for buck converter input current 
 
-#define BUCK_DAC_MIN         (uint16_t)(BUCK_DAC_MINIMUM / DAC_GRAN)
-#define BUCK_DAC_MAX         (uint16_t)(BUCK_DAC_MAXIMUM / DAC_GRAN)
+#define BUCK_VREF_RAMPUP_PERIOD 100e-3  // [s]; Vref ramp-up period for buck converter
 
-#define BUCK_SLEW_RATE          0.100   // Compensation ramp in [V/usec] (SLPxDAT is calculated below)
-#define BUCK_DAC_SLOPE_RATE     (uint16_t)((16.0 * (BUCK_SLEW_RATE / DAC_GRAN) / (1.0e-6/DACCLK)) + 1.0) // SLOPE DATA in [DAC-ticks/CLK-tick]
+#define BUCK_VRF             (uint16_t)(BUCK1_VREF * BUCK1_IIN_FEEDBACK_GAIN * BUCK1_ADC_RESOLUTION / BUCK1_ADC_REFERENCE)
+#define BUCK_MIN_PCMC_CL     (uint16_t)(BUCK_MIN_PCMC_CLAMP * BUCK1_IIN_FEEDBACK_GAIN * BUCK1_ADC_RESOLUTION / BUCK1_ADC_REFERENCE)
+#define BUCK_MAX_PCMC_CL     (uint16_t)(BUCK_MAX_PCMC_CLAMP * BUCK1_IIN_FEEDBACK_GAIN * BUCK1_ADC_RESOLUTION / BUCK1_ADC_REFERENCE)
+#define BUCK_RP_VREF_PER     (uint16_t)((BUCK_VREF_RAMPUP_PERIOD / MAIN_EXECUTION_PERIOD)-1.0)
+#define BUCK_RP_VREF_STEP    (uint16_t)((BUCK_VRF)/(BUCK_RP_VREF_PER + 1))
+#define BUCK_DAC_SLOPE_RATE  (uint16_t)((16.0 * (BUCK1_SLEW_RATE / DAC_GRAN) / (1.0e-6/DACCLK)) + 1.0) // SLOPE DATA in [DAC-ticks/CLK-tick]
 
 POWER_CONTROLLER_DATA_t pwrCtrlBuck1_Data;      // data instance for the buck converter
 
@@ -128,8 +132,11 @@ void Drv_PowerControllerBuck1_Init(bool autostart)
     Drv_PowerControllerBuck_CalculateVoltageLimits(pPCData);
   */
             
-    pwrCtrlBuck1_Data.voltageRef_rampStep = 4;              // 4 adc values per 100µs
-    pwrCtrlBuck1_Data.powerInputOk_waitTime_100us = 1000;   // 100ms input power stabilization delay
+    pwrCtrlBuck1_Data.voltageRef_rampStep = BUCK_RP_VREF_STEP;              // N adc values per 100µs
+    if(pwrCtrlBuck1_Data.voltageRef_rampStep == 0) {         // Protecting startup settings against 
+        pwrCtrlBuck1_Data.voltageRef_rampStep = 1;           // ZERO settings
+    }
+                        pwrCtrlBuck1_Data.powerInputOk_waitTime_100us = 1000;   // 100ms input power stabilization delay
     pwrCtrlBuck1_Data.powerOutputOk_waitTime_100us = 1000;  // 100ms output power stabilization delay
     pwrCtrlBuck1_Data.ftkEnableControlLoop  = Drv_PowerControllerBuck1_EnableControlLoop;
     pwrCtrlBuck1_Data.ftkDisableControlLoop = Drv_PowerControllerBuck1_DisableControlLoop;
@@ -147,8 +154,8 @@ void Drv_PowerControllerBuck1_Init(bool autostart)
     c2p2z_buck.ptrControlReference = &(pwrCtrlBuck1_Data.voltageRef_compensator);    //TODO: wrong pointer!
     c2p2z_buck.ptrSource = &ADCBUF13;
     c2p2z_buck.ptrTarget = &DAC1DATH;
-    c2p2z_buck.MaxOutput = 3600;
-    c2p2z_buck.MinOutput = 10;
+    c2p2z_buck.MaxOutput = BUCK_MAX_PCMC_CL;
+    c2p2z_buck.MinOutput = BUCK_MIN_PCMC_CL;
     c2p2z_buck.status.flag.enable = 0;
 }
 
