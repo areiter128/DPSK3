@@ -61,6 +61,12 @@
 #define INIT_DACDATH_BOOST            0  // DAC value for the boost the slope starts from
 #define INIT_DACDATL_BOOST            0  // Set this to minimum in Slope mode
 
+#define BOOST_DAC_MINIMUM     0.650   // Minimum DAC voltage in [V]
+#define BOOST_DAC_MAXIMUM     3.100   // Maximum DAC voltage in [V]
+
+#define BOOST_DAC_MIN         (uint16_t)(BOOST_DAC_MINIMUM / DAC_GRAN)
+#define BOOST_DAC_MAX         (uint16_t)(BOOST_DAC_MAXIMUM / DAC_GRAN)
+
 #define BOOST_SLEW_RATE          0.100   // Compensation ramp in [V/usec] (SLPxDAT is calculated below)
 #define BOOST_DAC_SLOPE_RATE    (uint16_t)((16.0 * (BOOST_SLEW_RATE / DAC_GRAN) / (1.0e-6/DACCLK)) + 1.0) // SLOPE DATA in [DAC-ticks/CLK-tick]
 

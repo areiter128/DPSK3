@@ -68,10 +68,6 @@
  * 
  * *************************************************************************************************/
 
-// Feedback Loop Output Settings
-#define DAC_MINIMUM     0.650   // Minimum DAC voltage in [V]
-#define DAC_MAXIMUM     3.100   // Maximum DAC voltage in [V]
-
 //-------    
 #define DAC_REF         (double)3.300           // DAC reference voltage (usually AVDD)
 #define DAC_RES         (double)12.00           // DAC resolution in [bit]
@@ -85,8 +81,6 @@
 #define DAC_T_SETTLING  350e-9  // Time from Start of Transition Mode until Steady-State Filter is Enabled
 
 // Device-specific DAC settings
-#define DAC_MIN         (uint16_t)(DAC_MINIMUM / DAC_GRAN)
-#define DAC_MAX         (uint16_t)(DAC_MAXIMUM / DAC_GRAN)
 #define DAC_TMCB        (uint16_t)((DAC_CBLANK_TIME * FDAC)/2.0)    // Leading edge period for the comparator when slope re-settles to its initial value
 #define DAC_TMODTIME    (uint16_t)((DAC_T_RESET * FDAC)/2.0)            // Transition Mode Duration
 #define DAC_SSTIME      (uint16_t)((DAC_T_SETTLING * FDAC)/2.0)         // Time from Start of Transition Mode until Steady-State Filter is Enabled

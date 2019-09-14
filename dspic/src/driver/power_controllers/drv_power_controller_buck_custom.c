@@ -47,6 +47,12 @@
 #define INIT_DACDATH_BUCK       0  // DAC value for the buck the slope starts from
 #define INIT_DACDATL_BUCK       0  // Set this to minimum in Slope mode
 
+#define BUCK_DAC_MINIMUM     0.650   // Minimum DAC voltage in [V]
+#define BUCK_DAC_MAXIMUM     3.100   // Maximum DAC voltage in [V]
+
+#define BUCK_DAC_MIN         (uint16_t)(BUCK_DAC_MINIMUM / DAC_GRAN)
+#define BUCK_DAC_MAX         (uint16_t)(BUCK_DAC_MAXIMUM / DAC_GRAN)
+
 #define BUCK_SLEW_RATE          0.100   // Compensation ramp in [V/usec] (SLPxDAT is calculated below)
 #define BUCK_DAC_SLOPE_RATE     (uint16_t)((16.0 * (BUCK_SLEW_RATE / DAC_GRAN) / (1.0e-6/DACCLK)) + 1.0) // SLOPE DATA in [DAC-ticks/CLK-tick]
 
