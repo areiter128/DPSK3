@@ -191,7 +191,7 @@ volatile uint16_t System_AClk_Init(void)
 
     // Configure APLL pre-scaler, APLL post-scaler, APLL divisor
     ACLKCON1bits.APLLPRE   = 1;     // N1 (non zero)
-	APLLFBD1bits.APLLFBDIV = 125;   // M  = APLLFBD 
+	APLLFBD1bits.APLLFBDIV = 100;   // M  = APLLFBD 
     APLLDIV1bits.APOST1DIV = 2;     // N2 (non zero)
     APLLDIV1bits.APOST2DIV = 1;     // N3 (non zero)
 
