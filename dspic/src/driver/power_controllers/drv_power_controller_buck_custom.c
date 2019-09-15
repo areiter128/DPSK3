@@ -51,12 +51,10 @@
 #define BUCK_MIN_PCMC_CLAMP     0  // [A]; Minimum clamping value for buck converter input current
 #define BUCK_MAX_PCMC_CLAMP     2  // [A]; Maximum clamping value for buck converter input current 
 
-#define BUCK_VREF_RAMPUP_PERIOD 100e-3  // [s]; Vref ramp-up period for buck converter
-
 #define BUCK_VRF             (uint16_t)(BUCK1_VREF * BUCK1_IIN_FEEDBACK_GAIN * BUCK1_ADC_RESOLUTION / BUCK1_ADC_REFERENCE)
 #define BUCK_MIN_PCMC_CL     (uint16_t)(BUCK_MIN_PCMC_CLAMP * BUCK1_IIN_FEEDBACK_GAIN * BUCK1_ADC_RESOLUTION / BUCK1_ADC_REFERENCE)
 #define BUCK_MAX_PCMC_CL     (uint16_t)(BUCK_MAX_PCMC_CLAMP * BUCK1_IIN_FEEDBACK_GAIN * BUCK1_ADC_RESOLUTION / BUCK1_ADC_REFERENCE)
-#define BUCK_RP_VREF_PER     (uint16_t)((BUCK_VREF_RAMPUP_PERIOD / MAIN_EXECUTION_PERIOD)-1.0)
+#define BUCK_RP_VREF_PER     (uint16_t)((BUCK1_VREF_RAMPUP_PERIOD / MAIN_EXECUTION_PERIOD)-1.0)
 #define BUCK_RP_VREF_STEP    (uint16_t)((BUCK_VRF)/(BUCK_RP_VREF_PER + 1))
 #define BUCK_DAC_SLOPE_RATE  (uint16_t)((16.0 * (BUCK1_SLEW_RATE / DAC_GRAN) / (1.0e-6/DACCLK)) + 1.0) // SLOPE DATA in [DAC-ticks/CLK-tick]
 

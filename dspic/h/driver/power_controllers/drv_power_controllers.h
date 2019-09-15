@@ -33,10 +33,12 @@
 
 #define BUCK1_VREF               3.3   // [V]; Voltage reference for boost converter
 #define BUCK1_SLEW_RATE          0.100 // Compensation ramp in [V/usec] (SLPxDAT is calculated below)
+#define BUCK1_VREF_RAMPUP_PERIOD 100e-3  // [s]; Vref ramp-up period for buck converter
 
 #define BOOST1_VREF              15.0   // [V]; Voltage reference for boost converter
 #define BOOST1_SLEW_RATE          0.100 // Compensation ramp in [V/usec] (SLPxDAT is calculated below)
-
+#define BOOST1_CLAMP_RAMPUP_PERIOD 20e-3  // [s]; Current clamp ramp-up period for boost converter
+#define BOOST1_VREF_RAMPUP_PERIOD 100e-3  // [s]; Vref ramp-up period for boost converter
   
 #define BUCK1_VREF_mV         (uint32_t)(1000*(double)(BUCK1_VREF))
 #define BOOST1_VREF_mV        (uint32_t)(1000*(double)(BOOST1_VREF))

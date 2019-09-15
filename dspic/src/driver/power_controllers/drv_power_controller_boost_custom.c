@@ -50,17 +50,14 @@
 #define INIT_DACDATH_BOOST            0  // DAC value for the boost the slope starts from
 #define INIT_DACDATL_BOOST            0  // Set this to minimum in Slope mode
 
-#define BOOST_INIT_PCMC_CLAMP         0  // [A]; Initial clamping value for boost converter input current
-#define BOOST_FINAL_PCMC_CLAMP        2  // [A]; Final clamping value for boost converter input current 
-
-#define BOOST_CLAMP_RAMPUP_PERIOD 20e-3  // [s]; Current clamp ramp-up period for boost converter
-#define BOOST_VREF_RAMPUP_PERIOD 100e-3  // [s]; Vref ramp-up period for boost converter
+#define BOOST_INIT_PCMC_CLAMP         0  // [A]; Minimum (and initial maximum) clamping value for boost converter input current
+#define BOOST_FINAL_PCMC_CLAMP        2  // [A]; Maximum (and final maximum) clamping value for boost converter input current  
 
 #define BOOST_IN_PCMC_CL      (uint16_t)(BOOST_INIT_PCMC_CLAMP * BOOST1_IIN_FEEDBACK_GAIN * BOOST1_ADC_RESOLUTION / BOOST1_ADC_REFERENCE)
 #define BOOST_FN_PCMC_CL      (uint16_t)(BOOST_FINAL_PCMC_CLAMP * BOOST1_IIN_FEEDBACK_GAIN * BOOST1_ADC_RESOLUTION / BOOST1_ADC_REFERENCE)
-#define BOOST_RP_CL_PER       (uint16_t)((BOOST_CLAMP_RAMPUP_PERIOD / MAIN_EXECUTION_PERIOD)-1.0)             
+#define BOOST_RP_CL_PER       (uint16_t)((BOOST1_CLAMP_RAMPUP_PERIOD / MAIN_EXECUTION_PERIOD)-1.0)             
 #define BOOST_RP_CL_STEP      (uint16_t)((BOOST_FN_PCMC_CL - BOOST_IN_PCMC_CL)/(BOOST_RP_CL_PER + 1))
-#define BOOST_RP_VREF_PER     (uint16_t)((BOOST_VREF_RAMPUP_PERIOD / MAIN_EXECUTION_PERIOD)-1.0)
+#define BOOST_RP_VREF_PER     (uint16_t)((BOOST1_VREF_RAMPUP_PERIOD / MAIN_EXECUTION_PERIOD)-1.0)
 #define BOOST_DAC_SLOPE_RATE  (uint16_t)((16.0 * (BOOST1_SLEW_RATE / DAC_GRAN) / (1.0e-6/DACCLK)) + 1.0) // SLOPE DATA in [DAC-ticks/CLK-tick]
 
 POWER_CONTROLLER_DATA_t pwrCtrlBoost1_Data;      // data instance for the boost converter
