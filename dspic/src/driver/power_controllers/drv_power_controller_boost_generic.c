@@ -197,7 +197,9 @@ void Drv_PowerControllerBoost_Task_100us(POWER_CONTROLLER_DATA_t* pPCData)
             }
             break;
                  
-        case PCS_UP_AND_RUNNING:   // Soft start is complete, system is running, nothing to do
+        case PCS_UP_AND_RUNNING:   // Soft start is complete, system is running
+            
+            // Checking output voltage limits
             Drv_PowerControllerBoost_MonitorVoltageLimits(pPCData);
             break;
 

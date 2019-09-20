@@ -210,3 +210,4 @@ static inline void Drv_PowerControllerBuck_MonitorVoltageLimits(POWER_CONTROLLER
     else
         pPCData->flags.bits.undervoltage_fault = false;
 }
+

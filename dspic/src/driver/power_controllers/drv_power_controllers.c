@@ -46,6 +46,8 @@
 #define VIN_ADC_RESOLUTION    4095UL          // 12 bits
 #define VIN_FEEDBACK_GAIN     0.1253          // 1k /(1k+6.98k)
 
+static inline void Drv_PowerControllerVinMeas_Task_100us(POWER_CONTROLLER_DATA_t* pPCData);
+
 //=======================================================================================================
 // @brief   wrapper function returns the Output Voltage in Volts as a double 
 //=======================================================================================================
@@ -104,7 +106,19 @@ void Drv_PowerControllers_Task_100us(void)
     // PWMs get enabled.
     Drv_PowerControllerBoost_Task_100us(&pwrCtrlBoost1_Data);
     Drv_PowerControllerBuck_Task_100us(&pwrCtrlBuck1_Data);
+    Drv_PowerControllerVinMeas_Task_100us(&pwrCtrlBuck1_Data);
     
+}
+
+static inline void Drv_PowerControllerVinMeas_Task_100us(POWER_CONTROLLER_DATA_t* pPCData)
+{
+    // Reading input voltage
+    if (_AN12RDY)
+    {
+        pwrCtrlBuck1_Data.voltageInput  = ADCBUF12;
+        pwrCtrlBoost1_Data.voltageInput = ADCBUF12;
+        _ADCAN12IF = 0;
+    }
 }
 
 volatile uint16_t Drv_PowerControllers_InitPWM(void)
