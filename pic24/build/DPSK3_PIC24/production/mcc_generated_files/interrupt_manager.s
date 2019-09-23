@@ -1,4 +1,4 @@
-	.file "C:\\_dsmps\\DPSK3\\Troubleshooting\\__src__\\dpsk3-firmware\\pic24\\mcc_generated_files\\interrupt_manager.c"
+	.file "C:\\Projects\\Demo boards\\DPSK3\\pic24\\mcc_generated_files\\interrupt_manager.c"
 	.section	.text,code
 	.align	2
 	.global	_INTERRUPT_Initialize	; export
@@ -33,6 +33,9 @@ _INTERRUPT_Initialize:
 	.size	_INTERRUPT_Initialize, .-_INTERRUPT_Initialize
 
 
+
+	.section __c30_info, info, bss
+__large_data_scalar:
 
 	.section __c30_signature, info, data
 	.word 0x0001

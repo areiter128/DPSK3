@@ -1,4 +1,4 @@
-	.file "C:\\_dsmps\\DPSK3\\Troubleshooting\\__src__\\dpsk3-firmware\\pic24\\src\\temperature.c"
+	.file "C:\\Projects\\Demo boards\\DPSK3\\pic24\\src\\temperature.c"
 	.section	.text,code
 	.align	2
 	.global	_TemperatureCheck	; export
@@ -84,6 +84,9 @@ _stateThermalShutDown.4359:
 	.skip	1
 
 
+
+	.section __c30_info, info, bss
+__large_data_scalar:
 
 	.section __c30_signature, info, data
 	.word 0x0001
