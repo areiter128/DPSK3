@@ -48,7 +48,7 @@
 #define INIT_DACDATH_BUCK       0  // DAC value for the buck the slope starts from
 #define INIT_DACDATL_BUCK       0  // Set this to minimum in Slope mode
 
-#define BUCK_MIN_PCMC_CLAMP     0  // [A]; Minimum clamping value for buck converter input current
+#define BUCK_MIN_PCMC_CLAMP     0.1  // [A]; Minimum clamping value for buck converter input current
 #define BUCK_MAX_PCMC_CLAMP     2  // [A]; Maximum clamping value for buck converter input current 
 
 #define BUCK_VRF             (uint16_t)(BUCK1_VREF * BUCK1_IIN_FEEDBACK_GAIN * BUCK1_ADC_RESOLUTION / BUCK1_ADC_REFERENCE)
@@ -442,7 +442,7 @@ volatile uint16_t Drv_PowerControllerBuck1_InitACMP(void)
     DAC1CONLbits.DACEN = 0; // Individual DACx Module Enable: Disables DACx module during configuration
     DAC1CONLbits.IRQM = 0b00; // Interrupt Mode Selection: Interrupts are disabled
     DAC1CONLbits.CBE = 1; // Comparator Blank Enable: Enables the analog comparator output to be blanked (gated off) during the recovery transition following the completion of a slope operation
-    DAC1CONLbits.DACOEN = 0; // DACx Output Buffer Enable: DACx analog voltage is connected to the DACOUT1 pin (RA3/TP35 on DPSK3)
+    DAC1CONLbits.DACOEN = 1; // DACx Output Buffer Enable: DACx analog voltage is connected to the DACOUT1 pin (RA3/TP35 on DPSK3)
     // DAC1CONLbits.CMPSTAT (read only bit)
     
     // Comparator filter and hysteresis options

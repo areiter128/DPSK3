@@ -32,11 +32,11 @@
 #include <stdint.h>
 
 #define BUCK1_VREF               3.3   // [V]; Voltage reference for boost converter
-#define BUCK1_SLEW_RATE          0.100 // Compensation ramp in [V/usec] (SLPxDAT is calculated below)
+#define BUCK1_SLEW_RATE          0.3 // Compensation ramp in [V/usec] (SLPxDAT is calculated below)
 #define BUCK1_VREF_RAMPUP_PERIOD 100e-3  // [s]; Vref ramp-up period for buck converter
 
 #define BOOST1_VREF              15.0   // [V]; Voltage reference for boost converter
-#define BOOST1_SLEW_RATE          0.100 // Compensation ramp in [V/usec] (SLPxDAT is calculated below)
+#define BOOST1_SLEW_RATE          0.200 // Compensation ramp in [V/usec] (SLPxDAT is calculated below)
 #define BOOST1_CLAMP_RAMPUP_PERIOD 20e-3  // [s]; Current clamp ramp-up period for boost converter
 #define BOOST1_VREF_RAMPUP_PERIOD 100e-3  // [s]; Vref ramp-up period for boost converter
   
@@ -122,7 +122,7 @@
 #define BOOST_TO_BUCK_OFFSET        0.50    // Boost offset with respect to the buck in proportion of the PWM period 
 #define MAXIMUM_DUTY_RATIO          0.80    // Maximum Duty Ratio in [%]
 #define LEB_PERIOD                  100e-9  // Leading Edge Blanking period in [sec]
-#define SLOPE_START_DELAY           100e-9  // Delay in {sec] until the slope compensation ramp starts
+#define SLOPE_START_DELAY           0  // Delay in {sec] until the slope compensation ramp starts
 #define SLOPE_STOP_DELAY            0.80    // Delay in [%] until the slope compensation ramp stops
 #define VOUT_ADC_TRIGGER_DELAY      (SWITCHING_PERIOD - 800e-9) // ADC trigger delay in [sec] used to sample output voltage
 #define PWM_MASTER_PHASE_SHIFT      0e-9  // Switching frequency phase shift in [sec]

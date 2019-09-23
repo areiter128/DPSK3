@@ -471,7 +471,7 @@ volatile uint16_t Drv_PowerControllerBoost1_InitACMP(void)
     DAC2CONLbits.DACEN = 0; // Individual DACx Module Enable: Disables DACx module during configuration
     DAC2CONLbits.IRQM = 0b00; // Interrupt Mode Selection: Interrupts are disabled
     DAC2CONLbits.CBE = 1; // Comparator Blank Enable: Enables the analog comparator output to be blanked (gated off) during the recovery transition following the completion of a slope operation
-    DAC2CONLbits.DACOEN = 1; // DACx Output Buffer Enable: disabled for this module
+    DAC2CONLbits.DACOEN = 0; // DACx Output Buffer Enable: disabled for this module
     // DAC2CONLbits.CMPSTAT (read only bit)
     
     // Comparator filter and hysteresis options
