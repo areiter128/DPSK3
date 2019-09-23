@@ -5,12 +5,12 @@
 # 23 "src/main.c"
 # 1 "mcc_generated_files/mcc.h" 1
 # 47 "mcc_generated_files/mcc.h"
-# 1 "c:\\program files (x86)\\microchip\\xc16\\v1.36\\bin\\bin\\../..\\support\\generic\\h/xc.h" 1 3 4
-# 646 "c:\\program files (x86)\\microchip\\xc16\\v1.36\\bin\\bin\\../..\\support\\generic\\h/xc.h" 3 4
-# 1 "c:\\program files (x86)\\microchip\\xc16\\v1.36\\bin\\bin\\../..\\support\\PIC24F\\h/p24FJ64GA004.h" 1 3 4
-# 41 "c:\\program files (x86)\\microchip\\xc16\\v1.36\\bin\\bin\\../..\\support\\PIC24F\\h/p24FJ64GA004.h" 3 4
-# 1 "c:\\program files (x86)\\microchip\\xc16\\v1.36\\bin\\bin\\../..\\include\\lega-c/stdint.h" 1 3 4
-# 13 "c:\\program files (x86)\\microchip\\xc16\\v1.36\\bin\\bin\\../..\\include\\lega-c/stdint.h" 3 4
+# 1 "c:\\program files (x86)\\microchip\\xc16\\v1.40\\bin\\bin\\../..\\support\\generic\\h/xc.h" 1 3 4
+# 758 "c:\\program files (x86)\\microchip\\xc16\\v1.40\\bin\\bin\\../..\\support\\generic\\h/xc.h" 3 4
+# 1 "c:\\program files (x86)\\microchip\\xc16\\v1.40\\bin\\bin\\../..\\support\\PIC24F\\h/p24FJ64GA004.h" 1 3 4
+# 41 "c:\\program files (x86)\\microchip\\xc16\\v1.40\\bin\\bin\\../..\\support\\PIC24F\\h/p24FJ64GA004.h" 3 4
+# 1 "c:\\program files (x86)\\microchip\\xc16\\v1.40\\bin\\bin\\../..\\include\\lega-c/stdint.h" 1 3 4
+# 13 "c:\\program files (x86)\\microchip\\xc16\\v1.40\\bin\\bin\\../..\\include\\lega-c/stdint.h" 3 4
 typedef signed char int8_t;
 
 
@@ -33,7 +33,7 @@ typedef signed long int int32_t;
 
 
 typedef signed long long int int64_t;
-# 43 "c:\\program files (x86)\\microchip\\xc16\\v1.36\\bin\\bin\\../..\\include\\lega-c/stdint.h" 3 4
+# 43 "c:\\program files (x86)\\microchip\\xc16\\v1.40\\bin\\bin\\../..\\include\\lega-c/stdint.h" 3 4
 typedef unsigned char uint8_t;
 
 
@@ -53,7 +53,7 @@ typedef unsigned long int uint32_t;
 
 
 typedef unsigned long long int uint64_t;
-# 70 "c:\\program files (x86)\\microchip\\xc16\\v1.36\\bin\\bin\\../..\\include\\lega-c/stdint.h" 3 4
+# 70 "c:\\program files (x86)\\microchip\\xc16\\v1.40\\bin\\bin\\../..\\include\\lega-c/stdint.h" 3 4
 typedef signed char int_least8_t;
 
 
@@ -192,8 +192,8 @@ typedef long long int intmax_t;
 
 
 typedef unsigned long long int uintmax_t;
-# 42 "c:\\program files (x86)\\microchip\\xc16\\v1.36\\bin\\bin\\../..\\support\\PIC24F\\h/p24FJ64GA004.h" 2 3 4
-# 55 "c:\\program files (x86)\\microchip\\xc16\\v1.36\\bin\\bin\\../..\\support\\PIC24F\\h/p24FJ64GA004.h" 3 4
+# 42 "c:\\program files (x86)\\microchip\\xc16\\v1.40\\bin\\bin\\../..\\support\\PIC24F\\h/p24FJ64GA004.h" 2 3 4
+# 55 "c:\\program files (x86)\\microchip\\xc16\\v1.40\\bin\\bin\\../..\\support\\PIC24F\\h/p24FJ64GA004.h" 3 4
 extern volatile uint16_t WREG0 __attribute__((__sfr__,__deprecated__,__unsafe__));
 
 extern volatile uint16_t WREG1 __attribute__((__sfr__,__deprecated__,__unsafe__));
@@ -1552,7 +1552,7 @@ typedef struct tagUART {
         uint16_t uxrxreg;
         uint16_t uxbrg;
 } UART, *PUART;
-# 1422 "c:\\program files (x86)\\microchip\\xc16\\v1.36\\bin\\bin\\../..\\support\\PIC24F\\h/p24FJ64GA004.h" 3 4
+# 1422 "c:\\program files (x86)\\microchip\\xc16\\v1.40\\bin\\bin\\../..\\support\\PIC24F\\h/p24FJ64GA004.h" 3 4
 extern volatile UART UART1 __attribute__((__sfr__));
 
 extern volatile UART UART2 __attribute__((__sfr__));
@@ -3459,50 +3459,50 @@ typedef struct tagPMD3BITS {
   uint16_t CMPMD:1;
 } PMD3BITS;
 extern volatile PMD3BITS PMD3bits __attribute__((__sfr__));
-# 10873 "c:\\program files (x86)\\microchip\\xc16\\v1.36\\bin\\bin\\../..\\support\\PIC24F\\h/p24FJ64GA004.h" 3 4
+# 10873 "c:\\program files (x86)\\microchip\\xc16\\v1.40\\bin\\bin\\../..\\support\\PIC24F\\h/p24FJ64GA004.h" 3 4
 extern __attribute__((space(prog))) __prog__ uint16_t _CONFIG2;
-# 10968 "c:\\program files (x86)\\microchip\\xc16\\v1.36\\bin\\bin\\../..\\support\\PIC24F\\h/p24FJ64GA004.h" 3 4
+# 10968 "c:\\program files (x86)\\microchip\\xc16\\v1.40\\bin\\bin\\../..\\support\\PIC24F\\h/p24FJ64GA004.h" 3 4
 extern __attribute__((space(prog))) __prog__ uint16_t _CONFIG1;
-# 647 "c:\\program files (x86)\\microchip\\xc16\\v1.36\\bin\\bin\\../..\\support\\generic\\h/xc.h" 2 3 4
+# 759 "c:\\program files (x86)\\microchip\\xc16\\v1.40\\bin\\bin\\../..\\support\\generic\\h/xc.h" 2 3 4
 # 48 "mcc_generated_files/mcc.h" 2
 # 1 "mcc_generated_files/pin_manager.h" 1
 # 52 "mcc_generated_files/pin_manager.h"
-# 1 "c:\\program files (x86)\\microchip\\xc16\\v1.36\\bin\\bin\\../..\\support\\generic\\h/xc.h" 1 3 4
-# 646 "c:\\program files (x86)\\microchip\\xc16\\v1.36\\bin\\bin\\../..\\support\\generic\\h/xc.h" 3 4
-# 1 "c:\\program files (x86)\\microchip\\xc16\\v1.36\\bin\\bin\\../..\\support\\PIC24F\\h/p24FJ64GA004.h" 1 3 4
-# 41 "c:\\program files (x86)\\microchip\\xc16\\v1.36\\bin\\bin\\../..\\support\\PIC24F\\h/p24FJ64GA004.h" 3 4
-# 1 "c:\\program files (x86)\\microchip\\xc16\\v1.36\\bin\\bin\\../..\\include\\lega-c/stdint.h" 1 3 4
-# 42 "c:\\program files (x86)\\microchip\\xc16\\v1.36\\bin\\bin\\../..\\support\\PIC24F\\h/p24FJ64GA004.h" 2 3 4
-# 647 "c:\\program files (x86)\\microchip\\xc16\\v1.36\\bin\\bin\\../..\\support\\generic\\h/xc.h" 2 3 4
+# 1 "c:\\program files (x86)\\microchip\\xc16\\v1.40\\bin\\bin\\../..\\support\\generic\\h/xc.h" 1 3 4
+# 758 "c:\\program files (x86)\\microchip\\xc16\\v1.40\\bin\\bin\\../..\\support\\generic\\h/xc.h" 3 4
+# 1 "c:\\program files (x86)\\microchip\\xc16\\v1.40\\bin\\bin\\../..\\support\\PIC24F\\h/p24FJ64GA004.h" 1 3 4
+# 41 "c:\\program files (x86)\\microchip\\xc16\\v1.40\\bin\\bin\\../..\\support\\PIC24F\\h/p24FJ64GA004.h" 3 4
+# 1 "c:\\program files (x86)\\microchip\\xc16\\v1.40\\bin\\bin\\../..\\include\\lega-c/stdint.h" 1 3 4
+# 42 "c:\\program files (x86)\\microchip\\xc16\\v1.40\\bin\\bin\\../..\\support\\PIC24F\\h/p24FJ64GA004.h" 2 3 4
+# 759 "c:\\program files (x86)\\microchip\\xc16\\v1.40\\bin\\bin\\../..\\support\\generic\\h/xc.h" 2 3 4
 # 53 "mcc_generated_files/pin_manager.h" 2
 # 1403 "mcc_generated_files/pin_manager.h"
 void PIN_MANAGER_Initialize(void);
 # 49 "mcc_generated_files/mcc.h" 2
-# 1 "c:\\program files (x86)\\microchip\\xc16\\v1.36\\bin\\bin\\../..\\include\\lega-c/stdint.h" 1 3 4
+# 1 "c:\\program files (x86)\\microchip\\xc16\\v1.40\\bin\\bin\\../..\\include\\lega-c/stdint.h" 1 3 4
 # 50 "mcc_generated_files/mcc.h" 2
-# 1 "c:\\program files (x86)\\microchip\\xc16\\v1.36\\bin\\bin\\../..\\include\\lega-c/stdbool.h" 1 3 4
+# 1 "c:\\program files (x86)\\microchip\\xc16\\v1.40\\bin\\bin\\../..\\include\\lega-c/stdbool.h" 1 3 4
 # 51 "mcc_generated_files/mcc.h" 2
 # 1 "mcc_generated_files/adc1.h" 1
 # 53 "mcc_generated_files/adc1.h"
-# 1 "c:\\program files (x86)\\microchip\\xc16\\v1.36\\bin\\bin\\../..\\include\\lega-c/stdint.h" 1 3 4
+# 1 "c:\\program files (x86)\\microchip\\xc16\\v1.40\\bin\\bin\\../..\\include\\lega-c/stdint.h" 1 3 4
 # 54 "mcc_generated_files/adc1.h" 2
-# 1 "c:\\program files (x86)\\microchip\\xc16\\v1.36\\bin\\bin\\../..\\include\\lega-c/stdlib.h" 1 3 4
+# 1 "c:\\program files (x86)\\microchip\\xc16\\v1.40\\bin\\bin\\../..\\include\\lega-c/stdlib.h" 1 3 4
 
 
 
 
-# 1 "c:\\program files (x86)\\microchip\\xc16\\v1.36\\bin\\bin\\../..\\include\\lega-c/yvals.h" 1 3 4
-# 86 "c:\\program files (x86)\\microchip\\xc16\\v1.36\\bin\\bin\\../..\\include\\lega-c/yvals.h" 3 4
+# 1 "c:\\program files (x86)\\microchip\\xc16\\v1.40\\bin\\bin\\../..\\include\\lega-c/yvals.h" 1 3 4
+# 86 "c:\\program files (x86)\\microchip\\xc16\\v1.40\\bin\\bin\\../..\\include\\lega-c/yvals.h" 3 4
 typedef void *va_list;
-# 102 "c:\\program files (x86)\\microchip\\xc16\\v1.36\\bin\\bin\\../..\\include\\lega-c/yvals.h" 3 4
+# 102 "c:\\program files (x86)\\microchip\\xc16\\v1.40\\bin\\bin\\../..\\include\\lega-c/yvals.h" 3 4
 
-# 135 "c:\\program files (x86)\\microchip\\xc16\\v1.36\\bin\\bin\\../..\\include\\lega-c/yvals.h" 3 4
+# 135 "c:\\program files (x86)\\microchip\\xc16\\v1.40\\bin\\bin\\../..\\include\\lega-c/yvals.h" 3 4
 typedef long long _Longlong;
 typedef unsigned long long _ULonglong;
-# 149 "c:\\program files (x86)\\microchip\\xc16\\v1.36\\bin\\bin\\../..\\include\\lega-c/yvals.h" 3 4
+# 149 "c:\\program files (x86)\\microchip\\xc16\\v1.40\\bin\\bin\\../..\\include\\lega-c/yvals.h" 3 4
 typedef short unsigned int _Wchart;
 typedef unsigned int _Wintt;
-# 161 "c:\\program files (x86)\\microchip\\xc16\\v1.36\\bin\\bin\\../..\\include\\lega-c/yvals.h" 3 4
+# 161 "c:\\program files (x86)\\microchip\\xc16\\v1.40\\bin\\bin\\../..\\include\\lega-c/yvals.h" 3 4
 typedef int _Ptrdifft;
 typedef unsigned int _Sizet;
 
@@ -3525,18 +3525,18 @@ typedef struct _Mbstatet
  _Wchart _Wchar;
  unsigned short _Byte, _State;
  } _Mbstatet;
-# 191 "c:\\program files (x86)\\microchip\\xc16\\v1.36\\bin\\bin\\../..\\include\\lega-c/yvals.h" 3 4
+# 191 "c:\\program files (x86)\\microchip\\xc16\\v1.40\\bin\\bin\\../..\\include\\lega-c/yvals.h" 3 4
 typedef struct _Fpost
  {
  long _Off;
  _Mbstatet _Wstate;
  } _Fpost;
-# 212 "c:\\program files (x86)\\microchip\\xc16\\v1.36\\bin\\bin\\../..\\include\\lega-c/yvals.h" 3 4
+# 212 "c:\\program files (x86)\\microchip\\xc16\\v1.40\\bin\\bin\\../..\\include\\lega-c/yvals.h" 3 4
 
-# 6 "c:\\program files (x86)\\microchip\\xc16\\v1.36\\bin\\bin\\../..\\include\\lega-c/stdlib.h" 2 3 4
+# 6 "c:\\program files (x86)\\microchip\\xc16\\v1.40\\bin\\bin\\../..\\include\\lega-c/stdlib.h" 2 3 4
 
 
-# 36 "c:\\program files (x86)\\microchip\\xc16\\v1.36\\bin\\bin\\../..\\include\\lega-c/stdlib.h" 3 4
+# 36 "c:\\program files (x86)\\microchip\\xc16\\v1.40\\bin\\bin\\../..\\include\\lega-c/stdlib.h" 3 4
 typedef _Sizet size_t;
 
 
@@ -3591,7 +3591,7 @@ void * realloc(void *, size_t);
 long strtol(const char *, char **, int);
 size_t wcstombs(char *, const wchar_t *, size_t);
 int wctomb(char *, wchar_t);
-# 102 "c:\\program files (x86)\\microchip\\xc16\\v1.36\\bin\\bin\\../..\\include\\lega-c/stdlib.h" 3 4
+# 102 "c:\\program files (x86)\\microchip\\xc16\\v1.40\\bin\\bin\\../..\\include\\lega-c/stdlib.h" 3 4
 unsigned long _Stoul(const char *, char **, int);
 float _Stof(const char *, char **, long);
 
@@ -3606,7 +3606,7 @@ unsigned long long _Stoull(const char *, char **, int);
 
 extern size_t _Getmbcurmax(void);
 
-# 191 "c:\\program files (x86)\\microchip\\xc16\\v1.36\\bin\\bin\\../..\\include\\lega-c/stdlib.h" 3 4
+# 191 "c:\\program files (x86)\\microchip\\xc16\\v1.40\\bin\\bin\\../..\\include\\lega-c/stdlib.h" 3 4
 
 
 typedef int _Cmpfun(const void *, const void *);
@@ -3622,7 +3622,7 @@ long atol(const char *);
 unsigned long strtoul(const char *, char **, int);
 long long atoll(const char *);
 unsigned long long strtoull(const char *, char **, int);
-# 219 "c:\\program files (x86)\\microchip\\xc16\\v1.36\\bin\\bin\\../..\\include\\lega-c/stdlib.h" 3 4
+# 219 "c:\\program files (x86)\\microchip\\xc16\\v1.40\\bin\\bin\\../..\\include\\lega-c/stdlib.h" 3 4
 
 
 
@@ -3659,18 +3659,18 @@ uint16_t ADC1_ReadAvg(void);
 # 52 "mcc_generated_files/mcc.h" 2
 # 1 "mcc_generated_files/uart1.h" 1
 # 52 "mcc_generated_files/uart1.h"
-# 1 "c:\\program files (x86)\\microchip\\xc16\\v1.36\\bin\\bin\\../..\\support\\generic\\h/xc.h" 1 3 4
-# 646 "c:\\program files (x86)\\microchip\\xc16\\v1.36\\bin\\bin\\../..\\support\\generic\\h/xc.h" 3 4
-# 1 "c:\\program files (x86)\\microchip\\xc16\\v1.36\\bin\\bin\\../..\\support\\PIC24F\\h/p24FJ64GA004.h" 1 3 4
-# 41 "c:\\program files (x86)\\microchip\\xc16\\v1.36\\bin\\bin\\../..\\support\\PIC24F\\h/p24FJ64GA004.h" 3 4
-# 1 "c:\\program files (x86)\\microchip\\xc16\\v1.36\\bin\\bin\\../..\\include\\lega-c/stdint.h" 1 3 4
-# 42 "c:\\program files (x86)\\microchip\\xc16\\v1.36\\bin\\bin\\../..\\support\\PIC24F\\h/p24FJ64GA004.h" 2 3 4
-# 647 "c:\\program files (x86)\\microchip\\xc16\\v1.36\\bin\\bin\\../..\\support\\generic\\h/xc.h" 2 3 4
+# 1 "c:\\program files (x86)\\microchip\\xc16\\v1.40\\bin\\bin\\../..\\support\\generic\\h/xc.h" 1 3 4
+# 758 "c:\\program files (x86)\\microchip\\xc16\\v1.40\\bin\\bin\\../..\\support\\generic\\h/xc.h" 3 4
+# 1 "c:\\program files (x86)\\microchip\\xc16\\v1.40\\bin\\bin\\../..\\support\\PIC24F\\h/p24FJ64GA004.h" 1 3 4
+# 41 "c:\\program files (x86)\\microchip\\xc16\\v1.40\\bin\\bin\\../..\\support\\PIC24F\\h/p24FJ64GA004.h" 3 4
+# 1 "c:\\program files (x86)\\microchip\\xc16\\v1.40\\bin\\bin\\../..\\include\\lega-c/stdint.h" 1 3 4
+# 42 "c:\\program files (x86)\\microchip\\xc16\\v1.40\\bin\\bin\\../..\\support\\PIC24F\\h/p24FJ64GA004.h" 2 3 4
+# 759 "c:\\program files (x86)\\microchip\\xc16\\v1.40\\bin\\bin\\../..\\support\\generic\\h/xc.h" 2 3 4
 # 53 "mcc_generated_files/uart1.h" 2
 
-# 1 "c:\\program files (x86)\\microchip\\xc16\\v1.36\\bin\\bin\\../..\\include\\lega-c/stdint.h" 1 3 4
+# 1 "c:\\program files (x86)\\microchip\\xc16\\v1.40\\bin\\bin\\../..\\include\\lega-c/stdint.h" 1 3 4
 # 55 "mcc_generated_files/uart1.h" 2
-# 1 "c:\\program files (x86)\\microchip\\xc16\\v1.36\\bin\\bin\\../..\\include\\lega-c/stdlib.h" 1 3 4
+# 1 "c:\\program files (x86)\\microchip\\xc16\\v1.40\\bin\\bin\\../..\\include\\lega-c/stdlib.h" 1 3 4
 # 56 "mcc_generated_files/uart1.h" 2
 # 77 "mcc_generated_files/uart1.h"
 typedef enum
@@ -3769,7 +3769,7 @@ inline static void INTERRUPT_GlobalDisable(void)
 # 54 "mcc_generated_files/mcc.h" 2
 # 1 "mcc_generated_files/traps.h" 1
 # 48 "mcc_generated_files/traps.h"
-# 1 "c:\\program files (x86)\\microchip\\xc16\\v1.36\\bin\\bin\\../..\\include\\lega-c/stdint.h" 1 3 4
+# 1 "c:\\program files (x86)\\microchip\\xc16\\v1.40\\bin\\bin\\../..\\include\\lega-c/stdint.h" 1 3 4
 # 49 "mcc_generated_files/traps.h" 2
 
 
@@ -3788,15 +3788,15 @@ void __attribute__((naked, noreturn, weak)) TRAPS_halt_on_error(uint16_t code);
 # 55 "mcc_generated_files/mcc.h" 2
 # 1 "mcc_generated_files/tmr1.h" 1
 # 52 "mcc_generated_files/tmr1.h"
-# 1 "c:\\program files (x86)\\microchip\\xc16\\v1.36\\bin\\bin\\../..\\support\\generic\\h/xc.h" 1 3 4
-# 646 "c:\\program files (x86)\\microchip\\xc16\\v1.36\\bin\\bin\\../..\\support\\generic\\h/xc.h" 3 4
-# 1 "c:\\program files (x86)\\microchip\\xc16\\v1.36\\bin\\bin\\../..\\support\\PIC24F\\h/p24FJ64GA004.h" 1 3 4
-# 41 "c:\\program files (x86)\\microchip\\xc16\\v1.36\\bin\\bin\\../..\\support\\PIC24F\\h/p24FJ64GA004.h" 3 4
-# 1 "c:\\program files (x86)\\microchip\\xc16\\v1.36\\bin\\bin\\../..\\include\\lega-c/stdint.h" 1 3 4
-# 42 "c:\\program files (x86)\\microchip\\xc16\\v1.36\\bin\\bin\\../..\\support\\PIC24F\\h/p24FJ64GA004.h" 2 3 4
-# 647 "c:\\program files (x86)\\microchip\\xc16\\v1.36\\bin\\bin\\../..\\support\\generic\\h/xc.h" 2 3 4
+# 1 "c:\\program files (x86)\\microchip\\xc16\\v1.40\\bin\\bin\\../..\\support\\generic\\h/xc.h" 1 3 4
+# 758 "c:\\program files (x86)\\microchip\\xc16\\v1.40\\bin\\bin\\../..\\support\\generic\\h/xc.h" 3 4
+# 1 "c:\\program files (x86)\\microchip\\xc16\\v1.40\\bin\\bin\\../..\\support\\PIC24F\\h/p24FJ64GA004.h" 1 3 4
+# 41 "c:\\program files (x86)\\microchip\\xc16\\v1.40\\bin\\bin\\../..\\support\\PIC24F\\h/p24FJ64GA004.h" 3 4
+# 1 "c:\\program files (x86)\\microchip\\xc16\\v1.40\\bin\\bin\\../..\\include\\lega-c/stdint.h" 1 3 4
+# 42 "c:\\program files (x86)\\microchip\\xc16\\v1.40\\bin\\bin\\../..\\support\\PIC24F\\h/p24FJ64GA004.h" 2 3 4
+# 759 "c:\\program files (x86)\\microchip\\xc16\\v1.40\\bin\\bin\\../..\\support\\generic\\h/xc.h" 2 3 4
 # 53 "mcc_generated_files/tmr1.h" 2
-# 1 "c:\\program files (x86)\\microchip\\xc16\\v1.36\\bin\\bin\\../..\\include\\lega-c/stdint.h" 1 3 4
+# 1 "c:\\program files (x86)\\microchip\\xc16\\v1.40\\bin\\bin\\../..\\include\\lega-c/stdint.h" 1 3 4
 # 54 "mcc_generated_files/tmr1.h" 2
 # 110 "mcc_generated_files/tmr1.h"
 void TMR1_Initialize (void);
@@ -3828,49 +3828,49 @@ void OSCILLATOR_Initialize(void);
 # 24 "src/main.c" 2
 # 1 "h/delay.h" 1
 # 30 "h/delay.h"
-# 1 "c:\\program files (x86)\\microchip\\xc16\\v1.36\\bin\\bin\\../..\\support\\generic\\h/xc.h" 1 3 4
-# 646 "c:\\program files (x86)\\microchip\\xc16\\v1.36\\bin\\bin\\../..\\support\\generic\\h/xc.h" 3 4
-# 1 "c:\\program files (x86)\\microchip\\xc16\\v1.36\\bin\\bin\\../..\\support\\PIC24F\\h/p24FJ64GA004.h" 1 3 4
-# 41 "c:\\program files (x86)\\microchip\\xc16\\v1.36\\bin\\bin\\../..\\support\\PIC24F\\h/p24FJ64GA004.h" 3 4
-# 1 "c:\\program files (x86)\\microchip\\xc16\\v1.36\\bin\\bin\\../..\\include\\lega-c/stdint.h" 1 3 4
-# 42 "c:\\program files (x86)\\microchip\\xc16\\v1.36\\bin\\bin\\../..\\support\\PIC24F\\h/p24FJ64GA004.h" 2 3 4
-# 647 "c:\\program files (x86)\\microchip\\xc16\\v1.36\\bin\\bin\\../..\\support\\generic\\h/xc.h" 2 3 4
+# 1 "c:\\program files (x86)\\microchip\\xc16\\v1.40\\bin\\bin\\../..\\support\\generic\\h/xc.h" 1 3 4
+# 758 "c:\\program files (x86)\\microchip\\xc16\\v1.40\\bin\\bin\\../..\\support\\generic\\h/xc.h" 3 4
+# 1 "c:\\program files (x86)\\microchip\\xc16\\v1.40\\bin\\bin\\../..\\support\\PIC24F\\h/p24FJ64GA004.h" 1 3 4
+# 41 "c:\\program files (x86)\\microchip\\xc16\\v1.40\\bin\\bin\\../..\\support\\PIC24F\\h/p24FJ64GA004.h" 3 4
+# 1 "c:\\program files (x86)\\microchip\\xc16\\v1.40\\bin\\bin\\../..\\include\\lega-c/stdint.h" 1 3 4
+# 42 "c:\\program files (x86)\\microchip\\xc16\\v1.40\\bin\\bin\\../..\\support\\PIC24F\\h/p24FJ64GA004.h" 2 3 4
+# 759 "c:\\program files (x86)\\microchip\\xc16\\v1.40\\bin\\bin\\../..\\support\\generic\\h/xc.h" 2 3 4
 # 31 "h/delay.h" 2
-# 1 "c:\\program files (x86)\\microchip\\xc16\\v1.36\\bin\\bin\\../..\\include\\lega-c/stdint.h" 1 3 4
+# 1 "c:\\program files (x86)\\microchip\\xc16\\v1.40\\bin\\bin\\../..\\include\\lega-c/stdint.h" 1 3 4
 # 32 "h/delay.h" 2
 # 42 "h/delay.h"
-# 1 "c:\\program files (x86)\\microchip\\xc16\\v1.36\\bin\\bin\\../..\\support\\generic\\h/libpic30.h" 1 3 4
-# 12 "c:\\program files (x86)\\microchip\\xc16\\v1.36\\bin\\bin\\../..\\support\\generic\\h/libpic30.h" 3 4
-# 1 "c:\\program files (x86)\\microchip\\xc16\\v1.36\\bin\\bin\\../..\\support\\generic\\h/subordinate_errors.h" 1 3 4
-# 13 "c:\\program files (x86)\\microchip\\xc16\\v1.36\\bin\\bin\\../..\\support\\generic\\h/libpic30.h" 2 3 4
-# 24 "c:\\program files (x86)\\microchip\\xc16\\v1.36\\bin\\bin\\../..\\support\\generic\\h/libpic30.h" 3 4
+# 1 "c:\\program files (x86)\\microchip\\xc16\\v1.40\\bin\\bin\\../..\\support\\generic\\h/libpic30.h" 1 3 4
+# 12 "c:\\program files (x86)\\microchip\\xc16\\v1.40\\bin\\bin\\../..\\support\\generic\\h/libpic30.h" 3 4
+# 1 "c:\\program files (x86)\\microchip\\xc16\\v1.40\\bin\\bin\\../..\\support\\generic\\h/subordinate_errors.h" 1 3 4
+# 13 "c:\\program files (x86)\\microchip\\xc16\\v1.40\\bin\\bin\\../..\\support\\generic\\h/libpic30.h" 2 3 4
+# 24 "c:\\program files (x86)\\microchip\\xc16\\v1.40\\bin\\bin\\../..\\support\\generic\\h/libpic30.h" 3 4
 extern int __attach_input_file(const char *f);
 void __close_input_file(void);
-# 35 "c:\\program files (x86)\\microchip\\xc16\\v1.36\\bin\\bin\\../..\\support\\generic\\h/libpic30.h" 3 4
+# 35 "c:\\program files (x86)\\microchip\\xc16\\v1.40\\bin\\bin\\../..\\support\\generic\\h/libpic30.h" 3 4
 extern int __C30_UART;
-# 45 "c:\\program files (x86)\\microchip\\xc16\\v1.36\\bin\\bin\\../..\\support\\generic\\h/libpic30.h" 3 4
+# 45 "c:\\program files (x86)\\microchip\\xc16\\v1.40\\bin\\bin\\../..\\support\\generic\\h/libpic30.h" 3 4
 extern void __delay32(unsigned long cycles);
-# 83 "c:\\program files (x86)\\microchip\\xc16\\v1.36\\bin\\bin\\../..\\support\\generic\\h/libpic30.h" 3 4
+# 83 "c:\\program files (x86)\\microchip\\xc16\\v1.40\\bin\\bin\\../..\\support\\generic\\h/libpic30.h" 3 4
 extern __attribute__((space(prog))) int _PROGRAM_END;
-# 96 "c:\\program files (x86)\\microchip\\xc16\\v1.36\\bin\\bin\\../..\\support\\generic\\h/libpic30.h" 3 4
+# 96 "c:\\program files (x86)\\microchip\\xc16\\v1.40\\bin\\bin\\../..\\support\\generic\\h/libpic30.h" 3 4
 extern void _dump_heap_info(void);
-# 115 "c:\\program files (x86)\\microchip\\xc16\\v1.36\\bin\\bin\\../..\\support\\generic\\h/libpic30.h" 3 4
+# 115 "c:\\program files (x86)\\microchip\\xc16\\v1.40\\bin\\bin\\../..\\support\\generic\\h/libpic30.h" 3 4
 typedef unsigned long _prog_addressT;
 
 extern _prog_addressT _memcpy_helper(_prog_addressT src, void *dst,
                                      unsigned int len, int flags);
-# 128 "c:\\program files (x86)\\microchip\\xc16\\v1.36\\bin\\bin\\../..\\support\\generic\\h/libpic30.h" 3 4
+# 128 "c:\\program files (x86)\\microchip\\xc16\\v1.40\\bin\\bin\\../..\\support\\generic\\h/libpic30.h" 3 4
 extern void *_memcpy_df(__pack_upper_byte void *src,void *dst,unsigned int len);
-# 147 "c:\\program files (x86)\\microchip\\xc16\\v1.36\\bin\\bin\\../..\\support\\generic\\h/libpic30.h" 3 4
+# 147 "c:\\program files (x86)\\microchip\\xc16\\v1.40\\bin\\bin\\../..\\support\\generic\\h/libpic30.h" 3 4
 _prog_addressT _memcpy_p2d16(void *dest, _prog_addressT src,
                              unsigned int len);
-# 159 "c:\\program files (x86)\\microchip\\xc16\\v1.36\\bin\\bin\\../..\\support\\generic\\h/libpic30.h" 3 4
+# 159 "c:\\program files (x86)\\microchip\\xc16\\v1.40\\bin\\bin\\../..\\support\\generic\\h/libpic30.h" 3 4
 _prog_addressT _memcpy_p2d24(void *dest, _prog_addressT src,
                              unsigned int len);
-# 172 "c:\\program files (x86)\\microchip\\xc16\\v1.36\\bin\\bin\\../..\\support\\generic\\h/libpic30.h" 3 4
+# 172 "c:\\program files (x86)\\microchip\\xc16\\v1.40\\bin\\bin\\../..\\support\\generic\\h/libpic30.h" 3 4
 _prog_addressT _strncpy_p2d16(char *dest, _prog_addressT src,
                               unsigned int len);
-# 185 "c:\\program files (x86)\\microchip\\xc16\\v1.36\\bin\\bin\\../..\\support\\generic\\h/libpic30.h" 3 4
+# 185 "c:\\program files (x86)\\microchip\\xc16\\v1.40\\bin\\bin\\../..\\support\\generic\\h/libpic30.h" 3 4
 _prog_addressT _strncpy_p2d24(char *dest, _prog_addressT src,
                               unsigned int len);
 
@@ -3895,49 +3895,61 @@ extern char *_strncpy_packed(char *dest, __pack_upper_byte void *src,
 
 extern __eds__ void *_memcpy_eds_3(__eds__ void *src, __eds__ void *dst,
                                    int len);
-# 222 "c:\\program files (x86)\\microchip\\xc16\\v1.36\\bin\\bin\\../..\\support\\generic\\h/libpic30.h" 3 4
+# 222 "c:\\program files (x86)\\microchip\\xc16\\v1.40\\bin\\bin\\../..\\support\\generic\\h/libpic30.h" 3 4
 extern __eds__ char *_strcpy_eds(__eds__ void *src, __eds__ void *dst);
 extern __eds__ char *_strncpy_eds(__eds__ void *src, __eds__ void *dst,int len);
-# 363 "c:\\program files (x86)\\microchip\\xc16\\v1.36\\bin\\bin\\../..\\support\\generic\\h/libpic30.h" 3 4
-extern void _eedata_helper1(_prog_addressT dst, int len);
-extern void _eedata_helper2(void);
-extern void _eedata_helper3(_prog_addressT dst, int dat);
-extern void _eedata_helper4(_prog_addressT dst, int *src);
-extern void _eedata_helper5(_prog_addressT dst, int len);
-extern void _eedata_helper6(void);
-extern void _eedata_helper7(_prog_addressT dst, int dat);
-extern void _flash_helper1 (_prog_addressT dst, int code);
-extern void _flash_helper2 (_prog_addressT dst, int *src, int len);
-extern void _flash_helper3 (_prog_addressT dst, long *src, int len);
-extern void _flash_helper4 (_prog_addressT dst, int dat);
-extern void _flash_helper5 (_prog_addressT dst, long dat);
-extern void _flash_helper6 (int code);
-extern void _flash_helper7(_prog_addressT dst, int len);
-extern void _flash_helper8 (_prog_addressT dst, int *src, int len);
-extern void _flash_helper9 (_prog_addressT dst, long *src, int len);
-extern void _flash_helper10 (_prog_addressT dst, int dat1, int empty, int dat2);
-extern void _flash_helper11 (_prog_addressT dst, long dat1, long dat2);
-# 503 "c:\\program files (x86)\\microchip\\xc16\\v1.36\\bin\\bin\\../..\\support\\generic\\h/libpic30.h" 3 4
+# 363 "c:\\program files (x86)\\microchip\\xc16\\v1.40\\bin\\bin\\../..\\support\\generic\\h/libpic30.h" 3 4
+extern void _eedata_helper1 (_prog_addressT dst, int len);
+extern void _eedata_helper2 (void);
+extern void _eedata_helper3 (_prog_addressT dst, int dat);
+extern void _eedata_helper4 (_prog_addressT dst, int *src);
+extern void _eedata_helper5 (_prog_addressT dst, int len);
+extern void _eedata_helper6 (void);
+extern void _eedata_helper7 (_prog_addressT dst, int dat);
+# 385 "c:\\program files (x86)\\microchip\\xc16\\v1.40\\bin\\bin\\../..\\support\\generic\\h/libpic30.h" 3 4
+extern void _flash_helper1 (_prog_addressT dst, int code)
+            __attribute__((deprecated("consider migrating to Microchip Code Configurator https://www.microchip.com/mcc")));
+extern void _flash_helper2 (_prog_addressT dst, int *src, int len)
+            __attribute__((deprecated("consider migrating to Microchip Code Configurator https://www.microchip.com/mcc")));
+extern void _flash_helper3 (_prog_addressT dst, long *src, int len)
+            __attribute__((deprecated("consider migrating to Microchip Code Configurator https://www.microchip.com/mcc")));
+extern void _flash_helper4 (_prog_addressT dst, int dat)
+            __attribute__((deprecated("consider migrating to Microchip Code Configurator https://www.microchip.com/mcc")));
+extern void _flash_helper5 (_prog_addressT dst, long dat)
+            __attribute__((deprecated("consider migrating to Microchip Code Configurator https://www.microchip.com/mcc")));
+extern void _flash_helper6 (int code)
+            __attribute__((deprecated("consider migrating to Microchip Code Configurator https://www.microchip.com/mcc")));
+extern void _flash_helper7 (_prog_addressT dst, int len)
+            __attribute__((deprecated("consider migrating to Microchip Code Configurator https://www.microchip.com/mcc")));
+extern void _flash_helper8 (_prog_addressT dst, int *src, int len)
+            __attribute__((deprecated("consider migrating to Microchip Code Configurator https://www.microchip.com/mcc")));
+extern void _flash_helper9 (_prog_addressT dst, long *src, int len)
+            __attribute__((deprecated("consider migrating to Microchip Code Configurator https://www.microchip.com/mcc")));
+extern void _flash_helper10 (_prog_addressT dst, int dat1, int empty, int dat2)
+            __attribute__((deprecated("consider migrating to Microchip Code Configurator https://www.microchip.com/mcc")));
+extern void _flash_helper11 (_prog_addressT dst, long dat1, long dat2)
+            __attribute__((deprecated("consider migrating to Microchip Code Configurator https://www.microchip.com/mcc")));
+# 530 "c:\\program files (x86)\\microchip\\xc16\\v1.40\\bin\\bin\\../..\\support\\generic\\h/libpic30.h" 3 4
 void _erase_flash(_prog_addressT dst);
-# 519 "c:\\program files (x86)\\microchip\\xc16\\v1.36\\bin\\bin\\../..\\support\\generic\\h/libpic30.h" 3 4
+# 546 "c:\\program files (x86)\\microchip\\xc16\\v1.40\\bin\\bin\\../..\\support\\generic\\h/libpic30.h" 3 4
 void _write_flash16(_prog_addressT dst, int *src);
-# 535 "c:\\program files (x86)\\microchip\\xc16\\v1.36\\bin\\bin\\../..\\support\\generic\\h/libpic30.h" 3 4
+# 562 "c:\\program files (x86)\\microchip\\xc16\\v1.40\\bin\\bin\\../..\\support\\generic\\h/libpic30.h" 3 4
 void _write_flash24(_prog_addressT dst, long *src);
-# 555 "c:\\program files (x86)\\microchip\\xc16\\v1.36\\bin\\bin\\../..\\support\\generic\\h/libpic30.h" 3 4
+# 581 "c:\\program files (x86)\\microchip\\xc16\\v1.40\\bin\\bin\\../..\\support\\generic\\h/libpic30.h" 3 4
 void _write_flash_word16(_prog_addressT dst, int dat);
-# 573 "c:\\program files (x86)\\microchip\\xc16\\v1.36\\bin\\bin\\../..\\support\\generic\\h/libpic30.h" 3 4
+# 599 "c:\\program files (x86)\\microchip\\xc16\\v1.40\\bin\\bin\\../..\\support\\generic\\h/libpic30.h" 3 4
 void _write_flash_word24(_prog_addressT dst, long dat);
 # 43 "h/delay.h" 2
 # 25 "src/main.c" 2
 # 1 "h/leds.h" 1
 # 30 "h/leds.h"
-# 1 "c:\\program files (x86)\\microchip\\xc16\\v1.36\\bin\\bin\\../..\\support\\generic\\h/xc.h" 1 3 4
-# 646 "c:\\program files (x86)\\microchip\\xc16\\v1.36\\bin\\bin\\../..\\support\\generic\\h/xc.h" 3 4
-# 1 "c:\\program files (x86)\\microchip\\xc16\\v1.36\\bin\\bin\\../..\\support\\PIC24F\\h/p24FJ64GA004.h" 1 3 4
-# 41 "c:\\program files (x86)\\microchip\\xc16\\v1.36\\bin\\bin\\../..\\support\\PIC24F\\h/p24FJ64GA004.h" 3 4
-# 1 "c:\\program files (x86)\\microchip\\xc16\\v1.36\\bin\\bin\\../..\\include\\lega-c/stdint.h" 1 3 4
-# 42 "c:\\program files (x86)\\microchip\\xc16\\v1.36\\bin\\bin\\../..\\support\\PIC24F\\h/p24FJ64GA004.h" 2 3 4
-# 647 "c:\\program files (x86)\\microchip\\xc16\\v1.36\\bin\\bin\\../..\\support\\generic\\h/xc.h" 2 3 4
+# 1 "c:\\program files (x86)\\microchip\\xc16\\v1.40\\bin\\bin\\../..\\support\\generic\\h/xc.h" 1 3 4
+# 758 "c:\\program files (x86)\\microchip\\xc16\\v1.40\\bin\\bin\\../..\\support\\generic\\h/xc.h" 3 4
+# 1 "c:\\program files (x86)\\microchip\\xc16\\v1.40\\bin\\bin\\../..\\support\\PIC24F\\h/p24FJ64GA004.h" 1 3 4
+# 41 "c:\\program files (x86)\\microchip\\xc16\\v1.40\\bin\\bin\\../..\\support\\PIC24F\\h/p24FJ64GA004.h" 3 4
+# 1 "c:\\program files (x86)\\microchip\\xc16\\v1.40\\bin\\bin\\../..\\include\\lega-c/stdint.h" 1 3 4
+# 42 "c:\\program files (x86)\\microchip\\xc16\\v1.40\\bin\\bin\\../..\\support\\PIC24F\\h/p24FJ64GA004.h" 2 3 4
+# 759 "c:\\program files (x86)\\microchip\\xc16\\v1.40\\bin\\bin\\../..\\support\\generic\\h/xc.h" 2 3 4
 # 31 "h/leds.h" 2
 # 1 "h/leds.h" 1
 # 32 "h/leds.h" 2
@@ -3952,13 +3964,13 @@ extern void LedsBlinkTask(void);
 # 26 "src/main.c" 2
 # 1 "h/fault.h" 1
 # 30 "h/fault.h"
-# 1 "c:\\program files (x86)\\microchip\\xc16\\v1.36\\bin\\bin\\../..\\support\\generic\\h/xc.h" 1 3 4
-# 646 "c:\\program files (x86)\\microchip\\xc16\\v1.36\\bin\\bin\\../..\\support\\generic\\h/xc.h" 3 4
-# 1 "c:\\program files (x86)\\microchip\\xc16\\v1.36\\bin\\bin\\../..\\support\\PIC24F\\h/p24FJ64GA004.h" 1 3 4
-# 41 "c:\\program files (x86)\\microchip\\xc16\\v1.36\\bin\\bin\\../..\\support\\PIC24F\\h/p24FJ64GA004.h" 3 4
-# 1 "c:\\program files (x86)\\microchip\\xc16\\v1.36\\bin\\bin\\../..\\include\\lega-c/stdint.h" 1 3 4
-# 42 "c:\\program files (x86)\\microchip\\xc16\\v1.36\\bin\\bin\\../..\\support\\PIC24F\\h/p24FJ64GA004.h" 2 3 4
-# 647 "c:\\program files (x86)\\microchip\\xc16\\v1.36\\bin\\bin\\../..\\support\\generic\\h/xc.h" 2 3 4
+# 1 "c:\\program files (x86)\\microchip\\xc16\\v1.40\\bin\\bin\\../..\\support\\generic\\h/xc.h" 1 3 4
+# 758 "c:\\program files (x86)\\microchip\\xc16\\v1.40\\bin\\bin\\../..\\support\\generic\\h/xc.h" 3 4
+# 1 "c:\\program files (x86)\\microchip\\xc16\\v1.40\\bin\\bin\\../..\\support\\PIC24F\\h/p24FJ64GA004.h" 1 3 4
+# 41 "c:\\program files (x86)\\microchip\\xc16\\v1.40\\bin\\bin\\../..\\support\\PIC24F\\h/p24FJ64GA004.h" 3 4
+# 1 "c:\\program files (x86)\\microchip\\xc16\\v1.40\\bin\\bin\\../..\\include\\lega-c/stdint.h" 1 3 4
+# 42 "c:\\program files (x86)\\microchip\\xc16\\v1.40\\bin\\bin\\../..\\support\\PIC24F\\h/p24FJ64GA004.h" 2 3 4
+# 759 "c:\\program files (x86)\\microchip\\xc16\\v1.40\\bin\\bin\\../..\\support\\generic\\h/xc.h" 2 3 4
 # 31 "h/fault.h" 2
 
 
@@ -3991,13 +4003,13 @@ uint16_t LoadsGetStatus(void);
 # 28 "src/main.c" 2
 # 1 "h/buttons.h" 1
 # 31 "h/buttons.h"
-# 1 "c:\\program files (x86)\\microchip\\xc16\\v1.36\\bin\\bin\\../..\\support\\generic\\h/xc.h" 1 3 4
-# 646 "c:\\program files (x86)\\microchip\\xc16\\v1.36\\bin\\bin\\../..\\support\\generic\\h/xc.h" 3 4
-# 1 "c:\\program files (x86)\\microchip\\xc16\\v1.36\\bin\\bin\\../..\\support\\PIC24F\\h/p24FJ64GA004.h" 1 3 4
-# 41 "c:\\program files (x86)\\microchip\\xc16\\v1.36\\bin\\bin\\../..\\support\\PIC24F\\h/p24FJ64GA004.h" 3 4
-# 1 "c:\\program files (x86)\\microchip\\xc16\\v1.36\\bin\\bin\\../..\\include\\lega-c/stdint.h" 1 3 4
-# 42 "c:\\program files (x86)\\microchip\\xc16\\v1.36\\bin\\bin\\../..\\support\\PIC24F\\h/p24FJ64GA004.h" 2 3 4
-# 647 "c:\\program files (x86)\\microchip\\xc16\\v1.36\\bin\\bin\\../..\\support\\generic\\h/xc.h" 2 3 4
+# 1 "c:\\program files (x86)\\microchip\\xc16\\v1.40\\bin\\bin\\../..\\support\\generic\\h/xc.h" 1 3 4
+# 758 "c:\\program files (x86)\\microchip\\xc16\\v1.40\\bin\\bin\\../..\\support\\generic\\h/xc.h" 3 4
+# 1 "c:\\program files (x86)\\microchip\\xc16\\v1.40\\bin\\bin\\../..\\support\\PIC24F\\h/p24FJ64GA004.h" 1 3 4
+# 41 "c:\\program files (x86)\\microchip\\xc16\\v1.40\\bin\\bin\\../..\\support\\PIC24F\\h/p24FJ64GA004.h" 3 4
+# 1 "c:\\program files (x86)\\microchip\\xc16\\v1.40\\bin\\bin\\../..\\include\\lega-c/stdint.h" 1 3 4
+# 42 "c:\\program files (x86)\\microchip\\xc16\\v1.40\\bin\\bin\\../..\\support\\PIC24F\\h/p24FJ64GA004.h" 2 3 4
+# 759 "c:\\program files (x86)\\microchip\\xc16\\v1.40\\bin\\bin\\../..\\support\\generic\\h/xc.h" 2 3 4
 # 32 "h/buttons.h" 2
 
 
@@ -4011,13 +4023,13 @@ void ButtonsTask(void);
 # 29 "src/main.c" 2
 # 1 "h/temperature.h" 1
 # 30 "h/temperature.h"
-# 1 "c:\\program files (x86)\\microchip\\xc16\\v1.36\\bin\\bin\\../..\\support\\generic\\h/xc.h" 1 3 4
-# 646 "c:\\program files (x86)\\microchip\\xc16\\v1.36\\bin\\bin\\../..\\support\\generic\\h/xc.h" 3 4
-# 1 "c:\\program files (x86)\\microchip\\xc16\\v1.36\\bin\\bin\\../..\\support\\PIC24F\\h/p24FJ64GA004.h" 1 3 4
-# 41 "c:\\program files (x86)\\microchip\\xc16\\v1.36\\bin\\bin\\../..\\support\\PIC24F\\h/p24FJ64GA004.h" 3 4
-# 1 "c:\\program files (x86)\\microchip\\xc16\\v1.36\\bin\\bin\\../..\\include\\lega-c/stdint.h" 1 3 4
-# 42 "c:\\program files (x86)\\microchip\\xc16\\v1.36\\bin\\bin\\../..\\support\\PIC24F\\h/p24FJ64GA004.h" 2 3 4
-# 647 "c:\\program files (x86)\\microchip\\xc16\\v1.36\\bin\\bin\\../..\\support\\generic\\h/xc.h" 2 3 4
+# 1 "c:\\program files (x86)\\microchip\\xc16\\v1.40\\bin\\bin\\../..\\support\\generic\\h/xc.h" 1 3 4
+# 758 "c:\\program files (x86)\\microchip\\xc16\\v1.40\\bin\\bin\\../..\\support\\generic\\h/xc.h" 3 4
+# 1 "c:\\program files (x86)\\microchip\\xc16\\v1.40\\bin\\bin\\../..\\support\\PIC24F\\h/p24FJ64GA004.h" 1 3 4
+# 41 "c:\\program files (x86)\\microchip\\xc16\\v1.40\\bin\\bin\\../..\\support\\PIC24F\\h/p24FJ64GA004.h" 3 4
+# 1 "c:\\program files (x86)\\microchip\\xc16\\v1.40\\bin\\bin\\../..\\include\\lega-c/stdint.h" 1 3 4
+# 42 "c:\\program files (x86)\\microchip\\xc16\\v1.40\\bin\\bin\\../..\\support\\PIC24F\\h/p24FJ64GA004.h" 2 3 4
+# 759 "c:\\program files (x86)\\microchip\\xc16\\v1.40\\bin\\bin\\../..\\support\\generic\\h/xc.h" 2 3 4
 # 31 "h/temperature.h" 2
 # 1 "mcc_generated_files/adc1.h" 1
 # 32 "h/temperature.h" 2
@@ -4034,13 +4046,13 @@ therm_event_t TemperatureCheck(uint8_t * pTemperature);
 # 30 "src/main.c" 2
 # 1 "h/protocol.h" 1
 # 30 "h/protocol.h"
-# 1 "c:\\program files (x86)\\microchip\\xc16\\v1.36\\bin\\bin\\../..\\support\\generic\\h/xc.h" 1 3 4
-# 646 "c:\\program files (x86)\\microchip\\xc16\\v1.36\\bin\\bin\\../..\\support\\generic\\h/xc.h" 3 4
-# 1 "c:\\program files (x86)\\microchip\\xc16\\v1.36\\bin\\bin\\../..\\support\\PIC24F\\h/p24FJ64GA004.h" 1 3 4
-# 41 "c:\\program files (x86)\\microchip\\xc16\\v1.36\\bin\\bin\\../..\\support\\PIC24F\\h/p24FJ64GA004.h" 3 4
-# 1 "c:\\program files (x86)\\microchip\\xc16\\v1.36\\bin\\bin\\../..\\include\\lega-c/stdint.h" 1 3 4
-# 42 "c:\\program files (x86)\\microchip\\xc16\\v1.36\\bin\\bin\\../..\\support\\PIC24F\\h/p24FJ64GA004.h" 2 3 4
-# 647 "c:\\program files (x86)\\microchip\\xc16\\v1.36\\bin\\bin\\../..\\support\\generic\\h/xc.h" 2 3 4
+# 1 "c:\\program files (x86)\\microchip\\xc16\\v1.40\\bin\\bin\\../..\\support\\generic\\h/xc.h" 1 3 4
+# 758 "c:\\program files (x86)\\microchip\\xc16\\v1.40\\bin\\bin\\../..\\support\\generic\\h/xc.h" 3 4
+# 1 "c:\\program files (x86)\\microchip\\xc16\\v1.40\\bin\\bin\\../..\\support\\PIC24F\\h/p24FJ64GA004.h" 1 3 4
+# 41 "c:\\program files (x86)\\microchip\\xc16\\v1.40\\bin\\bin\\../..\\support\\PIC24F\\h/p24FJ64GA004.h" 3 4
+# 1 "c:\\program files (x86)\\microchip\\xc16\\v1.40\\bin\\bin\\../..\\include\\lega-c/stdint.h" 1 3 4
+# 42 "c:\\program files (x86)\\microchip\\xc16\\v1.40\\bin\\bin\\../..\\support\\PIC24F\\h/p24FJ64GA004.h" 2 3 4
+# 759 "c:\\program files (x86)\\microchip\\xc16\\v1.40\\bin\\bin\\../..\\support\\generic\\h/xc.h" 2 3 4
 # 31 "h/protocol.h" 2
 # 1 "../common/h/proto_data.h" 1
 # 34 "../common/h/proto_data.h"
@@ -4122,11 +4134,11 @@ int main(void)
         volatile protocol_data_t proto_data;
         volatile therm_event_t therm_event;
 
-        therm_event = TemperatureCheck(&temperature);
+        therm_event = TemperatureCheck((uint8_t*) &temperature);
         proto_data.temperature = temperature;
         proto_data.load_status.u16 = (test_mode)? 0 : LoadsGetStatus();
         proto_data.fault_status.u8 = (test_mode)? 0 : FaultCheck();
-        proto_event = ProtocolCheck(&proto_data);
+        proto_event = ProtocolCheck((protocol_data_t*) &proto_data);
 
 
         switch(proto_event)

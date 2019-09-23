@@ -1,4 +1,4 @@
-	.file "C:\\_dsmps\\DPSK3\\Troubleshooting\\__src__\\dpsk3-firmware\\pic24\\src\\fault.c"
+	.file "C:\\Projects\\Demo boards\\DPSK3\\pic24\\src\\fault.c"
 	.section	.text,code
 	.align	2
 	.type	_FaultInput,@function
@@ -307,6 +307,9 @@ _fault_flags:
 	.skip	4
 
 
+
+	.section __c30_info, info, bss
+__large_data_scalar:
 
 	.section __c30_signature, info, data
 	.word 0x0001

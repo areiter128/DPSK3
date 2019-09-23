@@ -104,28 +104,28 @@ uint8_t change_position = false;
 //======================================================================================================================
 void Dev_Lcd_Init(void)
 {
-    Lcd_Interface_Init();
-    Lcd_Interface_Reset();
+    Drv_Lcd_Interface_Init();
+    Drv_Lcd_Interface_Reset();
     
-    Lcd_Interface_SendCmd(LCD_FUNCTION | FUNCTION_8BITS | FUNCTION_1_HIGH | FUNCTION_1_LINE | FUNCTION_nIS);   //function set
+    Drv_Lcd_Interface_SendCmd(LCD_FUNCTION | FUNCTION_8BITS | FUNCTION_1_HIGH | FUNCTION_1_LINE | FUNCTION_nIS);   //function set
  
     __delay_ms(25);
 
-    Lcd_Interface_SendCmd(LCD_FUNCTION | FUNCTION_8BITS | FUNCTION_1_HIGH | FUNCTION_1_LINE | FUNCTION_nIS);   //function set
-    Lcd_Interface_SendCmd(LCD_FUNCTION | FUNCTION_8BITS | FUNCTION_1_HIGH | FUNCTION_1_LINE | FUNCTION_nIS);   //function set
+    Drv_Lcd_Interface_SendCmd(LCD_FUNCTION | FUNCTION_8BITS | FUNCTION_1_HIGH | FUNCTION_1_LINE | FUNCTION_nIS);   //function set
+    Drv_Lcd_Interface_SendCmd(LCD_FUNCTION | FUNCTION_8BITS | FUNCTION_1_HIGH | FUNCTION_1_LINE | FUNCTION_nIS);   //function set
 
     // Enter the second page of instructions
-    Lcd_Interface_SendCmd(LCD_FUNCTION | FUNCTION_8BITS | FUNCTION_1_HIGH | FUNCTION_2_LINE | FUNCTION_IS);   //function set
-    Lcd_Interface_SendCmd(LCD_OSC_FREQ | BIAS_1_5 | FREQ_CNTRL(4));   //internal osc frequency
-    Lcd_Interface_SendCmd(LCD_PWR_CONTROL | nICON | BOOSTLCD | CONTRAST(2));   //power control
-    Lcd_Interface_SendCmd(LCD_FOLLOWER_ON | FOLLOWER_GAIN(5));   //follower control
-    Lcd_Interface_SendCmd(LCD_CONTRAST(0));   //contrast
+    Drv_Lcd_Interface_SendCmd(LCD_FUNCTION | FUNCTION_8BITS | FUNCTION_1_HIGH | FUNCTION_2_LINE | FUNCTION_IS);   //function set
+    Drv_Lcd_Interface_SendCmd(LCD_OSC_FREQ | BIAS_1_5 | FREQ_CNTRL(4));   //internal osc frequency
+    Drv_Lcd_Interface_SendCmd(LCD_PWR_CONTROL | nICON | BOOSTLCD | CONTRAST(2));   //power control
+    Drv_Lcd_Interface_SendCmd(LCD_FOLLOWER_ON | FOLLOWER_GAIN(5));   //follower control
+    Drv_Lcd_Interface_SendCmd(LCD_CONTRAST(0));   //contrast
     // leave second instruction page
 
     //Dev_Lcd_WriteCommand(LCD_FUNCTION | FUNCTION_8BITS | FUNCTION_1_HIGH | FUNCTION_2_LINE | FUNCTION_nIS);   //function set
-    Lcd_Interface_SendCmd(LCD_DISPLAY_ON | CURSOR_OFF | BLINK_OFF);           //display on
-    Lcd_Interface_SendCmd(LCD_ENTRY_MODE | CURSOR_nSHIFT | DATA_INCREMENT);   //entry mode
-    Lcd_Interface_SendCmd(LCD_CLEAR);   //clear
+    Drv_Lcd_Interface_SendCmd(LCD_DISPLAY_ON | CURSOR_OFF | BLINK_OFF);           //display on
+    Drv_Lcd_Interface_SendCmd(LCD_ENTRY_MODE | CURSOR_nSHIFT | DATA_INCREMENT);   //entry mode
+    Drv_Lcd_Interface_SendCmd(LCD_CLEAR);   //clear
 
     __delay_ms(150);
 }
@@ -137,7 +137,7 @@ void Dev_Lcd_Init(void)
 //======================================================================================================================
 void Dev_Lcd_Clear(void)
 {
-    Lcd_Interface_SendCmd(LCD_CLEAR);
+    Drv_Lcd_Interface_SendCmd(LCD_CLEAR);
     __delay_ms(1);
 }
 
@@ -149,7 +149,7 @@ void Dev_Lcd_Clear(void)
 //======================================================================================================================
 void Dev_Lcd_GotoXY(uint8_t x,uint8_t y)
 {
-    Lcd_Interface_SendCmd(LCD_DDRAM_ADDRESS((line_address[y] + x)));
+    Drv_Lcd_Interface_SendCmd(LCD_DDRAM_ADDRESS((line_address[y] + x)));
     pos_x = x;
     pos_y = y;
     change_position = false;
@@ -194,7 +194,7 @@ void Dev_Lcd_WriteChar(const char ch)
             break;
         default:
             if (pos_x < LCD_DISPLAYSIZE_X && pos_y < LCD_DISPLAYSIZE_Y)
-                Lcd_Interface_SendChar(ch);
+                Drv_Lcd_Interface_SendChar(ch);
             if (++pos_x >= LCD_DISPLAYSIZE_X)
             {
                 pos_x = 0;

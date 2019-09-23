@@ -17,6 +17,7 @@
 # Netbeans specific
 ~*.*
 build/
+pic24/build/
 dist/
 private/
 disassembly/
