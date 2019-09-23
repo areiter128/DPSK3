@@ -48,7 +48,7 @@
 #define INIT_DACDATH_BUCK       0  // DAC value for the buck the slope starts from
 #define INIT_DACDATL_BUCK       0  // Set this to minimum in Slope mode
 
-#define BUCK_MIN_PCMC_CLAMP     0.1  // [A]; Minimum clamping value for buck converter input current
+#define BUCK_MIN_PCMC_CLAMP     0  // [A]; Minimum clamping value for buck converter input current
 #define BUCK_MAX_PCMC_CLAMP     2  // [A]; Maximum clamping value for buck converter input current 
 
 #define BUCK_VRF             (uint16_t)(BUCK1_VREF * BUCK1_IIN_FEEDBACK_GAIN * BUCK1_ADC_RESOLUTION / BUCK1_ADC_REFERENCE)
