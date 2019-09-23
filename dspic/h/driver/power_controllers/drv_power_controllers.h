@@ -36,7 +36,7 @@
 #define BUCK1_VREF_RAMPUP_PERIOD 100e-3  // [s]; Vref ramp-up period for buck converter
 
 #define BOOST1_VREF              15.0   // [V]; Voltage reference for boost converter
-#define BOOST1_SLEW_RATE          0.200 // Compensation ramp in [V/usec] (SLPxDAT is calculated below)
+#define BOOST1_SLEW_RATE          0.2 // Compensation ramp in [V/usec] (SLPxDAT is calculated below)
 #define BOOST1_CLAMP_RAMPUP_PERIOD 20e-3  // [s]; Current clamp ramp-up period for boost converter
 #define BOOST1_VREF_RAMPUP_PERIOD 100e-3  // [s]; Vref ramp-up period for boost converter
   
@@ -116,15 +116,16 @@
 //------ macros
 #define SWITCHING_PERIOD            (1.0/SWITCHING_FREQUENCY)   // Power Supply Switching Period in [sec]
 #define PWM_RES                     (1.0/AUX_FREQUENCY)         // PWM Resolution
-#define PWM_PERIOD                  (uint16_t)(SWITCHING_PERIOD / PWM_RES)      // Measured in [tick = 2ns]
+#define PWM_PERIOD                  (uint16_t)(SWITCHING_PERIOD / PWM_RES)      // Measured in [tick = 2.5ns]
 //------ 
 
 #define BOOST_TO_BUCK_OFFSET        0.50    // Boost offset with respect to the buck in proportion of the PWM period 
 #define MAXIMUM_DUTY_RATIO          0.80    // Maximum Duty Ratio in [%]
 #define LEB_PERIOD                  100e-9  // Leading Edge Blanking period in [sec]
-#define SLOPE_START_DELAY           0  // Delay in {sec] until the slope compensation ramp starts
+#define SLOPE_START_DELAY           100e-9  // Delay in {sec] until the slope compensation ramp starts
 #define SLOPE_STOP_DELAY            0.80    // Delay in [%] until the slope compensation ramp stops
-#define VOUT_ADC_TRIGGER_DELAY      (SWITCHING_PERIOD - 800e-9) // ADC trigger delay in [sec] used to sample output voltage
+#define VOUT_ADC_TRIGGER_DELAY      (SWITCHING_PERIOD - 1300e-9) // ADC trigger delay in [sec] used to sample output voltage
+//#define VOUT_ADC_TRIGGER_DELAY      (uint16_t)(MAXIMUM_DUTY_RATIO * SWITCHING_PERIOD) // ADC trigger delay in [sec] used to sample output voltage
 #define PWM_MASTER_PHASE_SHIFT      0e-9  // Switching frequency phase shift in [sec]
 #define PWM_AUXILIARY_PHASE_SHIFT   100e-9  // Switching frequency phase shift in [sec]
 
