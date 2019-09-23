@@ -365,7 +365,7 @@ volatile uint16_t Drv_PowerControllerBoost1_InitAuxiliaryPWM(void)
     
     PG4CONHbits.MDCSEL = 0; // Master Duty Cycle Register Selection: PWM Generator uses PGxDC register
     PG4CONHbits.MPERSEL = 1; // Master Period Register Selection: PWM Generator uses MPER register
-    PG4CONHbits.MPHSEL = 1; // Master Phase Register Selection: PWM Generator uses MPHASE register
+    PG4CONHbits.MPHSEL = 0; // Master Phase Register Selection: PWM Generator uses MPHASE register
     PG4CONHbits.MSTEN = 0; // Master Update Enable: PWM Generator does not broadcast the UPDREQ status bit state or EOC signal
     PG4CONHbits.UPDMOD = 0b000; // PWM Buffer Update Mode Selection: SOC update
     PG4CONHbits.TRGMOD = 0; // PWM Generator Trigger Mode Selection: PWM Generator operates in single trigger mode
