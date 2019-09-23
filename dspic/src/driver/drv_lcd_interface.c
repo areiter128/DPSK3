@@ -73,7 +73,7 @@
 //  @brief  this function initialized the lcd interface driver
 //  @note   use this one time after booting up your system to initialize before calling something else
 //======================================================================================================================
-void Lcd_Interface_Init(void)
+void Drv_Lcd_Interface_Init(void)
 {
     LCD_RST_SetHigh();
     LCD_CS_nSELECTED();
@@ -92,7 +92,7 @@ void Lcd_Interface_Init(void)
 //  @brief  this function sends data through the spi interface to the lcd controller
 //  @note   local function
 //======================================================================================================================
-void Lcd_Interface_Spi_Send(uint8_t data)
+void Drv_Lcd_Interface_Spi_Send(uint8_t data)
 {
     uint8_t mask;
 
@@ -118,7 +118,7 @@ void Lcd_Interface_Spi_Send(uint8_t data)
 //  @brief  this function resets the lcd controller
 //  @note   use this one time after booting up your system to reset the lcd controller and get into a defined state
 //======================================================================================================================
-void Lcd_Interface_Reset(void)
+void Drv_Lcd_Interface_Reset(void)
 {
     LCD_RST_SetLow();
     __delay_ms(25);
@@ -129,19 +129,22 @@ void Lcd_Interface_Reset(void)
 //======================================================================================================================
 //  @brief  this functions sends a command to the lcd controller
 //======================================================================================================================
-void Lcd_Interface_SendCmd(uint8_t cmd)
+void Drv_Lcd_Interface_SendCmd(uint8_t cmd)
 {		
    LCD_CS_SELECTED();
    LCD_RS_COMMAND();
-   Lcd_Interface_Spi_Send(cmd);
+   Drv_Lcd_Interface_Spi_Send(cmd);
 }
 
+
 //======================================================================================================================
-//  @brief this function sends one character to the display controller to be displayed on the ldc screen
+//  @brief this function sends one character to the display controller to be displayed on the lcd screen
 //======================================================================================================================
-extern void Lcd_Interface_SendChar(const char c)
+extern void Drv_Lcd_Interface_SendChar(const char c)
 {
    LCD_CS_SELECTED();
    LCD_RS_DATA();
-   Lcd_Interface_Spi_Send(c);
+   Drv_Lcd_Interface_Spi_Send(c);
 }
+
+
