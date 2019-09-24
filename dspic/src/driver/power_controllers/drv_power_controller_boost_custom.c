@@ -273,15 +273,15 @@ volatile uint16_t Drv_PowerControllerBoost1_InitPWM(void)
     PG2CLPCIHbits.ACP       = 0b011;        // PCI Acceptance Mode: Latched
     PG2CLPCIHbits.SWPCI     = 0b0;          // Drives a '0' to PCI logic assigned to by the SWPCIM<1:0> control bits
     PG2CLPCIHbits.SWPCIM    = 0b00;         // SWPCI bit is assigned to PCI acceptance logic
-    PG2CLPCIHbits.PCIGT     = 0b1;          // SR latch is Reset-dominant in Latched Acceptance modes; ToDo: Why is this not called LATMOD?
-    PG2CLPCIHbits.TQPS      = 0b1;          // Termination Qualifier (0= not inverted, 1= inverted)
-    PG2CLPCIHbits.TQSS      = 0b100;        // Termination Qualifier Source: PCI Source #1 (PWM Generator output selected by the PWMPCI<2:0> bits)
+    PG2CLPCIHbits.PCIGT     = 0b0;          // SR latch is Set-dominant in Latched Acceptance modes; ToDo: Why is this not called LATMOD?
+    PG2CLPCIHbits.TQPS      = 0b0;          // Termination Qualifier (0= not inverted, 1= inverted)
+    PG2CLPCIHbits.TQSS      = 0b000;        // Termination Qualifier Source: No termination qualifier is used
     
     // PGCLPCIL: PWM GENERATOR CL PCI REGISTER LOW
     PG2CLPCILbits.TSYNCDIS  = 0;            // Termination of latched PCI occurs at PWM EOC
     PG2CLPCILbits.TERM      = 0b001;        // Termination Event: Terminate when Comparator 2 output transitions from active to inactive
-    PG2CLPCILbits.AQPS      = 0b0;          // Acceptance Qualifier signal is non-inverted
-    PG2CLPCILbits.AQSS      = 0b100;        // Acceptance Qualifier: PCI Source #1 (PWM Generator output selected by the PWMPCI<2:0> bits) 
+    PG2CLPCILbits.AQPS      = 0b1;          // Acceptance Qualifier (0= not inverted, 1= inverted)
+    PG2CLPCILbits.AQSS      = 0b010;        // Acceptance Qualifier: LEB
     PG2CLPCILbits.SWTERM    = 0b0;          // A write of '1' to this location will produce a termination event. This bit location always reads as '0'.
     PG2CLPCILbits.PSYNC     = 0;            // PCI source is not synchronized to PWM EOC
     PG2CLPCILbits.PPS       = 0;            // Non-inverted PCI polarity
@@ -472,7 +472,7 @@ volatile uint16_t Drv_PowerControllerBoost1_InitACMP(void)
     // DACxCONL: DACx CONTROL LOW REGISTER
     DAC2CONLbits.DACEN = 0; // Individual DACx Module Enable: Disables DACx module during configuration
     DAC2CONLbits.IRQM = 0b00; // Interrupt Mode Selection: Interrupts are disabled
-    DAC2CONLbits.CBE = 1; // Comparator Blank Enable: Enables the analog comparator output to be blanked (gated off) during the recovery transition following the completion of a slope operation
+    DAC2CONLbits.CBE = 0; // Comparator Blank Enable: Disables the analog comparator output to be blanked (gated off) during the recovery transition following the completion of a slope operation
     DAC2CONLbits.DACOEN = 0; // DACx Output Buffer Enable: disabled for this module
     // DAC2CONLbits.CMPSTAT (read only bit)
     
