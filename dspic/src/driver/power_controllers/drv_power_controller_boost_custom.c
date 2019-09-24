@@ -254,7 +254,7 @@ volatile uint16_t Drv_PowerControllerBoost1_InitPWM(void)
     PG2EVTLbits.ADTR1EN2    = 0b1;          // PG2TRIGB  Compare Event is enabled as trigger source for ADC Trigger 1  -> Slope start trigger
     PG2EVTLbits.ADTR1EN3    = 0b0;          // PG2TRIGC  Compare Event is disabled as trigger source for ADC Trigger 1    
     PG2EVTLbits.UPDTRG      = 0b00;         // User must set the UPDATE bit (PG2STAT<4>) manually
-    PG2EVTLbits.PGTRGSEL    = 0b000;        // PWM Generator Trigger Output is not used, leave it as default: EOC event is the PWM Generator trigger
+    PG2EVTLbits.PGTRGSEL    = 0b000;        // EOC event is the PWM Generator trigger
     
     // PWM GENERATOR x EVENT REGISTER HIGH
     PG2EVTHbits.FLTIEN      = 0b0;          // PCI Fault interrupt is disabled
@@ -371,7 +371,7 @@ volatile uint16_t Drv_PowerControllerBoost1_InitAuxiliaryPWM(void)
     PG4CONHbits.MSTEN = 0; // Master Update Enable: PWM Generator does not broadcast the UPDREQ status bit state or EOC signal
     PG4CONHbits.UPDMOD = 0b000; // PWM Buffer Update Mode Selection: SOC update
     PG4CONHbits.TRGMOD = 0; // PWM Generator Trigger Mode Selection: PWM Generator operates in single trigger mode
-    PG4CONHbits.SOCS = 3;   // Start-of-Cycle Selection: Trigger output selected by PG3 PGTRGSEL<2:0> bits (PGxEVTL<2:0>)
+    PG4CONHbits.SOCS = 2;   // Start-of-Cycle Selection: Trigger output selected by PG2 PGTRGSEL<2:0> bits (PGxEVTL<2:0>)
 
     // PGxIOCONH: PWM GENERATOR x I/O CONTROL REGISTER LOW
     PG4IOCONL = 0x0000;
@@ -481,13 +481,13 @@ volatile uint16_t Drv_PowerControllerBoost1_InitACMP(void)
     DAC2CONLbits.CMPPOL = 0; // Comparator Output Polarity Control: Output is non-inverted
     DAC2CONLbits.INSEL = 0b011; // Comparator Input Source Select: feedback is connected to CMPxD input pin
     DAC2CONLbits.HYSPOL = 0; // Comparator Hysteresis Polarity Selection: Hysteresis is applied to the rising edge of the comparator output
-    DAC2CONLbits.HYSSEL = 0b01; // Comparator Hysteresis Selection: 45 mv hysteresis (0 = 0mV, 1 = 15mV, 2 = 30mV, 3 = 45mV)
+    DAC2CONLbits.HYSSEL = 0b01; // Comparator Hysteresis Selection: 15 mv hysteresis (0 = 0mV, 1 = 15mV, 2 = 30mV, 3 = 45mV)
     
     // DACxCONH: DACx CONTROL HIGH REGISTER
     
     // ***********************************************
     // ToDo: CHECK DAC LEB PERIOD TO BE CORRECT AND DOESN'T CREATE CONFLICTS
-    DAC2CONHbits.TMCB = DAC_TMCB; // DACx Leading-Edge Blanking: period for the comparator
+    DAC2CONHbits.TMCB = 0; // DACx Leading-Edge Blanking: period for the comparator
     // ***********************************************
         
     // DACxDATH: DACx DATA HIGH REGISTER
@@ -546,7 +546,7 @@ volatile uint16_t Drv_PowerControllerBoost1_InitADC(void)
     ADMOD1Lbits.DIFF18 = 0; // Differential-Mode for Corresponding Analog Inputs: Channel is single-ended
     ADMOD1Lbits.SIGN18 = 0; // Output Data Sign for Corresponding Analog Inputs: Channel output data are unsigned
     
-    // ADEIEL: ADC EARLY INTERRUPT ENABLE REGISTER LOW
+    // ADEIEH: ADC EARLY INTERRUPT ENABLE REGISTER LOW
     ADEIEHbits.EIEN18 = 1; // Early interrupt is enabled for the channel
     
     // ADIEL: ADC INTERRUPT ENABLE REGISTER LOW
