@@ -187,7 +187,7 @@ volatile uint16_t System_AClk_Init(void)
     ACLKCON1bits.APLLEN = 0;
 
     // Set AVCO divider of Auxiliary PLL 
-    APLLDIV1bits.AVCODIV   = 0b11;  // AVCO Scaler = AFVCO
+    APLLDIV1bits.AVCODIV   = 0b10;  // AVCO Scaler = AFVCO/2
 
     // Configure APLL pre-scaler, APLL post-scaler, APLL divisor
     ACLKCON1bits.APLLPRE   = 1;     // N1 (non zero)

@@ -36,6 +36,8 @@
 #include "driver/power_controllers/npnz16b.h"
 #include "driver/power_controllers/c2p2z_buck.h"
 
+#include "misc/system.h"
+
 //=======================================================================================================
 // local defines
 //=======================================================================================================
@@ -450,7 +452,7 @@ volatile uint16_t Drv_PowerControllerBuck1_InitACMP(void)
     DAC1CONLbits.CMPPOL = 0; // Comparator Output Polarity Control: Output is non-inverted
     DAC1CONLbits.INSEL = 0b000; // Comparator Input Source Select: feedback is connected to CMPxA input pin
     DAC1CONLbits.HYSPOL = 0; // Comparator Hysteresis Polarity Selection: Hysteresis is applied to the rising edge of the comparator output
-    DAC1CONLbits.HYSSEL = 0b01; // Comparator Hysteresis Selection: 45 mv hysteresis (0 = 0mV, 1 = 15mV, 2 = 30mV, 3 = 45mV)
+    DAC1CONLbits.HYSSEL = 0b01; // Comparator Hysteresis Selection: 15 mv hysteresis (0 = 0mV, 1 = 15mV, 2 = 30mV, 3 = 45mV)
     
     // DACxCONH: DACx CONTROL HIGH REGISTER
     
@@ -550,15 +552,17 @@ volatile uint16_t Drv_PowerControllerBuck1_InitADC(void)
 //=======================================================================================================
 // @brief   Interrupt routine for calling the buck c2p2z compensator and sampling the Output Voltage
 //=======================================================================================================
-void __attribute__((__interrupt__, auto_psv)) _ADCAN13Interrupt(void)
+void __attribute__((__interrupt__, auto_psv, context)) _ADCAN13Interrupt(void)
 {
+DBGPIN_2_SET    
     c2p2z_buck_Update(&c2p2z_buck);     //call the compensator as soon as possible
+DBGPIN_2_CLEAR  
     // the readout of the ADC register is mandatory to make the reset of the interrupt flag stick
     // if we would not read from the ADC register then the interrupt flag would be set immediately after resetting it
     pwrCtrlBuck1_Data.voltageOutput =  ADCBUF13;
     pwrCtrlBuck1_Data.flags.bits.adc_active = true;
     _ADCAN13IF = 0;  // Clear the ADCANx interrupt flag. read from ADCBUFx first to make it stick
-    
+ 
     //TODO: discuss, if we should call the buck_Update routine at first or after resetting the interrupt flag?
 }
 

@@ -36,6 +36,8 @@
 #include "driver/power_controllers/npnz16b.h"
 #include "driver/power_controllers/c2P2Z_boost.h"
 
+#include "misc/system.h"
+
 //=======================================================================================================
 // local defines
 //=======================================================================================================
@@ -585,15 +587,17 @@ volatile uint16_t Drv_PowerControllerBoost1_InitADC(void)
 //=======================================================================================================
 // @brief   Interrupt routine for calling the boost c2p2z compensator and sampling the Output Voltage
 //=======================================================================================================
-void __attribute__((__interrupt__, auto_psv)) _ADCAN18Interrupt(void)
+void __attribute__((__interrupt__, auto_psv, context)) _ADCAN18Interrupt(void)
 {
+DBGPIN_3_SET    
     c2P2Z_boost_Update(&c2P2Z_boost);     //call the compensator as soon as possible
+DBGPIN_3_CLEAR 
     // the readout of the ADC register is mandatory to make the reset of the interrupt flag stick
     // if we would not read from the ADC register then the interrupt flag would be set immediately after resetting it
     pwrCtrlBoost1_Data.voltageOutput =  ADCBUF18;
     pwrCtrlBoost1_Data.flags.bits.adc_active = true;
     _ADCAN18IF = 0;  // Clear the ADCANx interrupt flag. read from ADCBUFx first to make it stick
-    
+   
     //TODO: discuss, if we should call the boost_Update routine at first or after resetting the interrupt flag?
 }
 
