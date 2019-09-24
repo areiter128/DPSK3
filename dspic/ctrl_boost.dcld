@@ -1,12 +1,12 @@
 [GUI]
 CreateDate=07/16/2019 02:55:41 PM
-SaveDate=07/16/2019 04:07:17 PM
+SaveDate=9/24/2019 7:30:02 PM
 Name=z-Domain Control Loop Designer
-Version=0.9.0.61
+Version=0.9.0.60
 WindoWState=Maximized
 Top=-8
 Left=-8
-Height=1066
+Height=1186
 Width=1936
 TabHeight=244
 [ControlSetup]
@@ -42,7 +42,7 @@ ContextSavingMACRegisters=1
 ContextSavingAccumulatorRegisters=1
 ContextSavingCoreConfigRegister=1
 ContextSavingCoreStatusRegister=1
-EnforceCoreConfiguration=0
+EnforceCoreConfiguration=1
 AddEnableDisableFeature=1
 AddErrorNormalization=1
 AddADCTriggerPlacement=0
