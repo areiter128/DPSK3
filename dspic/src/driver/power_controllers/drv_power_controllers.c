@@ -276,7 +276,7 @@ volatile uint16_t Drv_PowerControllers_InitADC(void)
     ADCON3Lbits.CNVCHSEL = 0; // Channel Number Selection for Software Individual Channel Conversion Trigger: AN0 (not used)
     
     // ADCON3H: ADC CONTROL REGISTER 3 HIGH
-    ADCON3Hbits.CLKSEL = 0b01; // ADC Module Clock Source Selection: AVCODIV
+    ADCON3Hbits.CLKSEL = 0b10; // ADC Module Clock Source Selection: AFVCODIV
     ADCON3Hbits.CLKDIV = 0b000000; // ADC Module Clock Source Divider: 1 Source Clock Period
     ADCON3Hbits.SHREN = 0; // Shared ADC Core Enable: Shared ADC core is disabled
     ADCON3Hbits.C0EN = 0; // Dedicated ADC Core 0 Enable: Dedicated ADC Core 0 is disabled
@@ -343,7 +343,7 @@ volatile uint16_t Drv_PowerControllers_InitVinADC(void)
     
     // ADCMPxCON: ADC DIGITAL COMPARATOR x CONTROL REGISTER
     ADCMP0CONbits.CHNL = 12; // Input Channel Number: 12=AN12
-    ADCMP0CONbits.CMPEN = 1; // Comparator Enable: Comparator is enabled
+    ADCMP0CONbits.CMPEN = 0; // Comparator Enable: Comparator is disabled
     ADCMP0CONbits.IE = 0; // Comparator Common ADC Interrupt Enable: Common ADC interrupt will not be generated for the comparator
     ADCMP0CONbits.BTWN = 0; // Between Low/High Comparator Event: Disabled
     ADCMP0CONbits.HIHI = 1; // High/High Comparator Event: Enabled

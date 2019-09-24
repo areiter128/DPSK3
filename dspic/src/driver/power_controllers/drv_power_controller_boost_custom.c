@@ -271,15 +271,15 @@ volatile uint16_t Drv_PowerControllerBoost1_InitPWM(void)
     PG2CLPCIHbits.ACP       = 0b011;        // PCI Acceptance Mode: Latched
     PG2CLPCIHbits.SWPCI     = 0b0;          // Drives a '0' to PCI logic assigned to by the SWPCIM<1:0> control bits
     PG2CLPCIHbits.SWPCIM    = 0b00;         // SWPCI bit is assigned to PCI acceptance logic
-    PG2CLPCIHbits.PCIGT     = 0b1;          // SR latch is Reset-dominant in Latched Acceptance modes; ToDo: Why is this not called LATMOD?
-    PG2CLPCIHbits.TQPS      = 0b1;          // Termination Qualifier (0= not inverted, 1= inverted)
-    PG2CLPCIHbits.TQSS      = 0b100;        // Termination Qualifier Source: PCI Source #1 (PWM Generator output selected by the PWMPCI<2:0> bits)
+    PG2CLPCIHbits.PCIGT     = 0b0;          // SR latch is Set-dominant in Latched Acceptance modes; ToDo: Why is this not called LATMOD?
+    PG2CLPCIHbits.TQPS      = 0b0;          // Termination Qualifier (0= not inverted, 1= inverted)
+    PG2CLPCIHbits.TQSS      = 0b000;        // Termination Qualifier Source: PCI Source #1 (PWM Generator output selected by the PWMPCI<2:0> bits)
     
     // PGCLPCIL: PWM GENERATOR CL PCI REGISTER LOW
     PG2CLPCILbits.TSYNCDIS  = 0;            // Termination of latched PCI occurs at PWM EOC
     PG2CLPCILbits.TERM      = 0b001;        // Termination Event: Terminate when Comparator 2 output transitions from active to inactive
-    PG2CLPCILbits.AQPS      = 0b0;          // Acceptance Qualifier signal is non-inverted
-    PG2CLPCILbits.AQSS      = 0b100;        // Acceptance Qualifier: PCI Source #1 (PWM Generator output selected by the PWMPCI<2:0> bits) 
+    PG2CLPCILbits.AQPS      = 0b1;          // Acceptance Qualifier signal is non-inverted
+    PG2CLPCILbits.AQSS      = 0b010;        // Acceptance Qualifier: LEB
     PG2CLPCILbits.SWTERM    = 0b0;          // A write of '1' to this location will produce a termination event. This bit location always reads as '0'.
     PG2CLPCILbits.PSYNC     = 0;            // PCI source is not synchronized to PWM EOC
     PG2CLPCILbits.PPS       = 0;            // Non-inverted PCI polarity
@@ -369,7 +369,7 @@ volatile uint16_t Drv_PowerControllerBoost1_InitAuxiliaryPWM(void)
     PG4CONHbits.MSTEN = 0; // Master Update Enable: PWM Generator does not broadcast the UPDREQ status bit state or EOC signal
     PG4CONHbits.UPDMOD = 0b000; // PWM Buffer Update Mode Selection: SOC update
     PG4CONHbits.TRGMOD = 0; // PWM Generator Trigger Mode Selection: PWM Generator operates in single trigger mode
-    PG4CONHbits.SOCS = 3;   // Start-of-Cycle Selection: Trigger output selected by PG3 PGTRGSEL<2:0> bits (PGxEVTL<2:0>)
+    PG4CONHbits.SOCS = 2;   // Start-of-Cycle Selection: Trigger output selected by PG2 PGTRGSEL<2:0> bits (PGxEVTL<2:0>)
 
     // PGxIOCONH: PWM GENERATOR x I/O CONTROL REGISTER LOW
     PG4IOCONL = 0x0000;
@@ -397,7 +397,7 @@ volatile uint16_t Drv_PowerControllerBoost1_InitAuxiliaryPWM(void)
     PG4EVTHbits.ADTR2EN3    = 0b0;          // PG4TRIGC register compare event is disabled as trigger source for ADC Trigger 2
     PG4EVTHbits.ADTR2EN2    = 0b0;          // PG4TRIGB register compare event is disabled as trigger source for ADC Trigger 2
     PG4EVTHbits.ADTR2EN1    = 0b0;          // PG4TRIGA register compare event is disabled as trigger source for ADC Trigger 2
-    PG4EVTHbits.ADTR1OFS    = 0b00000;      // ADC Trigger 1 offset = no offset 
+    PG4EVTHbits.ADTR1OFS    = 0b00001;      // ADC Trigger 1 offset = 1 cycle offset 
     
     // Reset PCI control registers
     PG4CLPCIH       = 0x0000;           // PWM GENERATOR CL PCI REGISTER HIGH
@@ -470,7 +470,7 @@ volatile uint16_t Drv_PowerControllerBoost1_InitACMP(void)
     // DACxCONL: DACx CONTROL LOW REGISTER
     DAC2CONLbits.DACEN = 0; // Individual DACx Module Enable: Disables DACx module during configuration
     DAC2CONLbits.IRQM = 0b00; // Interrupt Mode Selection: Interrupts are disabled
-    DAC2CONLbits.CBE = 1; // Comparator Blank Enable: Enables the analog comparator output to be blanked (gated off) during the recovery transition following the completion of a slope operation
+    DAC2CONLbits.CBE = 0; // Comparator Blank Enable: Disables the analog comparator output to be blanked (gated off) during the recovery transition following the completion of a slope operation
     DAC2CONLbits.DACOEN = 0; // DACx Output Buffer Enable: disabled for this module
     // DAC2CONLbits.CMPSTAT (read only bit)
     
@@ -479,7 +479,7 @@ volatile uint16_t Drv_PowerControllerBoost1_InitACMP(void)
     DAC2CONLbits.CMPPOL = 0; // Comparator Output Polarity Control: Output is non-inverted
     DAC2CONLbits.INSEL = 0b011; // Comparator Input Source Select: feedback is connected to CMPxD input pin
     DAC2CONLbits.HYSPOL = 0; // Comparator Hysteresis Polarity Selection: Hysteresis is applied to the rising edge of the comparator output
-    DAC2CONLbits.HYSSEL = 0b01; // Comparator Hysteresis Selection: 45 mv hysteresis (0 = 0mV, 1 = 15mV, 2 = 30mV, 3 = 45mV)
+    DAC2CONLbits.HYSSEL = 0b01; // Comparator Hysteresis Selection: 15 mV hysteresis (0 = 0mV, 1 = 15mV, 2 = 30mV, 3 = 45mV)
     
     // DACxCONH: DACx CONTROL HIGH REGISTER
     
@@ -544,7 +544,7 @@ volatile uint16_t Drv_PowerControllerBoost1_InitADC(void)
     ADMOD1Lbits.DIFF18 = 0; // Differential-Mode for Corresponding Analog Inputs: Channel is single-ended
     ADMOD1Lbits.SIGN18 = 0; // Output Data Sign for Corresponding Analog Inputs: Channel output data are unsigned
     
-    // ADEIEL: ADC EARLY INTERRUPT ENABLE REGISTER LOW
+    // ADEIEH: ADC EARLY INTERRUPT ENABLE REGISTER LOW
     ADEIEHbits.EIEN18 = 1; // Early interrupt is enabled for the channel
     
     // ADIEL: ADC INTERRUPT ENABLE REGISTER LOW
@@ -585,7 +585,7 @@ volatile uint16_t Drv_PowerControllerBoost1_InitADC(void)
 //=======================================================================================================
 // @brief   Interrupt routine for calling the boost c2p2z compensator and sampling the Output Voltage
 //=======================================================================================================
-void __attribute__((__interrupt__, auto_psv)) _ADCAN18Interrupt(void)
+void __attribute__((__interrupt__, auto_psv, context)) _ADCAN18Interrupt(void)
 {
     c2P2Z_boost_Update(&c2P2Z_boost);     //call the compensator as soon as possible
     // the readout of the ADC register is mandatory to make the reset of the interrupt flag stick
