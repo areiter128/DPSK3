@@ -399,7 +399,7 @@ volatile uint16_t Drv_PowerControllerBoost1_InitAuxiliaryPWM(void)
     PG4EVTHbits.ADTR2EN3    = 0b0;          // PG4TRIGC register compare event is disabled as trigger source for ADC Trigger 2
     PG4EVTHbits.ADTR2EN2    = 0b0;          // PG4TRIGB register compare event is disabled as trigger source for ADC Trigger 2
     PG4EVTHbits.ADTR2EN1    = 0b0;          // PG4TRIGA register compare event is disabled as trigger source for ADC Trigger 2
-    PG4EVTHbits.ADTR1OFS    = 0b00000;      // ADC Trigger 1 offset = no offset 
+    PG4EVTHbits.ADTR1OFS    = 0b00001;      // ADC Trigger 1 offset = no offset 
     
     // Reset PCI control registers
     PG4CLPCIH       = 0x0000;           // PWM GENERATOR CL PCI REGISTER HIGH
