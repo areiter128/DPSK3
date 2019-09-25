@@ -35,7 +35,7 @@
 #include "driver/power_controllers/drv_power_controllers.h"
 #include "driver/power_controllers/drv_power_controller_boost_generic.h"
 
-
+#include <misc/system.h>
 //=======================================================================================================
 // local defines
 //=======================================================================================================
@@ -141,11 +141,11 @@ void Drv_PowerControllerBoost_Task_100us(POWER_CONTROLLER_DATA_t* pPCData)
                 
                 if (++(pPCData->averageCounter) == 8) 
                 {
-                    pPCData->voltageInput = vin_avg >> 3;
+                    voltageInput = vin_avg >> 3;
                     vin_avg = 0;    // Reset averaging buffer
 
                     // Recently established input voltage value serves as initial reference value for the output
-                    pPCData->voltageRef_compensator = pPCData->voltageInput;
+                    pPCData->voltageRef_compensator = voltageInput;
                     
                     // Establishing magnitude of single step for the upcoming ramp-up phase
                     pPCData->voltageRef_rampStep = (uint16_t)((pPCData->voltageRef_softStart - pPCData->voltageRef_compensator)/(pPCData->voltageRef_rampPeriod_100us + 1));
@@ -165,7 +165,7 @@ void Drv_PowerControllerBoost_Task_100us(POWER_CONTROLLER_DATA_t* pPCData)
             Drv_PowerControllerBoost_MonitorVoltageLimits(pPCData);
            
             newClamp = *(pPCData->compClampMax) + pPCData->currentClamp_rampStep;
-//            newClamp     = c2P2Z_boost.MaxOutput + pPCData->currentClamp_rampStep;
+
             if (newClamp < pPCData->compMaxOutput)
             {
                 *(pPCData->compClampMax) = newClamp;
@@ -198,6 +198,12 @@ void Drv_PowerControllerBoost_Task_100us(POWER_CONTROLLER_DATA_t* pPCData)
             break;
                  
         case PCS_UP_AND_RUNNING:   // Soft start is complete, system is running
+          
+            if(_AN12RDY)
+            {
+                voltageInput = ADCBUF12; 
+                _ADCAN12IF = 0;
+            }
             
             // Checking output voltage limits
             Drv_PowerControllerBoost_MonitorVoltageLimits(pPCData);

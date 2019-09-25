@@ -214,7 +214,8 @@ typedef struct
     volatile int16_t *compClampMax;
    }POWER_CONTROLLER_DATA_t;                       // power control soft-start settings and variables
 
-
+extern volatile uint16_t voltageInput;             // Board Input Voltage measured by the ADC
+   
 extern void Drv_PowerControllers_Init(void);
 extern void Drv_PowerControllers_Task_100us(void);
 

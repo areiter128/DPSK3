@@ -555,8 +555,14 @@ void __attribute__((__interrupt__, auto_psv, context)) _ADCAN13Interrupt(void)
     c2p2z_buck_Update(&c2p2z_buck);     //call the compensator as soon as possible
     // the readout of the ADC register is mandatory to make the reset of the interrupt flag stick
     // if we would not read from the ADC register then the interrupt flag would be set immediately after resetting it
+    
+    // Triggering AD conversion for Vin
+    ADCON3Lbits.SWCTRG = 1; // Single trigger is generated, this bit it is automatically cleared by
+                            // hardware on the next instruction cycle
+
     pwrCtrlBuck1_Data.voltageOutput =  ADCBUF13;
     pwrCtrlBuck1_Data.flags.bits.adc_active = true;
+      
     _ADCAN13IF = 0;  // Clear the ADCANx interrupt flag. read from ADCBUFx first to make it stick
     
     //TODO: discuss, if we should call the buck_Update routine at first or after resetting the interrupt flag?

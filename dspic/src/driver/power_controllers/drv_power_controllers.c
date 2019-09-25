@@ -46,6 +46,8 @@
 #define VIN_ADC_RESOLUTION    4095UL          // 12 bits
 #define VIN_FEEDBACK_GAIN     0.1253          // 1k /(1k+6.98k)
 
+volatile uint16_t voltageInput = 0;
+
 static inline void Drv_PowerControllerVinMeas_Task_100us(POWER_CONTROLLER_DATA_t* pPCData);
 
 //=======================================================================================================
@@ -85,7 +87,7 @@ uint16_t GetDacBoost(void)
 //=======================================================================================================
 volatile double Drv_PowerController_GetInputVoltage()
 {
-    return (double)(((unsigned long)pwrCtrlBoost1_Data.voltageInput * VIN_ADC_REFERENCE) / (VIN_FEEDBACK_GAIN * VIN_ADC_RESOLUTION));
+    return (double)(((unsigned long)voltageInput * VIN_ADC_REFERENCE) / (VIN_FEEDBACK_GAIN * VIN_ADC_RESOLUTION));
 }
 
 void Drv_PowerControllers_Init(void)
@@ -106,7 +108,7 @@ void Drv_PowerControllers_Task_100us(void)
     // PWMs get enabled.
     Drv_PowerControllerBoost_Task_100us(&pwrCtrlBoost1_Data);
     Drv_PowerControllerBuck_Task_100us(&pwrCtrlBuck1_Data);
-    Drv_PowerControllerVinMeas_Task_100us(&pwrCtrlBuck1_Data);
+//    Drv_PowerControllerVinMeas_Task_100us(&pwrCtrlBuck1_Data);
     
 }
 
@@ -339,7 +341,7 @@ volatile uint16_t Drv_PowerControllers_InitVinADC(void)
     ADIELbits.IE12 = 1; // Common Interrupt Enable: Common and individual interrupts are disabled for the corresponding channel
     
     // ADTRIGnL/ADTRIGnH: ADC CHANNEL TRIGGER n(x) SELECTION REGISTERS LOW AND HIGH
-    ADTRIG3Lbits.TRGSRC12 = 0b00101; // Trigger Source Selection for Corresponding Analog Inputs: PWM1 Trigger 2
+    ADTRIG3Lbits.TRGSRC12 = 0b00001; // Trigger Source Selection for Corresponding Analog Inputs: Common software trigger
     
     // ADCMPxCON: ADC DIGITAL COMPARATOR x CONTROL REGISTER
     ADCMP0CONbits.CHNL = 12; // Input Channel Number: 12=AN12

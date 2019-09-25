@@ -133,29 +133,10 @@ void Drv_PowerControllerBuck_Task_100us(POWER_CONTROLLER_DATA_t* pPCData)
         case PCS_WAIT_FOR_ADC_ACTIVE:    // wait until the power controller is active
             if (pPCData->flags.bits.adc_active)
             {
-                buckPC_GotoState(pPCData, PCS_MEASURE_INPUT_VOLTAGE);
+                buckPC_GotoState(pPCData, PCS_RAMP_UP_VOLTAGE);
             }
             break;
-        case PCS_MEASURE_INPUT_VOLTAGE:  // take 8 samples of input voltage and calculate average value  
-        {    
-            volatile uint16_t samp = 0;
-           
-            if (_AN12RDY) 
-            {
-                samp     = ADCBUF12; // Read latest sample
-                vin_avg += samp;
-                _ADCAN12IF = 0;
-                
-                if (++(pPCData->averageCounter) == 8) 
-                {
-                    pPCData->voltageInput = vin_avg >> 3;
-                    vin_avg = 0;    // Reset averaging buffer
 
-                    buckPC_GotoState(pPCData, PCS_RAMP_UP_VOLTAGE);
-                }
-            }
-            break;
-        }
         case PCS_RAMP_UP_VOLTAGE: // Increasing the voltage reference for buck by ramp_step every scheduler cycle
         {
             uint16_t newReference;
@@ -184,6 +165,13 @@ void Drv_PowerControllerBuck_Task_100us(POWER_CONTROLLER_DATA_t* pPCData)
             break;
                  
         case PCS_UP_AND_RUNNING:   // Soft start is complete, system is running, nothing to do
+            
+            if(_AN12RDY)
+            {
+                voltageInput = ADCBUF12; 
+                _ADCAN12IF = 0;
+            }
+            
             Drv_PowerControllerBuck_MonitorVoltageLimits(pPCData);
             break;
 
