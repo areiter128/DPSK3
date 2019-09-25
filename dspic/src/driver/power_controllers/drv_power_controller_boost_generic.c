@@ -131,21 +131,14 @@ void Drv_PowerControllerBoost_Task_100us(POWER_CONTROLLER_DATA_t* pPCData)
             break;
         case PCS_MEASURE_INPUT_VOLTAGE:  // take 8 samples of input voltage and calculate average value  
         {    
-            volatile uint16_t samp = 0;
-           
-            if (_AN12RDY) 
-            {
-                samp     = ADCBUF12; // Read latest sample
-                vin_avg += samp;
-                _ADCAN12IF = 0;
+                vin_avg += voltage_input_adc;
                 
                 if (++(pPCData->averageCounter) == 8) 
                 {
-                    voltage_input_adc = vin_avg >> 3;
                     vin_avg = 0;    // Reset averaging buffer
 
                     // Recently established input voltage value serves as initial reference value for the output
-                    pPCData->voltageRef_compensator = voltage_input_adc;
+                    pPCData->voltageRef_compensator = vin_avg >> 3;;
                     
                     // Establishing magnitude of single step for the upcoming ramp-up phase
                     pPCData->voltageRef_rampStep = (uint16_t)((pPCData->voltageRef_softStart - pPCData->voltageRef_compensator)/(pPCData->voltageRef_rampPeriod_100us + 1));
@@ -154,7 +147,6 @@ void Drv_PowerControllerBoost_Task_100us(POWER_CONTROLLER_DATA_t* pPCData)
                     }               
                     boostPC_GotoState(pPCData, PCS_RAMP_UP_VOLTAGE);
                 }
-            }
             break;
         }         
         case PCS_RAMP_UP_VOLTAGE: // Increasing the voltage reference and compensator clamp for boost every scheduler cycle
@@ -199,12 +191,6 @@ void Drv_PowerControllerBoost_Task_100us(POWER_CONTROLLER_DATA_t* pPCData)
                  
         case PCS_UP_AND_RUNNING:   // Soft start is complete, system is running
           
-            if(_AN12RDY)
-            {
-                voltage_input_adc = ADCBUF12; 
-                _ADCAN12IF = 0;
-            }
-            
             // Checking output voltage limits
             Drv_PowerControllerBoost_MonitorVoltageLimits(pPCData);
             break;

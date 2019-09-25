@@ -166,12 +166,7 @@ void Drv_PowerControllerBuck_Task_100us(POWER_CONTROLLER_DATA_t* pPCData)
                  
         case PCS_UP_AND_RUNNING:   // Soft start is complete, system is running, nothing to do
             
-            if(_AN12RDY)
-            {
-                voltage_input_adc = ADCBUF12; 
-                _ADCAN12IF = 0;
-            }
-            
+            // Checking output voltage limits
             Drv_PowerControllerBuck_MonitorVoltageLimits(pPCData);
             break;
 

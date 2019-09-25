@@ -229,7 +229,6 @@ typedef struct
     volatile uint16_t averageCounter;           // average value calculation counter
     volatile uint16_t timeCounter;              // Soft-Start Execution Counter
     volatile PWR_CTRL_STATE_INT_e pc_state_internal;   // state of the power control state machine
-//    volatile uint16_t voltageInput;             // Input Voltage measured by the ADC
     volatile uint16_t voltageOutput;            // Output Voltage measured by the ADC
     volatile uint16_t voltageRef_softStart;     // target voltage reference value for soft start
     volatile uint16_t voltageRef_compensator;   // voltage reference for the compensator
