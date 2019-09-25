@@ -101,6 +101,7 @@ void Tasks_100us(void)
 
     Drv_PowerControllers_Task_100us();
     //exec_boos_pwr_control();
+    App_Fault_Handling_Task_100us();
 }
 
 //=======================================================================================================

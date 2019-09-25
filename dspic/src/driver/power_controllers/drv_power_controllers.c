@@ -42,28 +42,57 @@
 // local defines
 //=======================================================================================================
 // 
-#define VIN_ADC_REFERENCE     3.3             // 3.3 Volts ==> maximum ADC-Value
-#define VIN_ADC_RESOLUTION    4095UL          // 12 bits
-#define VIN_FEEDBACK_GAIN     0.1253          // 1k /(1k+6.98k)
+#define VIN_ADC_REFERENCE           3.3     // 3.3 Volts ==> maximum ADC-Value
+#define VIN_ADC_RESOLUTION          4095UL  // 12 bits
+#define VIN_FEEDBACK_GAIN           0.1253  // 1k /(1k+6.98k)
+#define VIN_ACD_REF_DIV_GAIN_1000   26334   // (3.3*1000) / (1k /(1k+6.98k))
 
-volatile uint16_t voltageInput = 0;
+volatile uint16_t voltage_input_adc = 0;    // Input Voltage measured by the ADC
 
-static inline void Drv_PowerControllerVinMeas_Task_100us(POWER_CONTROLLER_DATA_t* pPCData);
+
+volatile uint16_t Drv_PowerControllers_InitPWM(void);
+volatile uint16_t Drv_PowerControllers_InitACMP(void);
+volatile uint16_t Drv_PowerControllers_InitADC(void);
+volatile uint16_t Drv_PowerControllers_InitVinADC(void);
+
 
 //=======================================================================================================
-// @brief   wrapper function returns the Output Voltage in Volts as a double 
+// @brief   Initializes the power controllers
+// @note    Call this function from your main.c
 //=======================================================================================================
-double GetVoltageBoost(void)    
+void Drv_PowerControllers_Init(void)
 {
-    return Drv_PowerControllerBoost1_GetOutputVoltage();
+    // Basic setup of common power controller peripheral modules
+    Drv_PowerControllers_InitPWM();    // Set up PWM module (basic module configuration)
+    Drv_PowerControllers_InitACMP();   // Set up analog comparator/DAC module
+    Drv_PowerControllers_InitADC();    // Set up Analog-To-Digital converter module
+    Drv_PowerControllers_InitVinADC(); // Initialize ADC Channel to measure input voltage
+    
+    // Init all Buck Converter instances
+    Drv_PowerControllerBuck1_Init(true);                       // Init Buck Converter 1
+    Drv_PowerControllerBuck1_SetOutputVoltageReference_mV(BUCK1_VREF_mV); //Set Buck Converter Output to 3.3 Volt
+
+    // Init all Boost Converter instances
+    Drv_PowerControllerBoost1_Init(true);                       // Init Boost Convert 1
+    Drv_PowerControllerBoost1_SetOutputVoltageReference_mV(BOOST1_VREF_mV); //Set Boost Converter Output
+}
+
+
+//=======================================================================================================
+// @brief   returns the Input Voltage in Volts as a double
+//=======================================================================================================
+double Drv_PowerControllers_GetInputVoltage(void)
+{
+    return (double)(((unsigned long)voltage_input_adc * VIN_ADC_REFERENCE) / (VIN_FEEDBACK_GAIN * VIN_ADC_RESOLUTION));
 }
 
 //=======================================================================================================
-// @brief   wrapper function returns the Input Voltage in Volts as a double 
+// @brief   returns the Input Voltage in Millivolts
 //=======================================================================================================
-double GetVoltageInput(void)     
+uint32_t Drv_PowerControllers_GetInputVoltage_mV(void)
 {
-    return Drv_PowerController_GetInputVoltage();
+//    return ((uint32_t)voltage_input_adc * VIN_ADC_REFERENCE*1000) / (VIN_FEEDBACK_GAIN * VIN_ADC_RESOLUTION);
+    return ((uint32_t)voltage_input_adc * VIN_ACD_REF_DIV_GAIN_1000) / VIN_ADC_RESOLUTION;
 }
 
 //=======================================================================================================
@@ -82,25 +111,11 @@ uint16_t GetDacBoost(void)
     return DAC2DATH;
 }
 
+
 //=======================================================================================================
-// @brief   returns the Input Voltage in Volts as a double
+// @brief   power controller task
+// @note    call this every 100 µs from your task loop
 //=======================================================================================================
-volatile double Drv_PowerController_GetInputVoltage()
-{
-    return (double)(((unsigned long)voltageInput * VIN_ADC_REFERENCE) / (VIN_FEEDBACK_GAIN * VIN_ADC_RESOLUTION));
-}
-
-void Drv_PowerControllers_Init(void)
-{
-    // Init all Buck Converter instances
-    Drv_PowerControllerBuck1_Init(true);                       // Init Buck Converter 1
-    Drv_PowerControllerBuck1_SetOutputVoltageReference_mV(BUCK1_VREF_mV); //Set Buck Converter Output to 3.3 Volt
-
-    // Init all Boost Converter instances
-    Drv_PowerControllerBoost1_Init(true);                       // Init Boost Convert 1
-    Drv_PowerControllerBoost1_SetOutputVoltageReference_mV(BOOST1_VREF_mV); //Set Boost Converter Output
-}
-
 void Drv_PowerControllers_Task_100us(void)
 {
     // Boost converter PWM generators are triggered by auxiliary PWM of the buck regulator,
@@ -108,20 +123,17 @@ void Drv_PowerControllers_Task_100us(void)
     // PWMs get enabled.
     Drv_PowerControllerBoost_Task_100us(&pwrCtrlBoost1_Data);
     Drv_PowerControllerBuck_Task_100us(&pwrCtrlBuck1_Data);
-//    Drv_PowerControllerVinMeas_Task_100us(&pwrCtrlBuck1_Data);
-    
-}
 
-static inline void Drv_PowerControllerVinMeas_Task_100us(POWER_CONTROLLER_DATA_t* pPCData)
-{
     // Reading input voltage
     if (_AN12RDY)
     {
-        pwrCtrlBuck1_Data.voltageInput  = ADCBUF12;
-        pwrCtrlBoost1_Data.voltageInput = ADCBUF12;
+        voltage_input_adc = ADCBUF12;
         _ADCAN12IF = 0;
+        //pwrCtrlBuck1_Data.voltageInput  = voltage_input_adc;
+        //pwrCtrlBoost1_Data.voltageInput = voltage_input_adc;
     }
 }
+
 
 volatile uint16_t Drv_PowerControllers_InitPWM(void)
 {
@@ -207,6 +219,7 @@ volatile uint16_t Drv_PowerControllers_InitPWM(void)
     return(1);
 }
 
+
 volatile uint16_t Drv_PowerControllers_InitACMP(void)
 {
     // Make sure power is turned off to comparator modules
@@ -239,6 +252,7 @@ volatile uint16_t Drv_PowerControllers_InitACMP(void)
     
     return(1);
 }
+
 
 volatile uint16_t Drv_PowerControllers_InitADC(void)
 {
@@ -322,6 +336,7 @@ volatile uint16_t Drv_PowerControllers_InitADC(void)
     return(1);
 }
 
+
 volatile uint16_t Drv_PowerControllers_InitVinADC(void)
 {
     // ANSELx: ANALOG SELECT FOR PORTx REGISTER
@@ -372,6 +387,7 @@ volatile uint16_t Drv_PowerControllers_InitVinADC(void)
     return(1);
 }
 
+
 volatile uint16_t Drv_PowerControllers_LaunchADC(void)
 {
     volatile uint16_t timeout=0;
@@ -413,3 +429,4 @@ volatile uint16_t Drv_PowerControllers_LaunchADC(void)
     
     return(1);
 }
+

@@ -79,7 +79,7 @@ void Drv_PowerControllerBoost_Init(POWER_CONTROLLER_DATA_t* pPCData, bool autost
     pPCData->voltageRef_compensator = 0;                // 2047 for 3.3V
     pPCData->voltageRef_softStart = 0;                  // 2047 for 3.3V
     pPCData->voltageOutput = 0;
-    pPCData->voltageInput  = 0;
+    //pPCData->voltageInput  = 0;
     pPCData->flags.value = 0;                           // reset everything
     pPCData->flags.bits.adc_active = false;
     pPCData->flags.bits.auto_start = autostart;
@@ -141,11 +141,11 @@ void Drv_PowerControllerBoost_Task_100us(POWER_CONTROLLER_DATA_t* pPCData)
                 
                 if (++(pPCData->averageCounter) == 8) 
                 {
-                    voltageInput = vin_avg >> 3;
+                    voltage_input_adc = vin_avg >> 3;
                     vin_avg = 0;    // Reset averaging buffer
 
                     // Recently established input voltage value serves as initial reference value for the output
-                    pPCData->voltageRef_compensator = voltageInput;
+                    pPCData->voltageRef_compensator = voltage_input_adc;
                     
                     // Establishing magnitude of single step for the upcoming ramp-up phase
                     pPCData->voltageRef_rampStep = (uint16_t)((pPCData->voltageRef_softStart - pPCData->voltageRef_compensator)/(pPCData->voltageRef_rampPeriod_100us + 1));
@@ -201,7 +201,7 @@ void Drv_PowerControllerBoost_Task_100us(POWER_CONTROLLER_DATA_t* pPCData)
           
             if(_AN12RDY)
             {
-                voltageInput = ADCBUF12; 
+                voltage_input_adc = ADCBUF12; 
                 _ADCAN12IF = 0;
             }
             

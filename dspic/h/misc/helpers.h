@@ -2,9 +2,10 @@
 
 #include "stdio.h"
 #include "device/dev_lcd.h"
+#include "device/dev_uart1.h"
 
 #define TEMPSTR_LCD_SIZE        40
-#define TEMPSTR_SERIAL_SIZE    120
+#define TEMPSTR_SERIAL_SIZE    140
 
 //void PrintLcd(uint8_t linenumber, ...);
 

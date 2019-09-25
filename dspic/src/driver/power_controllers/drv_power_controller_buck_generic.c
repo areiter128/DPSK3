@@ -168,7 +168,7 @@ void Drv_PowerControllerBuck_Task_100us(POWER_CONTROLLER_DATA_t* pPCData)
             
             if(_AN12RDY)
             {
-                voltageInput = ADCBUF12; 
+                voltage_input_adc = ADCBUF12; 
                 _ADCAN12IF = 0;
             }
             

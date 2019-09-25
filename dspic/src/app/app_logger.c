@@ -28,12 +28,14 @@
 void App_Logger_Init(void)
 {
     Dev_UART1_Init();
+    PrintSerial("\033[2J");
 }
 
 
 void App_Logger_LogData(void)
 {
     double volt2;
+    PrintSerial("\033[1;1H");
     PrintSerial("==================================\n\r");
     PrintSerial("Packet count = %d\n\r", global_data.pic24_packet_counter);
     PrintSerial("Vbuck  =  %2.2f V\n\r", global_data.buck.output_voltage);

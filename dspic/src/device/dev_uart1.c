@@ -30,7 +30,7 @@
 //======================================================================================================================
 // @brief UART1 Driver Queue Length, defines the length of the Transmit and Receive Buffers
 //======================================================================================================================
-#define UART1_CONFIG_TX_BYTEQ_LENGTH 300
+#define UART1_CONFIG_TX_BYTEQ_LENGTH 350
 #define UART1_CONFIG_RX_BYTEQ_LENGTH 8
 
 
