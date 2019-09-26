@@ -31,6 +31,38 @@
 #include <stdbool.h>
 #include <stdint.h>
 
+
+//=======================================================================================================
+// @brief   Initializes the power controllers
+// @note    Call this function from your main.c
+//=======================================================================================================
+extern void Drv_PowerControllers_Init(void);
+
+
+//=======================================================================================================
+// @brief   power controller task
+// @note    call this every 100 µs from your task loop
+//=======================================================================================================
+extern void Drv_PowerControllers_Task_100us(void);
+
+
+//=======================================================================================================
+// @brief   returns the Input Voltage in Volts as a double
+//=======================================================================================================
+extern double Drv_PowerControllers_GetInputVoltage(void);
+
+
+//=======================================================================================================
+// @brief   returns the Input Voltage in Millivolts
+//=======================================================================================================
+extern uint32_t Drv_PowerControllers_GetInputVoltage_mV(void);
+
+
+
+
+
+
+
 #define BUCK1_VREF               3.3   // [V]; Voltage reference for boost converter
 #define BUCK1_SLEW_RATE          0.3 // Compensation ramp in [V/usec] (SLPxDAT is calculated below)
 #define BUCK1_VREF_RAMPUP_PERIOD 100e-3  // [s]; Vref ramp-up period for buck converter
@@ -152,7 +184,8 @@ typedef enum
     PCS_MEASURE_INPUT_VOLTAGE    = 5,    // measure input voltage
     PCS_RAMP_UP_VOLTAGE          = 6,    // Soft-Start Ramp Up Output Voltage
     PCS_WAIT_FOR_POWER_OUT_GOOD  = 7,    // Soft-Start wait to stabilize
-    PCS_UP_AND_RUNNING           = 8     // Soft-Start is complete, power is up and running
+    PCS_UP_AND_RUNNING           = 8,    // Soft-Start is complete, power is up and running
+    PCS_SHUTDOWN                 = 9     // shutting down the controller/reference voltage
 }PWR_CTRL_STATE_INT_e;
 
 
@@ -185,6 +218,7 @@ typedef union {
 } POWER_CONTROLLER_FLAGS_t;                  // SEPIC operation status bits
 
 typedef void (*pCallback_t)(void);
+typedef bool (*pCallbackBool_t)(void);
 
 typedef struct
 {
@@ -197,7 +231,6 @@ typedef struct
     volatile uint16_t averageCounter;           // average value calculation counter
     volatile uint16_t timeCounter;              // Soft-Start Execution Counter
     volatile PWR_CTRL_STATE_INT_e pc_state_internal;   // state of the power control state machine
-    volatile uint16_t voltageInput;             // Input Voltage measured by the ADC
     volatile uint16_t voltageOutput;            // Output Voltage measured by the ADC
     volatile uint16_t voltageRef_softStart;     // target voltage reference value for soft start
     volatile uint16_t voltageRef_compensator;   // voltage reference for the compensator
@@ -211,25 +244,19 @@ typedef struct
     volatile pCallback_t ftkEnableControlLoop;  // Controller calls this function to enable the control Loop
     volatile pCallback_t ftkDisableControlLoop; // Controller calls this function to disable the control Loop
     volatile pCallback_t ftkLaunchPeripherals;  // Controller calls this function to launch the peripherals
+    volatile pCallbackBool_t ftkFaultDetected;  // Controller calls this function for deciding startup/shutdown
     volatile int16_t *compClampMax;
    }POWER_CONTROLLER_DATA_t;                       // power control soft-start settings and variables
 
-extern volatile uint16_t voltageInput;             // Board Input Voltage measured by the ADC
-   
-extern void Drv_PowerControllers_Init(void);
-extern void Drv_PowerControllers_Task_100us(void);
-
-extern volatile uint16_t Drv_PowerControllers_InitPWM(void);
-extern volatile uint16_t Drv_PowerControllers_InitACMP(void);
-extern volatile uint16_t Drv_PowerControllers_InitADC(void);
-extern volatile uint16_t Drv_PowerControllers_InitVinADC(void);
 extern volatile uint16_t Drv_PowerControllers_LaunchADC(void);
 
-volatile double Drv_PowerController_GetInputVoltage(void);
 
-double GetVoltageBoost(void);
-double GetVoltageInput(void);
+//TODO: change names of that functions and move it to the proper place
+//double GetVoltageBoost(void);
+//double GetVoltageInput(void);
 uint16_t GetDacBuck(void);
 uint16_t GetDacBoost(void);
+
+extern volatile uint16_t voltage_input_adc;    // Input/Supply Voltage measured by the ADC
 
 #endif  //_DRV_POWER_CONTROLLERS_H_

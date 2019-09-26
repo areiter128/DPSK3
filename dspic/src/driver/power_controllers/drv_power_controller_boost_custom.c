@@ -68,7 +68,7 @@ POWER_CONTROLLER_DATA_t pwrCtrlBoost1_Data;      // data instance for the boost 
 //=======================================================================================================
 double Drv_PowerControllerBoost1_GetInputVoltage()
 {
-    return (double)(((unsigned long)voltageInput * BOOST1_ADC_REFERENCE) / (BOOST1_VIN_GAIN * BOOST1_ADC_RESOLUTION));
+    return (double)(((unsigned long)voltage_input_adc * BOOST1_ADC_REFERENCE) / (BOOST1_VIN_GAIN * BOOST1_ADC_RESOLUTION));
 }
 
 //=======================================================================================================

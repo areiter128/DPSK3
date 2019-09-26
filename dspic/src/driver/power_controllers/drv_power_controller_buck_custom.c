@@ -35,6 +35,7 @@
 #include "driver/power_controllers/drv_power_controller_buck_custom.h"
 #include "driver/power_controllers/npnz16b.h"
 #include "driver/power_controllers/c2p2z_buck.h"
+#include "app/app_fault_handling.h"
 
 //=======================================================================================================
 // local defines
@@ -111,6 +112,13 @@ void Drv_PowerControllerBuck1_LaunchPeripherals(void)
     Drv_PowerControllerBuck1_LaunchPWM();           // Start PWM
 }
 
+bool Drv_PowerControllerBuck1_FaultDetected(void)
+{
+    if ((App_Fault_Handling_GetFaults() & ((1<<FAULT_SUPPLY_OVERVOLTAGE) | (1<<FAULT_SUPPLY_UNDERVOLTAGE))) != 0)
+        return true;
+    else
+        return false;
+}
 //=======================================================================================================
 // @brief   Initializes the Buck Power Converter - Instance 1
 // @note    In this routine all the application specific custom functions are implemented
@@ -134,12 +142,14 @@ void Drv_PowerControllerBuck1_Init(bool autostart)
     if(pwrCtrlBuck1_Data.voltageRef_rampStep == 0) {         // Protecting startup settings against 
         pwrCtrlBuck1_Data.voltageRef_rampStep = 1;           // ZERO settings
     }
-                        pwrCtrlBuck1_Data.powerInputOk_waitTime_100us = 1000;   // 100ms input power stabilization delay
+
+    pwrCtrlBuck1_Data.powerInputOk_waitTime_100us = 1000;   // 100ms input power stabilization delay
     pwrCtrlBuck1_Data.powerOutputOk_waitTime_100us = 1000;  // 100ms output power stabilization delay
     pwrCtrlBuck1_Data.ftkEnableControlLoop  = Drv_PowerControllerBuck1_EnableControlLoop;
     pwrCtrlBuck1_Data.ftkDisableControlLoop = Drv_PowerControllerBuck1_DisableControlLoop;
     pwrCtrlBuck1_Data.ftkLaunchPeripherals  = Drv_PowerControllerBuck1_LaunchPeripherals;
-    
+    pwrCtrlBuck1_Data.ftkFaultDetected = Drv_PowerControllerBuck1_FaultDetected;
+
     Drv_PowerControllerBuck1_InitAuxiliaryPWM(); // Set up auxiliary PWM 
     Drv_PowerControllerBuck1_InitPWM();          // Set up primary PWM 
     Drv_PowerControllerBuck1_InitACMP();         // Set up comparator/DAC for PCMC

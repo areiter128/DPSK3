@@ -70,6 +70,18 @@ void buckPC_GotoState(POWER_CONTROLLER_DATA_t* pPCData, PWR_CTRL_STATE_e newStat
     pPCData->pc_state_internal = newState;
 }
 
+
+//=======================================================================================================
+// @brief   Dummy function for FaultDetection
+// @note    This function is only for Initialization in the generic part to make the system work
+// @note    It should be overwritten in the custom part of the power controller to make use of this
+//          function for startup and shutdown of the power controller
+//=======================================================================================================
+bool Drv_PowerControllerBuck1_FaultDetectedDummy(void)
+{
+    return false;
+}
+
 //=======================================================================================================
 // @brief   Initializes all peripherals and data structures of the buck controller like PWM, ADC, DAC, CMP etc.
 // @note    call this during booting up the system before you call anything else or the Power Controller
@@ -82,6 +94,7 @@ void Drv_PowerControllerBuck_Init(POWER_CONTROLLER_DATA_t* pPCData, bool autosta
     pPCData->flags.value = 0;                           // reset everything
     pPCData->flags.bits.adc_active = false;
     pPCData->flags.bits.auto_start = autostart;
+    pPCData->ftkFaultDetected = Drv_PowerControllerBuck1_FaultDetectedDummy;
     buckPC_GotoState(pPCData, PCS_STARTUP_PERIPHERALS); // reset state machine
     
     Drv_PowerControllerBuck_CalculateVoltageLimits(pPCData);
@@ -119,6 +132,8 @@ void Drv_PowerControllerBuck_Task_100us(POWER_CONTROLLER_DATA_t* pPCData)
         // PWM1H is kept low, while PWM1L is kept high to pre-charge the half-bridge bootstrap cap.
         // At the end of this phase, PWM1 output user overrides are disabled and the control is enabled.
         case PCS_WAIT_FOR_POWER_IN_GOOD:
+            if (pPCData->ftkFaultDetected())
+                break;
             if(++pPCData->timeCounter >= pPCData->powerInputOk_waitTime_100us)
             {
                 //c2p2z_buck.status.flag.enable = 1;  // Start the control loop for buck
@@ -142,37 +157,48 @@ void Drv_PowerControllerBuck_Task_100us(POWER_CONTROLLER_DATA_t* pPCData)
             uint16_t newReference;
 
             Drv_PowerControllerBuck_MonitorVoltageLimits(pPCData);
-            newReference = pPCData->voltageRef_compensator + pPCData->voltageRef_rampStep;
-            if (newReference < pPCData->voltageRef_softStart)
-            {
-                pPCData->voltageRef_compensator = newReference;
-            }
+            if (pPCData->ftkFaultDetected())
+                buckPC_GotoState(pPCData, PCS_SHUTDOWN);
             else
             {
-                pPCData->voltageRef_compensator = pPCData->voltageRef_softStart;
-                buckPC_GotoState(pPCData, PCS_WAIT_FOR_POWER_OUT_GOOD);
+                newReference = pPCData->voltageRef_compensator + pPCData->voltageRef_rampStep;
+                if (newReference < pPCData->voltageRef_softStart)
+                {
+                    pPCData->voltageRef_compensator = newReference;
+                }
+                else
+                {
+                    pPCData->voltageRef_compensator = pPCData->voltageRef_softStart;
+                    buckPC_GotoState(pPCData, PCS_WAIT_FOR_POWER_OUT_GOOD);
+                }
+                Drv_PowerControllerBuck_CalculateVoltageLimits(pPCData);    // Update the VoltageLimits
             }
-            Drv_PowerControllerBuck_CalculateVoltageLimits(pPCData);    // Update the VoltageLimits
             break; 
         }
 
         case PCS_WAIT_FOR_POWER_OUT_GOOD:    // wait some time for the caps to charge and the power to be stable
             Drv_PowerControllerBuck_MonitorVoltageLimits(pPCData);
-            if (++pPCData->timeCounter >= pPCData->powerOutputOk_waitTime_100us)
+            if (pPCData->ftkFaultDetected())
+                buckPC_GotoState(pPCData, PCS_SHUTDOWN);
+            else if (++pPCData->timeCounter >= pPCData->powerOutputOk_waitTime_100us)
             {
                 buckPC_GotoState(pPCData, PCS_UP_AND_RUNNING);
             }
             break;
                  
         case PCS_UP_AND_RUNNING:   // Soft start is complete, system is running, nothing to do
-            
-            if(_AN12RDY)
-            {
-                voltageInput = ADCBUF12; 
-                _ADCAN12IF = 0;
-            }
-            
+            // Checking output voltage limits
             Drv_PowerControllerBuck_MonitorVoltageLimits(pPCData);
+            if (pPCData->ftkFaultDetected())
+                buckPC_GotoState(pPCData, PCS_SHUTDOWN);
+            break;
+
+        case PCS_SHUTDOWN:   // Soft start is complete, system is running, nothing to do
+            // Checking output voltage limits
+            pPCData->voltageRef_compensator = 0;
+            Drv_PowerControllerBuck_MonitorVoltageLimits(pPCData);
+            if (pPCData->ftkFaultDetected() == false)
+                buckPC_GotoState(pPCData, PCS_WAIT_FOR_POWER_IN_GOOD);
             break;
 
         default: // If something is going wrong, reset entire PWR controller
@@ -183,6 +209,7 @@ void Drv_PowerControllerBuck_Task_100us(POWER_CONTROLLER_DATA_t* pPCData)
 
 static inline void Drv_PowerControllerBuck_CalculateVoltageLimits(POWER_CONTROLLER_DATA_t* pPCData)
 {
+    //TODO: Should there also be a constant value added? Because at low values we could run into some issues with only the percentage value
     pPCData->OverVoltageLimit  = (uint32_t) (pPCData->voltageRef_compensator * BUCK_OVERVOLTAGE_PERCENT) / 100;
     pPCData->UnderVoltageLimit = (uint32_t) (pPCData->voltageRef_compensator * BUCK_UNDERVOLTAGE_PERCENT) / 100;
 }

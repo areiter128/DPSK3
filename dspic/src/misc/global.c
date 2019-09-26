@@ -63,8 +63,8 @@ double GetLoadBoost(uint8_t bits)
 void Global_UpdateBoardData(void)
 {
     global_data.buck.output_voltage  = Drv_PowerControllerBuck1_GetOutputVoltage();
-    global_data.boost.output_voltage = GetVoltageBoost();
-    global_data.board.input_voltage = GetVoltageInput();
+    global_data.boost.output_voltage = Drv_PowerControllerBoost1_GetOutputVoltage();
+    global_data.board.input_voltage = Drv_PowerControllers_GetInputVoltage();
 //    global_data.fault_reg_buck  = buck_event; 
 //    global_data.fault_reg_boost = boost_event;
     global_data.buck.fault_reg  = false;             //TODO: fake, just for testing
