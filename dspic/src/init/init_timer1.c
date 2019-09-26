@@ -13,7 +13,6 @@
 
 volatile uint16_t init_timer1 (void)
 {
-
     T1CONbits.TON = 0;  // Timer1 On: Stops 16-bit Timer1 during configuration
     T1CONbits.TSIDL = 0; // Timer1 Stop in Idle Mode: Continues module operation in Idle mode
     T1CONbits.TMWDIS = 0; // Asynchronous Timer1 Write Disable: Back-to-back writes are enabled in Asynchronous mode
@@ -30,9 +29,12 @@ volatile uint16_t init_timer1 (void)
     //Period = 0.0001 s; Frequency = 100000000 Hz; PR 9999; 
     PR1 = 9999;
     // Reset interrupt and interrupt flag bit
-    _T1IP = 0;  // Set interrupt priority to zero
+    _T1IP = 1;  // Set interrupt priority to one (cpu is running on ip zero)
     _T1IF = 0;  // Reset interrupt flag bit
-    _T1IE = 0;  // Disable Timer1 interrupt
-   
+    _T1IE = 1;  // Enable Timer1 interrupt
+
+    // Enable Timer1 now    ==> TODO: divide in Init and Start function
+    T1CONbits.TON = 1; 
+
     return(1);
 }

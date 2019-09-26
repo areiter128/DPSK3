@@ -74,7 +74,7 @@ volatile uint16_t exec_buck_pwr_control(void) {
             
             launch_buck_pwr_control(); 
             buck_soft_start.phase = BUCK_SS_PWR_ON_DELAY;
-            
+
             break;
         
         /* In this step the soft-start procedure continues with counting up 
@@ -82,14 +82,15 @@ volatile uint16_t exec_buck_pwr_control(void) {
          * while PWM1L is kept high to pre-charge the half-bridge bootstrap cap.
          * At the end of this phase, PWM1 output user overrides are disabled 
          * and the control is enabled. */     
-        case BUCK_SS_PWR_ON_DELAY:  
-            
-            if(buck_soft_start.counter++ > buck_soft_start.pwr_on_delay)
+        case BUCK_SS_PWR_ON_DELAY:
+            if (buck_soft_start.counter < buck_soft_start.pwr_on_delay)
+                buck_soft_start.counter++;
+            if(buck_soft_start.counter >= buck_soft_start.pwr_on_delay)
             {
                 PG1IOCONLbits.OVRENH = 0;  // User override disabled for PWMxH Pin
                 PG1IOCONLbits.OVRENL = 0;  // User override disabled for PWMxL Pin
                
-                while (!adc_active); 
+                while (!adc_active);    //wait unril the power controller is active
                 c2p2z_buck.status.flag.enable = 1; // Start the control loop for buck
                 
                 buck_soft_start.counter = 0;
@@ -104,6 +105,7 @@ volatile uint16_t exec_buck_pwr_control(void) {
             // check if ramp is complete
             if (data.buck_vref >= buck_soft_start.reference)
             {
+                data.buck_vref = buck_soft_start.reference;
                buck_soft_start.counter = 0;
                buck_soft_start.phase   = BUCK_SS_PWR_GOOD_DELAY;
             }
@@ -127,23 +129,17 @@ volatile uint16_t exec_buck_pwr_control(void) {
             break;
             
     }
-        
     
     return(1);
 }
 
 void __attribute__((__interrupt__, auto_psv)) _ADCAN13Interrupt(void)
 {
-    volatile uint16_t dummy=0;
-    
-    adc_active = true;
-    
-//    dummy = ADCBUF13;
-
+    c2p2z_buck_Update(&c2p2z_buck);     //call the compensator as soon as possible
+    // the readout of the ADC register is mandatory to make the reset of the interrupt flag stick
+    // if we do not read from the ADC register then the interrupt flag will be set immediately after resetting it
     data.vout_buck = ADCBUF13;
-    c2p2z_buck_Update(&c2p2z_buck);
-
-    _ADCAN13IF = 0;  // Clear the ADCANx interrupt flag 
-    
+    adc_active = true;
+    _ADCAN13IF = 0;  // Clear the ADCANx interrupt flag. read from ADCBUFx first to make it stick
 }
 

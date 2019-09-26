@@ -67,7 +67,7 @@ volatile uint16_t exec_boost_pwr_control(void) {
 
 void __attribute__((__interrupt__, auto_psv)) _ADCAN18Interrupt(void)
 {
-    volatile uint16_t dummy=0;
+//    volatile uint16_t dummy=0;
     
 //    dummy = ADCBUF18;
 
