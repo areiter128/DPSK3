@@ -42,7 +42,7 @@
 #include "device/dev_button.h"
 #include "app/app_fault_handling.h"
 #include "app/app_proto24.h"
-#include "app/app_display.h"
+#include "app/app_hmi.h"
 #include "app/app_logger.h"
 #include "misc/global.h"
 #include "misc/system.h"
@@ -135,7 +135,7 @@ void Tasks_10ms(void)
 void Tasks_100ms(void)
 {
     DBGLED_TOGGLE;              // Toggle debug LED
-    App_Display_Task_100ms();   // calling the display application that contains the main state machine
+    App_Hmi_Task_100ms();   // calling the display application that contains the main state machine
     Global_UpdateBoardData();
     
     time_counter_logger++;

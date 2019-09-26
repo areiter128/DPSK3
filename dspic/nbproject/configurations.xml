@@ -5,11 +5,11 @@
                    displayName="Header Files"
                    projectFiles="true">
       <logicalFolder name="f4" displayName="app" projectFiles="true">
-        <itemPath>h/app/app_display.h</itemPath>
         <itemPath>h/app/app_proto24.h</itemPath>
         <itemPath>h/app/app_logger.h</itemPath>
         <itemPath>h/app/app_fault_handling.h</itemPath>
         <itemPath>h/app/app_test.h</itemPath>
+        <itemPath>h/app/app_hmi.h</itemPath>
       </logicalFolder>
       <logicalFolder name="f3" displayName="device" projectFiles="true">
         <itemPath>h/device/dev_lcd.h</itemPath>
@@ -53,11 +53,11 @@
                    displayName="Source Files"
                    projectFiles="true">
       <logicalFolder name="f4" displayName="app" projectFiles="true">
-        <itemPath>src/app/app_display.c</itemPath>
         <itemPath>src/app/app_proto24.c</itemPath>
         <itemPath>src/app/app_logger.c</itemPath>
         <itemPath>src/app/app_fault_handling.c</itemPath>
         <itemPath>src/app/app_test.c</itemPath>
+        <itemPath>src/app/app_hmi.c</itemPath>
       </logicalFolder>
       <logicalFolder name="f3" displayName="device" projectFiles="true">
         <itemPath>src/device/dev_lcd.c</itemPath>

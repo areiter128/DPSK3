@@ -34,7 +34,7 @@
 #include "device/dev_button.h"
 #include "device/dev_uart1.h"
 #include "driver/power_controllers/drv_power_controllers.h"
-#include "app/app_display.h"
+#include "app/app_hmi.h"
 #include "app/app_proto24.h"
 #include "app/app_logger.h"
 #include "app/app_fault_handling.h"

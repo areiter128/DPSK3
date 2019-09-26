@@ -14,14 +14,14 @@
 //======================================================================================================================
 
 //======================================================================================================================
-// @file app_display.h
+// @file app_hmi.h
 //
-// @brief main statemachine for buttons and display
+// @brief main statemachine for the human machine interface (buttons and display)
 //
 //======================================================================================================================
 
-#ifndef _APP_DISPLAY_H_
-#define	_APP_DISPLAY_H_
+#ifndef _APP_HMI_H_
+#define	_APP_HMI_H_
 
 #include <stdint.h>
 #include "device/dev_lcd.h"
@@ -31,10 +31,10 @@ extern "C" {
 #endif
 
 //======================================================================================================================
-//  @brief  this function contains the display task and needs to be called from outside every 100 ms
+//  @brief  this function contains the hmi task and needs to be called from outside every 100 ms
 //  @note   the 100 ms interval does not need to be exact. it should be roughly 100 ms
 //======================================================================================================================
-void App_Display_Task_100ms(void);
+void App_Hmi_Task_100ms(void);
 
 
 #ifdef	__cplusplus
