@@ -86,8 +86,8 @@ FAULTBIT_CONDITION_SETTINGS_t fault_handling_data_buck_undervoltage = {5, 0, 100
 // ==> buck avg. current fault reset level  102% ==> 1020 mA for 100 milliseconds
 
 //FAULT_CONDITION_SETTINGS_t  fault_handling_data_buck_voltage        = { 0, 3465, 20, 3366, 100 };
-FAULTVALUE_CONDITION_SETTINGS_t  fault_handling_data_buck_peak_current   = { 0, 1500, 20, 1100, 100 };
-FAULTVALUE_CONDITION_SETTINGS_t  fault_handling_data_buck_avg_current    = { 0, 1050, 20, 1020, 100 };
+FAULTVALUE_CONDITION_SETTINGS_t  fault_handling_data_buck_peak_current   = { 1500, 20, 1100, 100 };
+FAULTVALUE_CONDITION_SETTINGS_t  fault_handling_data_buck_avg_current    = { 1050, 20, 1020, 100 };
 
 //uint16_t fh_buck_overvoltage_trip = 0;
 uint16_t fh_buck_overvoltage_timer = 0;
@@ -104,13 +104,13 @@ uint16_t fh_buck_overvoltage_timer = 0;
 // boost max. current is 0,2A ==> 200 mA
 // ==> boost avg. current fault trip level   105% ==> 210 mA for 20 milliseconds
 // ==> boost avg. current fault reset level  102% ==> 204 mA for 100 milliseconds
-FAULTVALUE_CONDITION_SETTINGS_t  fault_handling_data_boost_voltage       = { 0, 15750, 20, 15300, 100 };
-FAULTVALUE_CONDITION_SETTINGS_t  fault_handling_data_boost_peak_current  = { 0,   300, 20,   220, 100 };
-FAULTVALUE_CONDITION_SETTINGS_t  fault_handling_data_boost_avg_current   = { 0,   210, 20,   204, 100 };
+FAULTVALUE_CONDITION_SETTINGS_t  fault_handling_data_boost_voltage       = { 15750, 20, 15300, 100 };
+FAULTVALUE_CONDITION_SETTINGS_t  fault_handling_data_boost_peak_current  = {   300, 20,   220, 100 };
+FAULTVALUE_CONDITION_SETTINGS_t  fault_handling_data_boost_avg_current   = {   210, 20,   204, 100 };
 
 //temperature: tenth degrees Celsius (TODO: or hundredth degrees???)
 //
-FAULTVALUE_CONDITION_SETTINGS_t  fault_handling_data_board_temperature   = { 0,   750, 100,  650, 100 };
+FAULTVALUE_CONDITION_SETTINGS_t  fault_handling_data_board_temperature   = {   750, 100,  650, 100 };
 
 
 //=======================================================================================================
@@ -131,6 +131,18 @@ void App_Fault_Handling_Init(void)
 uint16_t App_Fault_Handling_GetFaults(void)
 {
     return active_faults;
+}
+
+//=======================================================================================================
+//  @brief  this function returns if the given fault is set or not
+//  @note   the fault numbers are defined in app_fault_handling.h starting with FAULT_GENERAL
+//=======================================================================================================
+bool App_Fault_Handling_IsFaultSet(uint8_t faultnumber)
+{
+    if (active_faults & (1<<faultnumber))
+        return true;
+    else
+        return false;
 }
 
 //=======================================================================================================
@@ -178,7 +190,7 @@ void App_Fault_Handling_CheckFaultValue(FAULTVALUE_CONDITION_SETTINGS_t* faultda
             if (faultdata->trip_cnt < UINT16_MAX)
                 faultdata->trip_cnt++;
             if (faultdata->trip_cnt > faultdata->trip_cnt_threshold)
-                active_faults |= faultbit;      //set fault bit
+                active_faults |= (1<<faultbit);      //set fault bit
         }
         else if (value <= faultdata->reset_level)
         {
@@ -186,7 +198,7 @@ void App_Fault_Handling_CheckFaultValue(FAULTVALUE_CONDITION_SETTINGS_t* faultda
             if (faultdata->reset_cnt < UINT16_MAX)
                 faultdata->reset_cnt++;
             if (faultdata->reset_cnt > faultdata->reset_cnt_threshold)
-                active_faults &= ~faultbit;     //clear fault bit
+                active_faults &= ~(1<<faultbit);     //clear fault bit
         }
         else
         {
@@ -212,7 +224,7 @@ void App_Fault_Handling_CheckFaultValue(FAULTVALUE_CONDITION_SETTINGS_t* faultda
 //            PrintSerial("trip count = %d   trip threshold = %d\r\n", faultdata->trip_cnt, faultdata->trip_cnt_threshold);
             
             if (faultdata->trip_cnt > faultdata->trip_cnt_threshold)
-                active_faults |= faultbit;      //set fault bit
+                active_faults |= (1<<faultbit);      //set fault bit
         }
         else if (value >= faultdata->reset_level)
         {
@@ -221,7 +233,7 @@ void App_Fault_Handling_CheckFaultValue(FAULTVALUE_CONDITION_SETTINGS_t* faultda
             if (faultdata->reset_cnt < UINT16_MAX)
                 faultdata->reset_cnt++;
             if (faultdata->reset_cnt > faultdata->reset_cnt_threshold)
-                active_faults &= ~faultbit;     //clear fault bit
+                active_faults &= ~(1<<faultbit);     //clear fault bit
         }
         else
         {
@@ -245,7 +257,7 @@ void App_Fault_Handling_CheckFaultBit(FAULTBIT_CONDITION_SETTINGS_t* faultdata, 
         if (faultdata->trip_cnt < UINT16_MAX)
             faultdata->trip_cnt++;
         if (faultdata->trip_cnt > faultdata->trip_cnt_threshold)
-            active_faults |= faultbit;      //set fault bit
+            active_faults |= (1<<faultbit);      //set fault bit
     }
     else
     {
@@ -253,7 +265,7 @@ void App_Fault_Handling_CheckFaultBit(FAULTBIT_CONDITION_SETTINGS_t* faultdata, 
         if (faultdata->reset_cnt < UINT16_MAX)
             faultdata->reset_cnt++;
         if (faultdata->reset_cnt > faultdata->reset_cnt_threshold)
-            active_faults &= ~faultbit;     //clear fault bit
+            active_faults &= ~(1<<faultbit);     //clear fault bit
     }
 }
 
@@ -275,10 +287,10 @@ void App_Fault_Handling_Task_100us(void)
     App_Fault_Handling_CheckFaultValue(&fault_handling_data_input_overvoltage, value, FAULT_SUPPLY_OVERVOLTAGE);
     
     //set or clear the general fault bit
-    if (active_faults & ~FAULT_GENERAL) //is one of the fault bits active?
-        active_faults |= FAULT_GENERAL;
+    if (active_faults & ~(1<<FAULT_GENERAL)) //is one of the fault bits active?
+        active_faults |= (1<<FAULT_GENERAL);
     else
-        active_faults &= ~FAULT_GENERAL;
+        active_faults &= ~(1<<FAULT_GENERAL);
     
 #if FAULT_HANDLING_DEBUG == 1
     if (timer_debug++ > 50000)
@@ -331,10 +343,10 @@ void App_Fault_Handling_Task_1ms(void)
 
 */
     //set or clear the general fault bit
-    if (active_faults & ~FAULT_GENERAL) //is one of the fault bits active?
-        active_faults |= FAULT_GENERAL;
+    if (active_faults & ~(1<<FAULT_GENERAL)) //is one of the fault bits active?
+        active_faults |= (1<<FAULT_GENERAL);
     else
-        active_faults &= ~FAULT_GENERAL;
+        active_faults &= ~(1<<FAULT_GENERAL);
 }
 
 

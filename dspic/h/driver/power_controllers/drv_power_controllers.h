@@ -184,7 +184,8 @@ typedef enum
     PCS_MEASURE_INPUT_VOLTAGE    = 5,    // measure input voltage
     PCS_RAMP_UP_VOLTAGE          = 6,    // Soft-Start Ramp Up Output Voltage
     PCS_WAIT_FOR_POWER_OUT_GOOD  = 7,    // Soft-Start wait to stabilize
-    PCS_UP_AND_RUNNING           = 8     // Soft-Start is complete, power is up and running
+    PCS_UP_AND_RUNNING           = 8,    // Soft-Start is complete, power is up and running
+    PCS_SHUTDOWN                 = 9     // shutting down the controller/reference voltage
 }PWR_CTRL_STATE_INT_e;
 
 
@@ -217,6 +218,7 @@ typedef union {
 } POWER_CONTROLLER_FLAGS_t;                  // SEPIC operation status bits
 
 typedef void (*pCallback_t)(void);
+typedef bool (*pCallbackBool_t)(void);
 
 typedef struct
 {
@@ -242,6 +244,7 @@ typedef struct
     volatile pCallback_t ftkEnableControlLoop;  // Controller calls this function to enable the control Loop
     volatile pCallback_t ftkDisableControlLoop; // Controller calls this function to disable the control Loop
     volatile pCallback_t ftkLaunchPeripherals;  // Controller calls this function to launch the peripherals
+    volatile pCallbackBool_t ftkFaultDetected;  // Controller calls this function for deciding startup/shutdown
     volatile int16_t *compClampMax;
    }POWER_CONTROLLER_DATA_t;                       // power control soft-start settings and variables
 

@@ -77,7 +77,6 @@ void Drv_PowerControllers_Init(void)
     Drv_PowerControllerBoost1_SetOutputVoltageReference_mV(BOOST1_VREF_mV); //Set Boost Converter Output
 }
 
-
 //=======================================================================================================
 // @brief   returns the Input Voltage in Volts as a double
 //=======================================================================================================

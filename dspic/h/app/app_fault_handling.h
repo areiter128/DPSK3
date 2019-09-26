@@ -29,6 +29,7 @@
 #ifndef _APP_FAULT_HANDLING_H_
 #define _APP_FAULT_HANDLING_H_
 
+#include <stdbool.h>
 #include <stdint.h>
 
 #ifdef __cplusplus  // Provide C++ Compatibility
@@ -39,17 +40,18 @@
 //  @brief  these defines are the fault bits that are combined in a uint16 value
 //  @note   use the function App_Fault_Handling_GetFaults to retrieve the whole uint16 value
 //======================================================================================================================
-#define FAULT_GENERAL                   1
-#define FAULT_SUPPLY_OVERVOLTAGE        2
-#define FAULT_SUPPLY_UNDERVOLTAGE       4
-#define FAULT_OVERTEMPERATURE           8
-#define FAULT_BUCK_OVERVOLTAGE          16
-#define FAULT_BUCK_UNDERVOLTAGE         32
-#define FAULT_BUCK_OVERCURRENT          32
-#define FAULT_BOOST_OVERVOLTAGE         64
-#define FAULT_BOOST_UNDERVOLTAGE        128
-#define FAULT_BOOST_OVERCURRENT         256
-
+#define FAULT_GENERAL                   0
+#define FAULT_SUPPLY_OVERVOLTAGE        1
+#define FAULT_SUPPLY_UNDERVOLTAGE       2
+/*
+#define FAULT_OVERTEMPERATURE           3
+#define FAULT_BUCK_OVERVOLTAGE          4
+#define FAULT_BUCK_UNDERVOLTAGE         5
+#define FAULT_BUCK_OVERCURRENT          6
+#define FAULT_BOOST_OVERVOLTAGE         7
+#define FAULT_BOOST_UNDERVOLTAGE        8
+#define FAULT_BOOST_OVERCURRENT         9
+*/
 //======================================================================================================================
 //  @brief  this function initializes the fault handling
 //  @note   
@@ -61,6 +63,12 @@ void App_Fault_Handling_Init(void);
 //  @note   use the defined fault bit defines above to filter out the bit of interest
 //======================================================================================================================
 uint16_t App_Fault_Handling_GetFaults(void);
+
+//=======================================================================================================
+//  @brief  this function returns if the given fault is set or not
+//  @note   the fault numbers are defined in app_fault_handling.h starting with FAULT_GENERAL
+//=======================================================================================================
+bool App_Fault_Handling_IsFaultSet(uint8_t faultnumber);
 
 //======================================================================================================================
 //  @brief  this function does the fault handling every 1 ms
