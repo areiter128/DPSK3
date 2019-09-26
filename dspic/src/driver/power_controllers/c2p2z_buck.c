@@ -1,5 +1,5 @@
 /* ***************************************************************************************
- * z-Domain Control Loop Designer Version 0.9.0.60.
+ * z-Domain Control Loop Designer Version 0.9.0.61.
  * ***************************************************************************************
  * 2p2z compensation filter coefficients derived for following operating conditions:
  * ***************************************************************************************
@@ -12,7 +12,7 @@
  * 
  * ***************************************************************************************/
 
-#include "driver/power_controllers/c2p2z_buck.h"
+#include "../h/driver/power_controllers/c2p2z_buck.h"
 
 /* ***************************************************************************************
  * Data Arrays:
@@ -65,36 +65,36 @@
 
 /* ***************************************************************************************/
 
-uint16_t c2p2z_buck_Init(void)
+volatile uint16_t c2p2z_buck_Init(volatile cNPNZ16b_t* controller)
 {
 	volatile uint16_t i = 0;
 
 	// Initialize controller data structure at runtime with pre-defined default values
-	c2p2z_buck.status.flags = CONTROLLER_STATUS_CLEAR;  // clear all status flag bits (will turn off execution))
+	controller->status.value = CONTROLLER_STATUS_CLEAR;  // clear all status flag bits (will turn off execution))
 
-	c2p2z_buck.ptrACoefficients = &c2p2z_buck_coefficients.ACoefficients[0]; // initialize pointer to A-coefficients array
-	c2p2z_buck.ptrBCoefficients = &c2p2z_buck_coefficients.BCoefficients[0]; // initialize pointer to B-coefficients array
-	c2p2z_buck.ptrControlHistory = &c2p2z_buck_histories.ControlHistory[0]; // initialize pointer to control history array
-	c2p2z_buck.ptrErrorHistory = &c2p2z_buck_histories.ErrorHistory[0]; // initialize pointer to error history array
-	c2p2z_buck.normPostShiftA = c2p2z_buck_post_shift_A; // initialize A-coefficients/single bit-shift scaler
-	c2p2z_buck.normPostShiftB = c2p2z_buck_post_shift_B; // initialize B-coefficients/dual/post scale factor bit-shift scaler
-	c2p2z_buck.normPostScaler = c2p2z_buck_post_scaler; // initialize control output value normalization scaling factor
-	c2p2z_buck.normPreShift = c2p2z_buck_pre_scaler; // initialize A-coefficients/single bit-shift scaler
+	controller->ptrACoefficients = &c2p2z_buck_coefficients.ACoefficients[0]; // initialize pointer to A-coefficients array
+	controller->ptrBCoefficients = &c2p2z_buck_coefficients.BCoefficients[0]; // initialize pointer to B-coefficients array
+	controller->ptrControlHistory = &c2p2z_buck_histories.ControlHistory[0]; // initialize pointer to control history array
+	controller->ptrErrorHistory = &c2p2z_buck_histories.ErrorHistory[0]; // initialize pointer to error history array
+	controller->normPostShiftA = c2p2z_buck_post_shift_A; // initialize A-coefficients/single bit-shift scaler
+	controller->normPostShiftB = c2p2z_buck_post_shift_B; // initialize B-coefficients/dual/post scale factor bit-shift scaler
+	controller->normPostScaler = c2p2z_buck_post_scaler; // initialize control output value normalization scaling factor
+	controller->normPreShift = c2p2z_buck_pre_scaler; // initialize A-coefficients/single bit-shift scaler
 
-	c2p2z_buck.ACoefficientsArraySize = c2p2z_buck_ACoefficients_size; // initialize A-coefficients array size
-	c2p2z_buck.BCoefficientsArraySize = c2p2z_buck_BCoefficients_size; // initialize A-coefficients array size
-	c2p2z_buck.ControlHistoryArraySize = c2p2z_buck_ControlHistory_size; // initialize control history array size
-	c2p2z_buck.ErrorHistoryArraySize = c2p2z_buck_ErrorHistory_size; // initialize error history array size
+	controller->ACoefficientsArraySize = c2p2z_buck_ACoefficients_size; // initialize A-coefficients array size
+	controller->BCoefficientsArraySize = c2p2z_buck_BCoefficients_size; // initialize A-coefficients array size
+	controller->ControlHistoryArraySize = c2p2z_buck_ControlHistory_size; // initialize control history array size
+	controller->ErrorHistoryArraySize = c2p2z_buck_ErrorHistory_size; // initialize error history array size
 
 
 	// Load default set of A-coefficients from user RAM into X-Space controller A-array
-	for(i=0; i<c2p2z_buck.ACoefficientsArraySize; i++)
+	for(i=0; i<controller->ACoefficientsArraySize; i++)
 	{
 		c2p2z_buck_coefficients.ACoefficients[i] = c2p2z_buck_ACoefficients[i];
 	}
 
 	// Load default set of B-coefficients from user RAM into X-Space controller B-array
-	for(i=0; i<c2p2z_buck.BCoefficientsArraySize; i++)
+	for(i=0; i<controller->BCoefficientsArraySize; i++)
 	{
 		c2p2z_buck_coefficients.BCoefficients[i] = c2p2z_buck_BCoefficients[i];
 	}
