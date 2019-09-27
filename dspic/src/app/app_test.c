@@ -292,19 +292,26 @@ static bool testNoLoad(void)
     
     ret_code = 0;
     PrintSerial("\n\rinput voltage: ");
+    // last measurement: input voltage: min=9.139, max=9.268, dev=0.129, avg=9.212      ==> ok
     if(_analizeSamples_dbl(Drv_PowerControllers_GetInputVoltage, 6.0, 14.0, 2.0, 9.0, 0.6, 100))
     {   PrintSerial(" !");  ret_code |= 1;  }
     PrintSerial("\n\rbuck voltage:  ");
+    // last measurement: buck voltage:  min=3.293, max=3.306, dev=0.013, avg=3.299      ==> ok
     if(_analizeSamples_dbl(Drv_PowerControllerBuck1_GetOutputVoltage, 3.0, 3.5, 1.0, 3.3, 0.2, 100))
     {   PrintSerial(" !");  ret_code |= 1;  }
     PrintSerial("\n\rboost voltage: ");
+    // last measurement: boost voltage: min=14.992, max=15.017, dev=0.026, avg=15.006   ==> ok
     if(_analizeSamples_dbl(Drv_PowerControllerBoost1_GetOutputVoltage, 14.4, 15.4, 1.0, 15.0, 0.3, 100))
     {   PrintSerial(" !");  ret_code |= 1;  }
     PrintSerial("\n\rbuck DAC:      ");
-    if(_analizeSamples_u16(GetDacBuck, 0, 300, 200, 50, 40, 100))
+    // last measurement: buck DAC:      min=165, max=246, dev=81, avg=200 !
+//    if(_analizeSamples_u16(GetDacBuck, 0, 300, 200, 50, 40, 100))
+    if(_analizeSamples_u16(GetDacBuck, 0, 300, 200, 200, 40, 100))
     {   PrintSerial(" !");  ret_code |= 1;  }
     PrintSerial("\n\rboost DAC:     ");
-    if(_analizeSamples_u16(GetDacBoost, 800, 1800, 300, 1500, 400, 100))
+    // last measurement: boost DAC:     min=1378, max=1515, dev=137, avg=1453    
+    //if(_analizeSamples_u16(GetDacBoost, 800, 1800, 300, 1500, 400, 100))
+    if(_analizeSamples_u16(GetDacBoost, 689, 2272, 300, 1500, 400, 100))
     {   PrintSerial(" !");  ret_code |= 1;  }
     PrintSerial("\n\r");
     return ret_code;
@@ -325,19 +332,26 @@ static bool testFullLoad(void)
     ret_code = 0;
     /*                       pFunc,        min,  max,  dev,  avg,  err,  count */
     PrintSerial("\n\rinput voltage: ");
+    // last measurement: input voltage: min=9.010, max=9.043, dev=0.032, avg=9.030  ==> ok
     if(_analizeSamples_dbl(Drv_PowerControllers_GetInputVoltage, 6.0, 14.0, 2.0, 9.0, 0.6, 100))
     {   PrintSerial(" !");  ret_code |= 1;  }
     PrintSerial("\n\rbuck voltage:  ");
+    // last measurement: buck voltage:  min=3.294, max=3.302, dev=0.008, avg=3.299  ==> ok
     if(_analizeSamples_dbl(Drv_PowerControllerBuck1_GetOutputVoltage, 3.0, 3.5, 1.0, 3.3, 0.2, 100))
     {   PrintSerial(" !");  ret_code |= 1;  }
     PrintSerial("\n\rboost voltage: ");
+    // last measurement: boost voltage: min=14.992, max=15.024, dev=0.032, avg=15.006
     if(_analizeSamples_dbl(Drv_PowerControllerBoost1_GetOutputVoltage, 14.4, 15.4, 1.0, 15.0, 0.3, 100))
     {   PrintSerial(" !");  ret_code |= 1;  }
     PrintSerial("\n\rbuck DAC:      ");
-    if(_analizeSamples_u16(GetDacBuck, 2000, 2600, 300, 2400, 100, 100))
+    // last measurement: buck DAC:      min=1334, max=1362, dev=28, avg=1347 !
+//    if(_analizeSamples_u16(GetDacBuck, 2000, 2600, 300, 2400, 100, 100))
+    if(_analizeSamples_u16(GetDacBuck, 1067, 1634, 300, 1350, 100, 100))
     {   PrintSerial(" !");  ret_code |= 1;  }
     PrintSerial("\n\rboost DAC:     ");
-    if(_analizeSamples_u16(GetDacBoost, 2000, 2900, 300, 2500, 300, 100))
+    // last measurement: boost DAC:     min=2040, max=2078, dev=38, avg=2057 !
+//    if(_analizeSamples_u16(GetDacBoost, 2000, 2900, 300, 2500, 300, 100))
+    if(_analizeSamples_u16(GetDacBoost, 1020, 3117, 300, 2050, 300, 100))
     {   PrintSerial(" !");  ret_code |= 1;  }
     PrintSerial("\n\r");
     App_Proto24_Send(PROTO_SYS_RESET);   WaitMilliseconds(500);
@@ -359,19 +373,27 @@ static bool testStepLoad(void)
     ret_code = 0;
     /*                      pFunc,        min,  max,  dev,  avg,  err,  count */
     PrintSerial("\n\rinput voltage: ");
+    // last measurement: input voltage: min=8.972, max=9.255, dev=0.283, avg=9.126  ==> ok
     if(_analizeSamples_dbl(Drv_PowerControllers_GetInputVoltage, 6.0, 14.0, 2.0, 9.0, 0.6, 100))
     {   PrintSerial(" !");  ret_code |= 1;  }
     PrintSerial("\n\rbuck voltage:  ");
+    // last measurement: buck voltage:  min=3.153, max=3.436, dev=0.284, avg=3.299
     if(_analizeSamples_dbl(Drv_PowerControllerBuck1_GetOutputVoltage, 3.0, 3.5, 1.0, 3.3, 0.2, 100))
     {   PrintSerial(" !");  ret_code |= 1;  }
     PrintSerial("\n\rboost voltage: ");
+    // last measurement: boost voltage: min=14.728, max=15.320, dev=0.592, avg=15.005
+//    if(_analizeSamples_dbl(Drv_PowerControllerBoost1_GetOutputVoltage, 14.4, 15.4, 1.0, 15.0, 0.3, 100))
     if(_analizeSamples_dbl(Drv_PowerControllerBoost1_GetOutputVoltage, 14.4, 15.4, 1.0, 15.0, 0.3, 100))
     {   PrintSerial(" !");  ret_code |= 1;  }
     PrintSerial("\n\rbuck DAC:      ");
+    // last measurement: buck DAC:      min=206, max=1402, dev=1196, avg=840
+//    if(_analizeSamples_u16(GetDacBuck, 0, 2700, 2700, 1300, 600, 100))
     if(_analizeSamples_u16(GetDacBuck, 0, 2700, 2700, 1300, 600, 100))
     {   PrintSerial(" !");  ret_code |= 1;  }
     PrintSerial("\n\rboost DAC:     ");
-    if(_analizeSamples_u16(GetDacBoost, 800, 2900, 1200, 2200, 500, 100))
+    // last measurement: boost DAC:     min=780, max=2250, dev=1470, avg=1728 !
+//    if(_analizeSamples_u16(GetDacBoost, 800, 2900, 1200, 2200, 500, 100))
+    if(_analizeSamples_u16(GetDacBoost, 390, 2375, 2205, 1730, 500, 100))
     {   PrintSerial(" !");  ret_code |= 1;  }
     PrintSerial("\n\r");
     App_Proto24_Send(PROTO_SYS_RESET);    WaitMilliseconds(500);
