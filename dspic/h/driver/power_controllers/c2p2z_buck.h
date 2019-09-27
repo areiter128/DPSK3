@@ -1,5 +1,5 @@
 /* ***************************************************************************************
- * z-Domain Control Loop Designer Version 0.9.0.60.
+ * z-Domain Control Loop Designer Version 0.9.0.61.
  * ***************************************************************************************
  * 2p2z compensation filter coefficients derived for following operating conditions:
  * ***************************************************************************************
@@ -53,7 +53,9 @@
 
 // Function call prototypes for initialization routines and control loops
 
-extern uint16_t c2p2z_buck_Init(void); // Loads default coefficients into 2P2Z controller and resets histories to zero
+extern volatile uint16_t c2p2z_buck_Init( // Loads default coefficients into 2P2Z controller and resets histories to zero
+	volatile cNPNZ16b_t* controller // Pointer to nPnZ data structure
+	);
 
 extern void c2p2z_buck_Reset( // Resets the 2P2Z controller histories
 	volatile cNPNZ16b_t* controller // Pointer to nPnZ data structure

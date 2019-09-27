@@ -1,8 +1,8 @@
 ;LICENSE / DISCLAIMER
 ; **********************************************************************************
-;  SDK Version: z-Domain Control Loop Designer v0.9.0.60
-;  Author:      M91281
-;  Date/Time:   9/6/2019 3:41:20 PM
+;  SDK Version: z-Domain Control Loop Designer v0.9.0.61
+;  Author:      M16423
+;  Date/Time:   26/09/2019 14:03:44
 ; **********************************************************************************
 ;  2P2Z Control Library File (Dual Bitshift-Scaliing Mode)
 ; **********************************************************************************
@@ -55,8 +55,8 @@
 ; This function calls the z-domain controller processing the latest data point input
 ;------------------------------------------------------------------------------
 	
-	.global _c2P2Z_boost_Update
-_c2P2Z_boost_Update:    ; provide global scope to routine
+	.global _c2p2z_boost_Update
+_c2p2z_boost_Update:    ; provide global scope to routine
 	push w12    ; save working register used for status flag tracking
 	
 ;------------------------------------------------------------------------------
@@ -64,6 +64,11 @@ _c2P2Z_boost_Update:    ; provide global scope to routine
 	mov [w0 + #offStatus], w12
 	btss w12, #NPMZ16_STATUS_ENABLE
 	bra C2P2Z_BOOST_BYPASS_LOOP
+	
+;------------------------------------------------------------------------------
+; Configure DSP for fractional operation with normal saturation (Q1.31 format)
+	mov #0x00E4, w4
+	mov w4, _CORCON
 	
 ;------------------------------------------------------------------------------
 ; Setup pointers to A-Term data arrays
@@ -178,12 +183,12 @@ _c2P2Z_boost_Update:    ; provide global scope to routine
 ;------------------------------------------------------------------------------
 	
 ;------------------------------------------------------------------------------
-; Global function declaration _c2P2Z_boost_Reset
+; Global function declaration _c2p2z_boost_Reset
 ; This function clears control and error histories enforcing a reset
 ;------------------------------------------------------------------------------
 	
-	.global _c2P2Z_boost_Reset
-_c2P2Z_boost_Reset:
+	.global _c2p2z_boost_Reset
+_c2p2z_boost_Reset:
 	
 ;------------------------------------------------------------------------------
 ; Clear control history array
@@ -208,12 +213,12 @@ _c2P2Z_boost_Reset:
 ;------------------------------------------------------------------------------
 	
 ;------------------------------------------------------------------------------
-; Global function declaration _c2P2Z_boost_Precharge
+; Global function declaration _c2p2z_boost_Precharge
 ; This function loads user-defined default values into control and error histories
 ;------------------------------------------------------------------------------
 	
-	.global _c2P2Z_boost_Precharge
-_c2P2Z_boost_Precharge:
+	.global _c2p2z_boost_Precharge
+_c2p2z_boost_Precharge:
 	
 ;------------------------------------------------------------------------------
 ; Charge error history array with defined value

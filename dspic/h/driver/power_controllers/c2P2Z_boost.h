@@ -1,5 +1,5 @@
 /* ***************************************************************************************
- * z-Domain Control Loop Designer Version 0.9.0.60.
+ * z-Domain Control Loop Designer Version 0.9.0.61.
  * ***************************************************************************************
  * 2p2z compensation filter coefficients derived for following operating conditions:
  * ***************************************************************************************
@@ -47,25 +47,27 @@
 	} __attribute__((packed))C2P2Z_BOOST_CONTROL_LOOP_HISTORIES_t;
 
 
-	extern volatile cNPNZ16b_t c2P2Z_boost; // user-controller data object
+	extern volatile cNPNZ16b_t c2p2z_boost; // user-controller data object
 
 /* ***************************************************************************************/
 
 // Function call prototypes for initialization routines and control loops
 
-extern uint16_t c2P2Z_boost_Init(void); // Loads default coefficients into 2P2Z controller and resets histories to zero
-
-extern void c2P2Z_boost_Reset( // Resets the 2P2Z controller histories
+extern volatile uint16_t c2p2z_boost_Init( // Loads default coefficients into 2P2Z controller and resets histories to zero
 	volatile cNPNZ16b_t* controller // Pointer to nPnZ data structure
 	);
 
-extern void c2P2Z_boost_Precharge( // Pre-charges histories of the 2P2Z with defined steady-state data
+extern void c2p2z_boost_Reset( // Resets the 2P2Z controller histories
+	volatile cNPNZ16b_t* controller // Pointer to nPnZ data structure
+	);
+
+extern void c2p2z_boost_Precharge( // Pre-charges histories of the 2P2Z with defined steady-state data
 	volatile cNPNZ16b_t* controller, // Pointer to nPnZ data structure
 	volatile uint16_t ctrl_input, // user-defined, constant error history value
 	volatile uint16_t ctrl_output // user-defined, constant control output history value
 	);
 
-extern void c2P2Z_boost_Update( // Calls the 2P2Z controller
+extern void c2p2z_boost_Update( // Calls the 2P2Z controller
 	volatile cNPNZ16b_t* controller // Pointer to nPnZ data structure
 	);
 

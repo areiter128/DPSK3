@@ -92,14 +92,14 @@ void Drv_PowerControllerBuck1_SetOutputVoltageReference_mV(uint32_t newVoltRef_m
 
 void Drv_PowerControllerBuck1_EnableControlLoop(void)
 {
-    c2p2z_buck.status.flag.enable = 1;  // Start the control loop for buck
+    c2p2z_buck.status.flags.enable = 1;  // Start the control loop for buck
     PG1IOCONLbits.OVRENH = 0;           // User override disabled for PWMxH Pin
     PG1IOCONLbits.OVRENL = 0;           // User override disabled for PWMxL Pin
 }
 
 void Drv_PowerControllerBuck1_DisableControlLoop(void)
 {
-    c2p2z_buck.status.flag.enable = 0;  // Stop the control loop for buck
+    c2p2z_buck.status.flags.enable = 0;  // Stop the control loop for buck
     PG1IOCONLbits.OVRENH = 1;           // User override disabled for PWMxH Pin
     PG1IOCONLbits.OVRENL = 1;           // User override disabled for PWMxL Pin
     //TODO: should we set some output pin for safety reasons???
@@ -155,7 +155,7 @@ void Drv_PowerControllerBuck1_Init(bool autostart)
     Drv_PowerControllerBuck1_InitACMP();         // Set up comparator/DAC for PCMC
     Drv_PowerControllerBuck1_InitADC();          // Set up ADC (voltage feedback only)
    
-    c2p2z_buck_Init();
+    c2p2z_buck_Init(&c2p2z_buck);
     c2p2z_buck.ADCTriggerOffset = VOUT_ADCTRIG;
     c2p2z_buck.ptrADCTriggerRegister = &PG3TRIGA;
     c2p2z_buck.InputOffset = 0;
@@ -164,7 +164,7 @@ void Drv_PowerControllerBuck1_Init(bool autostart)
     c2p2z_buck.ptrTarget = &DAC1DATH;
     c2p2z_buck.MaxOutput = BUCK_MAX_PCMC_CL;
     c2p2z_buck.MinOutput = BUCK_MIN_PCMC_CL;
-    c2p2z_buck.status.flag.enable = 0;
+    c2p2z_buck.status.flags.enable = 0;
 }
 
 volatile uint16_t Drv_PowerControllerBuck1_InitPWM(void)

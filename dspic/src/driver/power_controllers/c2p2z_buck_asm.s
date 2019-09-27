@@ -1,8 +1,8 @@
 ;LICENSE / DISCLAIMER
 ; **********************************************************************************
-;  SDK Version: z-Domain Control Loop Designer v0.9.0.60
-;  Author:      M91281
-;  Date/Time:   7/16/2019 5:44:07 PM
+;  SDK Version: z-Domain Control Loop Designer v0.9.0.61
+;  Author:      M16423
+;  Date/Time:   26/09/2019 13:51:33
 ; **********************************************************************************
 ;  2P2Z Control Library File (Single Coefficient Factor Scaling Mode)
 ; **********************************************************************************
@@ -157,14 +157,6 @@ _c2p2z_buck_Update:    ; provide global scope to routine
 ; Write control output value to target
 	mov [w0 + #offTargetRegister], w8    ; move pointer to target in to working register
 	mov w4, [w8]    ; move control output into target address
-	
-;------------------------------------------------------------------------------
-; Update ADC trigger position
-	asr w4, #1, w6
-	mov [w0 + #offADCTriggerOffset], w8
-	add w6, w8, w6
-	mov [w0 + #offADCTriggerRegister], w8
-	mov w6, [w8]
 	
 ;------------------------------------------------------------------------------
 ; Load pointer to first element of control history array

@@ -14,10 +14,21 @@
             <make-dep-projects/>
             <sourceRootList>
                 <sourceRootElem>.</sourceRootElem>
+                <sourceRootElem>../common</sourceRootElem>
                 <sourceRootElem>h</sourceRootElem>
-                <sourceRootElem>h/init</sourceRootElem>
+                <sourceRootElem>h/app</sourceRootElem>
+                <sourceRootElem>h/driver</sourceRootElem>
+                <sourceRootElem>h/device</sourceRootElem>
+                <sourceRootElem>h/main</sourceRootElem>
+                <sourceRootElem>h/misc</sourceRootElem>
+                <sourceRootElem>h/os</sourceRootElem>
                 <sourceRootElem>src</sourceRootElem>
-                <sourceRootElem>src/init</sourceRootElem>
+                <sourceRootElem>src/app</sourceRootElem>
+                <sourceRootElem>src/device</sourceRootElem>
+                <sourceRootElem>src/driver</sourceRootElem>
+                <sourceRootElem>src/main</sourceRootElem>
+                <sourceRootElem>src/misc</sourceRootElem>
+                <sourceRootElem>src/os</sourceRootElem>
             </sourceRootList>
             <confList>
                 <confElem>
@@ -25,7 +36,7 @@
                     <type>2</type>
                 </confElem>
                 <confElem>
-                    <name>MA330048_R30</name>
+                    <name>DPSK3_R30_TEST_ENABLED</name>
                     <type>2</type>
                 </confElem>
             </confList>
