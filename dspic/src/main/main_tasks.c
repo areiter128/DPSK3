@@ -46,6 +46,7 @@
 #include "app/app_logger.h"
 #include "misc/global.h"
 #include "misc/system.h"
+#include "app/app_test.h"
 
 
 //=======================================================================================================
@@ -110,6 +111,10 @@ void Tasks_100us(void)
 //=======================================================================================================
 void Tasks_1ms(void)
 {
+#ifdef TEST_ENABLED
+    app_test_millisecondcounter++;
+#endif
+    
     App_Fault_Handling_Task_1ms();
     App_Proto24_Task_1ms();
     if(App_Proto24_IsNewDataAvailable())
@@ -134,9 +139,11 @@ void Tasks_10ms(void)
 //=======================================================================================================
 void Tasks_100ms(void)
 {
+    Global_UpdateBoardData();
+
+#ifndef TEST_ENABLED
     DBGLED_TOGGLE;              // Toggle debug LED
     App_Hmi_Task_100ms();   // calling the display application that contains the main state machine
-    Global_UpdateBoardData();
     
     time_counter_logger++;
     if (time_counter_logger == 8)
@@ -146,6 +153,7 @@ void Tasks_100ms(void)
         App_Logger_LogProto24();
         time_counter_logger = 0;
     }
+#endif
 }
 
 //=======================================================================================================

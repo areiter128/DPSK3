@@ -34,7 +34,7 @@ MICROCHIP FOR THIS SOFTWARE.
 #include "driver/power_controllers/drv_power_controllers.h"
 #include "driver/power_controllers/drv_power_controller_buck_custom.h"
 #include "driver/power_controllers/drv_power_controller_boost_custom.h"
-
+#include "os/os_scheduler.h"
 
 #define SIZE_OF(X)      (sizeof(X)/sizeof(X[0]))
 #define MIN(X,Y)        (((X)<(Y))?(X):(Y))
@@ -64,35 +64,38 @@ static bool _analizeSamples_dbl(pfread_dbl_t pFunc, double   min, double   max, 
 static bool _analizeSamples_u16(pfread_u16_t pFunc, uint16_t min, uint16_t max, uint16_t dev, uint16_t avg, uint16_t err, uint16_t count);
 
 
-pftest_t TestHandlers[] = {testSerial,
-                                    testP24com,
-                                    testP24ledsUbutton,
-                                    testP24btn1,
-                                    testP24btn2,
-                                    testNoLoad,
-                                    testFullLoad,
-                                    testStepLoad,
-                                    testThermal
-                                   };
+pftest_t TestHandlers[] = { testSerial,
+                            testP24com,
+                            testP24ledsUbutton,
+                            testP24btn1,
+                            testP24btn2,
+                            testNoLoad,
+                            testFullLoad,
+                            testStepLoad,
+                            testThermal
+                          };
 
-char    *TestStrings[] = {"PC comm",
-                                   "PIC24 comm",
-                                   "9 LEDs blinking / user button",
-                                   "buck load button",
-                                   "boost load button",
-                                   "regulators without load",
-                                   "regulators with full load",
-                                   "regulators with stepping load",
-                                   "thermal"
-                                  };
+char    *TestStrings[] = {  "PC comm",
+                            "PIC24 comm",
+                            "9 LEDs blinking / user button",
+                            "buck load button",
+                            "boost load button",
+                            "regulators without load",
+                            "regulators with full load",
+                            "regulators with stepping load",
+                            "thermal"
+                         };
 
 uint16_t  TestTimes[]  = {60, 55, 50, 45, 40, 35, 30, 25, 20};
 
+uint32_t app_test_millisecondcounter;
+
 #define NUM_TESTS    MIN3(SIZE_OF(TestHandlers), SIZE_OF(TestStrings), SIZE_OF(TestTimes))
 
-#define DELAY_ADJ_FACTOR      0.27
-#define DELAY_MS_ADJUSTED(x)  __delay_ms((unsigned long)(x * DELAY_ADJ_FACTOR))
+//#define DELAY_ADJ_FACTOR      0.27
+//#define DELAY_MS_ADJUSTED(x)  __delay_ms((unsigned long)(x * DELAY_ADJ_FACTOR))
 
+void WaitMilliseconds(uint16_t ms);
 
 void App_Test(void)
 {
@@ -123,7 +126,7 @@ void App_Test(void)
     testShowResults(results);
     PrintSerial("THE END\n\r");
     PrintSerial("=============================================================\n\r");
-    DELAY_MS_ADJUSTED(500);
+    WaitMilliseconds(500);
 }
 
 bool Proto24Check(void)
@@ -152,6 +155,7 @@ static void testShowResults(uint16_t results)
             testResult = "PASSED";
         }
         PrintSerial("Test no. %d - %s - %s\n\r", i + 1, testResult, TestStrings[i]);
+        WaitMilliseconds(5);    // wait for serial buffer to get empty
     }
     if(errors)
         PrintSerial("%d tests failed\n\r", errors);
@@ -167,7 +171,7 @@ static bool _waitSpecificKey(char *pString, uint16_t timeout)
     timeout = timeout >> 4; // divide it by 16
     do
     {
-        DELAY_MS_ADJUSTED(16);
+        WaitMilliseconds(16);
         if(!Dev_UART1_ReceiveBufferIsEmpty())
         {
             char ch = (char)Dev_UART1_Read();
@@ -205,12 +209,12 @@ static bool testP24ledsUbutton(void)
     PrintSerial("press user button 3 times (timeout 10s) ");
     App_Proto24_Init();
     App_Proto24_Send(PROTO_SYS_RESET);
-    DELAY_MS_ADJUSTED(600);
+    WaitMilliseconds(600);
     App_Proto24_Send(PROTO_TEST_ON);
 
     while(timeout_counter--)
     {
-        DELAY_MS_ADJUSTED(50);
+        WaitMilliseconds(50);
         Proto24Check();
         if(DEV_BUTTON_EVENT_PRESSED_SHORT == Dev_Button_GetEvent())
         {
@@ -224,7 +228,7 @@ static bool testP24ledsUbutton(void)
         }
     }
     App_Proto24_Send(PROTO_TEST_OFF);
-    DELAY_MS_ADJUSTED(50);
+    WaitMilliseconds(50);
     return ret_code;
 }
 
@@ -234,12 +238,12 @@ static bool testP24btn1(void)
     uint8_t timeout_counter = 100; // it takes around 5s
 //    Proto24Init(pProto);
 //    Proto24Send(PROTO_SYS_RESET);
-//    DELAY_MS_ADJUSTED(600);
+//    WaitMilliseconds(600);
     PrintSerial("press BUCK LOAD button 3 times (timeout 5s) ");
 
     while(timeout_counter--)
     {
-        DELAY_MS_ADJUSTED(50);
+        WaitMilliseconds(50);
         Proto24Check();
         if(global_proto24data.load_status.buck_still == 7)
         {
@@ -249,7 +253,7 @@ static bool testP24btn1(void)
         }
     }
   //  Proto24Send(PROTO_SYS_RESET);
-  //  DELAY_MS_ADJUSTED(100);
+  //  WaitMilliseconds(100);
     return ret_code;
 }
 
@@ -259,12 +263,12 @@ static bool testP24btn2(void)
     uint8_t timeout_counter = 100; // it takes around 5s
     App_Proto24_Init();
  //   Proto24Send(PROTO_SYS_RESET);
- //   DELAY_MS_ADJUSTED(600);
+ //   WaitMilliseconds(600);
     PrintSerial("press BOOST LOAD button 3 times (timeout 5s) ");
 
     while(timeout_counter--)
     {
-        DELAY_MS_ADJUSTED(50);
+        WaitMilliseconds(50);
         Proto24Check();
         if(global_proto24data.load_status.boost_still == 7)
         {
@@ -274,7 +278,7 @@ static bool testP24btn2(void)
         }
     }
     App_Proto24_Send(PROTO_SYS_RESET);
-    DELAY_MS_ADJUSTED(100);
+    WaitMilliseconds(100);
     return ret_code;
 }
 
@@ -284,6 +288,8 @@ static bool testNoLoad(void)
 {
     bool ret_code; // true means failed
     /*                       pFunc,        min,  max,  dev,  avg,  err,  count */
+//bool _analizeSamples_dbl(pfread_dbl_t pFunc, double min, double max, double dev, double avg, double err, uint16_t count)
+    
     ret_code = 0;
     PrintSerial("\n\rinput voltage: ");
     if(_analizeSamples_dbl(Drv_PowerControllers_GetInputVoltage, 6.0, 14.0, 2.0, 9.0, 0.6, 100))
@@ -308,13 +314,13 @@ static bool testFullLoad(void)
 {
     bool ret_code; // true means failed
     App_Proto24_Init();
-    App_Proto24_Send(PROTO_SYS_RESET);    DELAY_MS_ADJUSTED(600);
-    App_Proto24_Send(PROTO_SHORT_BUCK);   DELAY_MS_ADJUSTED(200);
-    App_Proto24_Send(PROTO_SHORT_BOOST);  DELAY_MS_ADJUSTED(200);
-    App_Proto24_Send(PROTO_SHORT_BUCK);   DELAY_MS_ADJUSTED(200);
-    App_Proto24_Send(PROTO_SHORT_BOOST);  DELAY_MS_ADJUSTED(200);
-    App_Proto24_Send(PROTO_SHORT_BUCK);   DELAY_MS_ADJUSTED(200);
-    App_Proto24_Send(PROTO_SHORT_BOOST);  DELAY_MS_ADJUSTED(500);
+    App_Proto24_Send(PROTO_SYS_RESET);    WaitMilliseconds(600);
+    App_Proto24_Send(PROTO_SHORT_BUCK);   WaitMilliseconds(200);
+    App_Proto24_Send(PROTO_SHORT_BOOST);  WaitMilliseconds(200);
+    App_Proto24_Send(PROTO_SHORT_BUCK);   WaitMilliseconds(200);
+    App_Proto24_Send(PROTO_SHORT_BOOST);  WaitMilliseconds(200);
+    App_Proto24_Send(PROTO_SHORT_BUCK);   WaitMilliseconds(200);
+    App_Proto24_Send(PROTO_SHORT_BOOST);  WaitMilliseconds(500);
 
     ret_code = 0;
     /*                       pFunc,        min,  max,  dev,  avg,  err,  count */
@@ -334,7 +340,7 @@ static bool testFullLoad(void)
     if(_analizeSamples_u16(GetDacBoost, 2000, 2900, 300, 2500, 300, 100))
     {   PrintSerial(" !");  ret_code |= 1;  }
     PrintSerial("\n\r");
-    App_Proto24_Send(PROTO_SYS_RESET);   DELAY_MS_ADJUSTED(500);
+    App_Proto24_Send(PROTO_SYS_RESET);   WaitMilliseconds(500);
     return ret_code;
 }
 
@@ -342,13 +348,13 @@ static bool testStepLoad(void)
 {
     bool ret_code; // true means failed
     App_Proto24_Init();
-    App_Proto24_Send(PROTO_SYS_RESET);    DELAY_MS_ADJUSTED(1000);
-    App_Proto24_Send(PROTO_LONG_BUCK);    DELAY_MS_ADJUSTED(500);
-    App_Proto24_Send(PROTO_SHORT_BUCK);   DELAY_MS_ADJUSTED(200);
-    App_Proto24_Send(PROTO_SHORT_BUCK);   DELAY_MS_ADJUSTED(200);
-    App_Proto24_Send(PROTO_LONG_BOOST);   DELAY_MS_ADJUSTED(500);
-    App_Proto24_Send(PROTO_SHORT_BOOST);  DELAY_MS_ADJUSTED(200);
-    App_Proto24_Send(PROTO_SHORT_BOOST);  DELAY_MS_ADJUSTED(500);
+    App_Proto24_Send(PROTO_SYS_RESET);    WaitMilliseconds(1000);
+    App_Proto24_Send(PROTO_LONG_BUCK);    WaitMilliseconds(500);
+    App_Proto24_Send(PROTO_SHORT_BUCK);   WaitMilliseconds(200);
+    App_Proto24_Send(PROTO_SHORT_BUCK);   WaitMilliseconds(200);
+    App_Proto24_Send(PROTO_LONG_BOOST);   WaitMilliseconds(500);
+    App_Proto24_Send(PROTO_SHORT_BOOST);  WaitMilliseconds(200);
+    App_Proto24_Send(PROTO_SHORT_BOOST);  WaitMilliseconds(500);
 
     ret_code = 0;
     /*                      pFunc,        min,  max,  dev,  avg,  err,  count */
@@ -368,7 +374,7 @@ static bool testStepLoad(void)
     if(_analizeSamples_u16(GetDacBoost, 800, 2900, 1200, 2200, 500, 100))
     {   PrintSerial(" !");  ret_code |= 1;  }
     PrintSerial("\n\r");
-    App_Proto24_Send(PROTO_SYS_RESET);    DELAY_MS_ADJUSTED(500);
+    App_Proto24_Send(PROTO_SYS_RESET);    WaitMilliseconds(500);
     return ret_code;
 }
 
@@ -387,7 +393,7 @@ static bool _analizeSamples_dbl(pfread_dbl_t pFunc, double min, double max, doub
     while(count--)
     {
         double val;
-        DELAY_MS_ADJUSTED(11);
+        WaitMilliseconds(11);
         val = pFunc();
         if(val < min_val)
             min_val = val;
@@ -429,7 +435,7 @@ static bool _analizeSamples_u16(pfread_u16_t pFunc, uint16_t min, uint16_t max, 
     while(count--)
     {
         uint16_t val;
-        DELAY_MS_ADJUSTED(11);
+        WaitMilliseconds(11);
         val = pFunc();
         if(val < min_val)
             min_val = val;
@@ -461,22 +467,15 @@ static bool _analizeSamples_u16(pfread_u16_t pFunc, uint16_t min, uint16_t max, 
 
 static bool testP24com(void)
 {
-    bool ret_code = true; // true means failed
-    uint8_t timeout_counter = 100; // it takes around 5s
-    uint8_t rx_count = 0;
-    App_Proto24_Init();
-    App_Proto24_Send(PROTO_SYS_RESET);
+    bool ret_code = true;               // true means failed
+    uint8_t timeout_counter = 100;      // it takes around 5s
 
     while(timeout_counter--)
     {
-        DELAY_MS_ADJUSTED(50);
-        if(Proto24Check()) // each time something comes from the Pic24
-        {
-            rx_count++;
-        }
+        WaitMilliseconds(50);
     }
-    PrintSerial("received %d packets", rx_count);
-    if(rx_count > 3)
+    PrintSerial("received %d packets", global_data.pic24_packet_counter);
+    if (global_data.pic24_packet_counter > 3)
         ret_code = false;
     return ret_code;
 }
@@ -484,14 +483,16 @@ static bool testP24com(void)
 static uint8_t _readTemperature(void)
 {
     uint8_t temperature = 255; // undefined temp
-    uint8_t timeout_counter = 15; // 1.5 seconds timeout
+    uint8_t timeout_counter = 30; // 1.5 seconds timeout
     
+    uint8_t proto24_packet_counter = global_data.pic24_packet_counter;
+        
     while(timeout_counter--)
     {
-        DELAY_MS_ADJUSTED(100);
-        if(Proto24Check())
+        WaitMilliseconds(50);
+        if (global_data.pic24_packet_counter != proto24_packet_counter) //did we receive a new temperature information?
         {
-            temperature = global_proto24data.temperature;
+            temperature = global_data.board.temperature;
             break;
         }
     }
@@ -504,6 +505,7 @@ static bool testThermal(void)
     uint8_t temp0 = 0, temp1 = 0, temp2 = 0;
     
     temp0 = _readTemperature();
+//    temp0 = global_data.board.temperature;
     if(temp0 == 255)
         goto exit;
     PrintSerial("initial temperature = %d deg C", temp0);
@@ -514,13 +516,13 @@ static bool testThermal(void)
     }
 
     App_Proto24_Init();
-    App_Proto24_Send(PROTO_SYS_RESET);    DELAY_MS_ADJUSTED(600);
-    App_Proto24_Send(PROTO_SHORT_BUCK);   DELAY_MS_ADJUSTED(200);
-    App_Proto24_Send(PROTO_SHORT_BOOST);  DELAY_MS_ADJUSTED(200);
-    App_Proto24_Send(PROTO_SHORT_BUCK);   DELAY_MS_ADJUSTED(200);
-    App_Proto24_Send(PROTO_SHORT_BOOST);  DELAY_MS_ADJUSTED(200);
-    App_Proto24_Send(PROTO_SHORT_BUCK);   DELAY_MS_ADJUSTED(200);
-    App_Proto24_Send(PROTO_SHORT_BOOST);  DELAY_MS_ADJUSTED(500);
+    App_Proto24_Send(PROTO_SYS_RESET);    WaitMilliseconds(600);
+    App_Proto24_Send(PROTO_SHORT_BUCK);   WaitMilliseconds(200);
+    App_Proto24_Send(PROTO_SHORT_BOOST);  WaitMilliseconds(200);
+    App_Proto24_Send(PROTO_SHORT_BUCK);   WaitMilliseconds(200);
+    App_Proto24_Send(PROTO_SHORT_BOOST);  WaitMilliseconds(200);
+    App_Proto24_Send(PROTO_SHORT_BUCK);   WaitMilliseconds(200);
+    App_Proto24_Send(PROTO_SHORT_BOOST);  WaitMilliseconds(500);
 
     temp1 = _readTemperature();
     if(temp1 == 255)
@@ -528,7 +530,7 @@ static bool testThermal(void)
 
     PrintSerial("\n\rtemperature 1 = %d deg C\n\r", temp1);
     PrintSerial("... heating 15s ...\n\r");
-    DELAY_MS_ADJUSTED(15000);
+    WaitMilliseconds(15000);
     temp2 = _readTemperature();
     if(temp2 == 255)
         goto exit;
@@ -537,6 +539,16 @@ static bool testThermal(void)
     if((temp2 - temp1) >= 5)
         ret_code = false;
 exit:
-    App_Proto24_Send(PROTO_SYS_RESET);    DELAY_MS_ADJUSTED(500);
+    App_Proto24_Send(PROTO_SYS_RESET);    WaitMilliseconds(500);
     return ret_code;
+}
+
+
+void WaitMilliseconds(uint16_t time_ms)
+{
+    app_test_millisecondcounter = 0;
+    while (app_test_millisecondcounter < time_ms)
+    {
+        OS_Scheduler_RunOnce();
+    }
 }
