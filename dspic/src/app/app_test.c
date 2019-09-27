@@ -219,7 +219,7 @@ static bool testP24ledsUbutton(void)
         if(DEV_BUTTON_EVENT_PRESSED_SHORT == Dev_Button_GetEvent())
         {
             btn_count++;
-            PrintSerial(".");
+            //PrintSerial(".");
                 if(btn_count > 2)
                 {
                     ret_code = false;
@@ -237,14 +237,14 @@ static bool testP24btn1(void)
     bool ret_code = true; // true means failed
     uint8_t timeout_counter = 100; // it takes around 5s
 //    Proto24Init(pProto);
-//    Proto24Send(PROTO_SYS_RESET);
-//    WaitMilliseconds(600);
+    App_Proto24_Send(PROTO_SYS_RESET);
+    WaitMilliseconds(600);
     PrintSerial("press BUCK LOAD button 3 times (timeout 5s) ");
 
     while(timeout_counter--)
     {
         WaitMilliseconds(50);
-        Proto24Check();
+        //Proto24Check();
         if(global_proto24data.load_status.buck_still == 7)
         {
             PrintSerial(" pressed 3 times ");
@@ -261,15 +261,15 @@ static bool testP24btn2(void)
 {
     bool ret_code = true; // true means failed
     uint8_t timeout_counter = 100; // it takes around 5s
-    App_Proto24_Init();
- //   Proto24Send(PROTO_SYS_RESET);
- //   WaitMilliseconds(600);
+//    App_Proto24_Init();
+    App_Proto24_Send(PROTO_SYS_RESET);
+    WaitMilliseconds(600);
     PrintSerial("press BOOST LOAD button 3 times (timeout 5s) ");
 
     while(timeout_counter--)
     {
         WaitMilliseconds(50);
-        Proto24Check();
+        //Proto24Check();
         if(global_proto24data.load_status.boost_still == 7)
         {
             PrintSerial(" pressed 3 times ");
