@@ -100,21 +100,24 @@ void WaitMilliseconds(uint16_t ms);
 void App_Test(void)
 {
     uint16_t results = UINT16_MAX;
+    bool fail = false;
     uint8_t  i;
         
-    PrintLcd(0,"DPSK TESTING... ");    
-    PrintLcd(1,"                ");
+    PrintLcd(0,"DPSK3 HW-TEST...");    
+    PrintLcd(1,"VERSION:    v1.2");
     PrintSerial("=============================================================\n\r");
     PrintSerial("DURING TEST, DO NOT PRESS ANY BUTTONS ON DPSK,\n\r");
     PrintSerial("EXCEPT FOR THE EXPLICIT SITUATIONS\n\r");
     
     for(i = 0; i < NUM_TESTS; i++)
     {
+        PrintLcd(1,"TEST         %d/%d", i+1, NUM_TESTS);
         PrintSerial("***********************************************************\n\r");
         PrintSerial("%d/%d Testing %s - estimated remaining time %d s\n\r", i+1, NUM_TESTS, TestStrings[i], TestTimes[i]);
         if(TestHandlers[i]())
         {
-            PrintSerial(" Failed!\n\r");
+            PrintSerial(" FAILED!\n\r");
+            fail = true;
         }
         else
         {
@@ -126,6 +129,12 @@ void App_Test(void)
     testShowResults(results);
     PrintSerial("THE END\n\r");
     PrintSerial("=============================================================\n\r");
+
+    if (fail)
+        PrintLcd(1,"==== FAILED ====");
+    else
+        PrintLcd(1,"==== PASSED ====");
+        
     while(1)
     {
         WaitMilliseconds(500);

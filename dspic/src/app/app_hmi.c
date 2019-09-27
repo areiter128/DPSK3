@@ -220,24 +220,24 @@ void RefreshDisplay(void)
     switch(app_hmi_pagestate)
     {
         case PAGE_INIT_0:
-            Dev_Lcd_WriteStringXY(0,0,"                ");
-            Dev_Lcd_WriteStringXY(0,1,"   MICROCHIP    ");
+            Dev_Lcd_WriteStringXY(0,0,"   MICROCHIP    ");
+            Dev_Lcd_WriteStringXY(0,1," TECHNOLOGY INC ");
             break;
         case PAGE_INIT_1:
-            Dev_Lcd_WriteStringXY(0,0,"   MICROCHIP    ");
-            Dev_Lcd_WriteStringXY(0,1,"Starter Kit for ");
+            Dev_Lcd_WriteStringXY(0,0," DIGITAL POWER  ");
+            Dev_Lcd_WriteStringXY(0,1," STARTER KIT 3  ");
             break;
         case PAGE_INIT_2:
-            Dev_Lcd_WriteStringXY(0,0,"Starter Kit for ");
-            Dev_Lcd_WriteStringXY(0,1,"     dsPIC      ");
-            break;
-        case PAGE_INIT_3:
             Dev_Lcd_WriteStringXY(0,0,"     dsPIC      ");
             Dev_Lcd_WriteStringXY(0,1,"  33CK256MP505  ");
             break;
+        case PAGE_INIT_3:
+            Dev_Lcd_WriteStringXY(0,0," Firmware: v1.0 ");
+            Dev_Lcd_WriteStringXY(0,1," Hardware: v3.0 ");
+            break;
         case PAGE_INIT_4:
-            Dev_Lcd_WriteStringXY(0,0,"  33CK256MP505  ");
-            Dev_Lcd_WriteStringXY(0,1,"                ");
+            Dev_Lcd_WriteStringXY(0,0,"Press [USER] to ");
+            Dev_Lcd_WriteStringXY(0,1,"   continue...  ");
             break;
 /*            
         case PAGE_EXAMPLE_SHORT_BUTTON:
@@ -268,7 +268,10 @@ void RefreshDisplay(void)
             }
             break;
         case PAGE_VIN_TEMP:
-            PrintLcd(0,"Vin  =  %2.2f V   ", global_data.board.input_voltage);
+            if(global_data.board.input_voltage < 10.0) 
+            { PrintLcd(0,"Vin  =   %2.2f V  ", global_data.board.input_voltage); }
+            else
+            { PrintLcd(0,"Vin  =  %2.2f V   ", global_data.board.input_voltage); }
             PrintLcd(1,"Temp = %d deg C   ", global_data.board.temperature);
             break;
         case PAGE_BUCK_FAULTS:
@@ -299,8 +302,8 @@ void RefreshDisplay(void)
             }
             break;
         default:
-            PrintLcd(0,"Firmware error !");
-            PrintLcd(1,"                ");
+            PrintLcd(0," FIRMWARE ERROR ");
+            PrintLcd(1,"  PRESS [RESET] ");
             break;
     }
 }
