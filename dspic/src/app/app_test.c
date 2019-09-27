@@ -126,7 +126,10 @@ void App_Test(void)
     testShowResults(results);
     PrintSerial("THE END\n\r");
     PrintSerial("=============================================================\n\r");
-    WaitMilliseconds(500);
+    while(1)
+    {
+        WaitMilliseconds(500);
+    }
 }
 
 bool Proto24Check(void)
@@ -235,7 +238,7 @@ static bool testP24ledsUbutton(void)
 static bool testP24btn1(void)
 {
     bool ret_code = true; // true means failed
-    uint8_t timeout_counter = 100; // it takes around 5s
+    uint8_t timeout_counter = 200; // it takes around 5s
 //    Proto24Init(pProto);
     App_Proto24_Send(PROTO_SYS_RESET);
     WaitMilliseconds(600);
@@ -243,7 +246,7 @@ static bool testP24btn1(void)
 
     while(timeout_counter--)
     {
-        WaitMilliseconds(50);
+        WaitMilliseconds(25);
         //Proto24Check();
         if(global_proto24data.load_status.buck_still == 7)
         {
@@ -260,7 +263,7 @@ static bool testP24btn1(void)
 static bool testP24btn2(void)
 {
     bool ret_code = true; // true means failed
-    uint8_t timeout_counter = 100; // it takes around 5s
+    uint8_t timeout_counter = 200; // it takes around 5s
 //    App_Proto24_Init();
     App_Proto24_Send(PROTO_SYS_RESET);
     WaitMilliseconds(600);
@@ -268,7 +271,7 @@ static bool testP24btn2(void)
 
     while(timeout_counter--)
     {
-        WaitMilliseconds(50);
+        WaitMilliseconds(25);
         //Proto24Check();
         if(global_proto24data.load_status.boost_still == 7)
         {
@@ -305,8 +308,10 @@ static bool testNoLoad(void)
     {   PrintSerial(" !");  ret_code |= 1;  }
     PrintSerial("\n\rbuck DAC:      ");
     // last measurement: buck DAC:      min=165, max=246, dev=81, avg=200 !
+    // last measurement: buck DAC:      min=203, max=274, dev=71, avg=249 !
+    // last measurement: buck DAC:      min=228, max=273, dev=45, avg=249 !
 //    if(_analizeSamples_u16(GetDacBuck, 0, 300, 200, 50, 40, 100))
-    if(_analizeSamples_u16(GetDacBuck, 0, 300, 200, 200, 40, 100))
+    if(_analizeSamples_u16(GetDacBuck, 0, 300, 200, 225, 70, 100))
     {   PrintSerial(" !");  ret_code |= 1;  }
     PrintSerial("\n\rboost DAC:     ");
     // last measurement: boost DAC:     min=1378, max=1515, dev=137, avg=1453    

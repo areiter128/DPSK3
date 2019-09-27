@@ -28,7 +28,9 @@
 void App_Logger_Init(void)
 {
     Dev_UART1_Init();
+#ifndef TEST_ENABLED
     PrintSerial("\033[2J");
+#endif
 }
 
 
@@ -49,9 +51,9 @@ void App_Logger_LogData(void)
     PrintSerial("Pboost = %1.2f W, ", volt2 * global_data.boost.load);
     PrintSerial("step = %1.2f W\n\r", volt2 * global_data.boost.step_load);
     PrintSerial("Buck faults:  OCP %d, OVP %d, REG %d\n\r",
-        global_data.buck.fault_overcurrentprotection, global_data.buck.fault_overvoltageprotection, global_data.buck.fault_reg);
+    global_data.buck.fault_overcurrentprotection, global_data.buck.fault_overvoltageprotection, global_data.buck.fault_reg);
     PrintSerial("Boost faults: OCP %d, OVP %d, REG %d\n\r",
-        global_data.boost.fault_overcurrentprotection, global_data.boost.fault_overvoltageprotection, global_data.boost.fault_reg);
+    global_data.boost.fault_overcurrentprotection, global_data.boost.fault_overvoltageprotection, global_data.boost.fault_reg);
 }
 
 
