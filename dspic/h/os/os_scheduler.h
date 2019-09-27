@@ -53,7 +53,7 @@ extern void OS_Scheduler_Init(void);
 //          please consider that the timing of the calls are dependent on the duration of the last call
 //          the resulting jitter therefore depends on the timing of the calls before
 //=======================================================================================================
-extern void OS_Scheduler_Run(void);
+extern void OS_Scheduler_RunOnce(void);
 
 //=======================================================================================================
 //  @brief  Scheduler function for calling all the Tasks regularly ( 1ms, 10ms, 100ms, 1s )
