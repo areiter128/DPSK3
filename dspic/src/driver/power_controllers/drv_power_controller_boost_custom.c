@@ -35,6 +35,8 @@
 #include "driver/power_controllers/drv_power_controller_boost_custom.h"
 #include "driver/power_controllers/npnz16b.h"
 #include "driver/power_controllers/c2p2z_boost.h"
+#include "app/app_fault_handling.h"
+
 
 //=======================================================================================================
 // local defines
@@ -139,6 +141,14 @@ void Drv_PowerControllerBoost1_LaunchPeripherals(void)
     Drv_PowerControllerBoost1_LaunchPWM();           // Start PWM
 }
 
+bool Drv_PowerControllerBoost1_FaultDetected(void)
+{
+    if ((App_Fault_Handling_GetFaults() & ((1<<FAULT_SUPPLY_OVERVOLTAGE) | (1<<FAULT_SUPPLY_UNDERVOLTAGE))) != 0)
+        return true;
+    else
+        return false;
+}
+
 //=======================================================================================================
 // @brief   Initializes the Boost Power Converter - Instance 1
 // @note    In this routine all the application specific custom functions are implemented
@@ -173,6 +183,7 @@ void Drv_PowerControllerBoost1_Init(bool autostart)
     pwrCtrlBoost1_Data.ftkEnableControlLoop  = Drv_PowerControllerBoost1_EnableControlLoop;
     pwrCtrlBoost1_Data.ftkDisableControlLoop = Drv_PowerControllerBoost1_DisableControlLoop;
     pwrCtrlBoost1_Data.ftkLaunchPeripherals  = Drv_PowerControllerBoost1_LaunchPeripherals;
+    pwrCtrlBoost1_Data.ftkFaultDetected = Drv_PowerControllerBoost1_FaultDetected;
     pwrCtrlBoost1_Data.compClampMax = &(c2p2z_boost.MaxOutput);
        
     Drv_PowerControllerBoost1_InitAuxiliaryPWM(); // Set up auxiliary PWM 

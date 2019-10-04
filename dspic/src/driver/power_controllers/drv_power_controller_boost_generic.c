@@ -71,6 +71,17 @@ void boostPC_GotoState(POWER_CONTROLLER_DATA_t* pPCData, PWR_CTRL_STATE_e newSta
 }
 
 //=======================================================================================================
+// @brief   Dummy function for FaultDetection
+// @note    This function is only for Initialization in the generic part to make the system work
+// @note    It should be overwritten in the custom part of the power controller to make use of this
+//          function for startup and shutdown of the power controller
+//=======================================================================================================
+bool Drv_PowerControllerBoost1_FaultDetectedDummy(void)
+{
+    return false;
+}
+
+//=======================================================================================================
 // @brief   Initializes all peripherals and data structures of the boost controller like PWM, ADC, DAC, CMP etc.
 // @note    call this during booting up the system before you call anything else or the Power Controller
 //=======================================================================================================
@@ -83,6 +94,7 @@ void Drv_PowerControllerBoost_Init(POWER_CONTROLLER_DATA_t* pPCData, bool autost
     pPCData->flags.value = 0;                           // reset everything
     pPCData->flags.bits.adc_active = false;
     pPCData->flags.bits.auto_start = autostart;
+    pPCData->ftkFaultDetected = Drv_PowerControllerBoost1_FaultDetectedDummy;
     boostPC_GotoState(pPCData, PCS_STARTUP_PERIPHERALS); // reset state machine
     
     Drv_PowerControllerBoost_CalculateVoltageLimits(pPCData);
@@ -115,6 +127,8 @@ void Drv_PowerControllerBoost_Task_100us(POWER_CONTROLLER_DATA_t* pPCData)
         // PWM1H is kept low, while PWM1L is kept high to pre-charge the half-bridge bootstrap cap.
         // At the end of this phase, PWM1 output user overrides are disabled and the control is enabled.
         case PCS_WAIT_FOR_POWER_IN_GOOD:
+            if (pPCData->ftkFaultDetected())
+                break;
             if(++pPCData->timeCounter >= pPCData->powerInputOk_waitTime_100us)
             {
                pPCData->ftkEnableControlLoop();
@@ -155,46 +169,61 @@ void Drv_PowerControllerBoost_Task_100us(POWER_CONTROLLER_DATA_t* pPCData)
             uint16_t newReference;
             
             Drv_PowerControllerBoost_MonitorVoltageLimits(pPCData);
-           
-            newClamp = *(pPCData->compClampMax) + pPCData->currentClamp_rampStep;
+            if (pPCData->ftkFaultDetected())
+                boostPC_GotoState(pPCData, PCS_SHUTDOWN);
+            else
+            {
+                newClamp = *(pPCData->compClampMax) + pPCData->currentClamp_rampStep;
 
-            if (newClamp < pPCData->compMaxOutput)
-            {
-                *(pPCData->compClampMax) = newClamp;
+                if (newClamp < pPCData->compMaxOutput)
+                {
+                    *(pPCData->compClampMax) = newClamp;
+                }
+                else
+                {
+                     *(pPCData->compClampMax) = pPCData->compMaxOutput;
+                }
+
+                newReference = pPCData->voltageRef_compensator + pPCData->voltageRef_rampStep;
+                if (newReference < pPCData->voltageRef_softStart)
+                {
+                    pPCData->voltageRef_compensator = newReference;
+                }
+                else
+                {
+                    pPCData->voltageRef_compensator = pPCData->voltageRef_softStart;
+                    boostPC_GotoState(pPCData, PCS_WAIT_FOR_POWER_OUT_GOOD);
+                }
+                Drv_PowerControllerBoost_CalculateVoltageLimits(pPCData);    // Update the VoltageLimits
             }
-            else
-            {
-                 *(pPCData->compClampMax) = pPCData->compMaxOutput;
-            }
-            
-            newReference = pPCData->voltageRef_compensator + pPCData->voltageRef_rampStep;
-            if (newReference < pPCData->voltageRef_softStart)
-            {
-                pPCData->voltageRef_compensator = newReference;
-            }
-            else
-            {
-                pPCData->voltageRef_compensator = pPCData->voltageRef_softStart;
-                boostPC_GotoState(pPCData, PCS_WAIT_FOR_POWER_OUT_GOOD);
-            }
-            Drv_PowerControllerBoost_CalculateVoltageLimits(pPCData);    // Update the VoltageLimits
             break; 
         }
 
         case PCS_WAIT_FOR_POWER_OUT_GOOD:    // wait some time for the caps to charge and the power to be stable
             Drv_PowerControllerBoost_MonitorVoltageLimits(pPCData);
-            if (++pPCData->timeCounter >= pPCData->powerOutputOk_waitTime_100us)
+            if (pPCData->ftkFaultDetected())
+                boostPC_GotoState(pPCData, PCS_SHUTDOWN);
+            else if (++pPCData->timeCounter >= pPCData->powerOutputOk_waitTime_100us)
             {
                 boostPC_GotoState(pPCData, PCS_UP_AND_RUNNING);
             }
             break;
                  
         case PCS_UP_AND_RUNNING:   // Soft start is complete, system is running
-          
             // Checking output voltage limits
             Drv_PowerControllerBoost_MonitorVoltageLimits(pPCData);
+            if (pPCData->ftkFaultDetected())
+                boostPC_GotoState(pPCData, PCS_SHUTDOWN);
             break;
 
+        case PCS_SHUTDOWN:   
+            // Checking output voltage limits
+            pPCData->voltageRef_compensator = 0;
+            Drv_PowerControllerBoost_MonitorVoltageLimits(pPCData);
+            if (pPCData->ftkFaultDetected() == false)
+                boostPC_GotoState(pPCData, PCS_WAIT_FOR_POWER_IN_GOOD);
+            break;
+        
         default: // If something is going wrong, reset entire PWR controller
             boostPC_GotoState(pPCData, PCS_STARTUP_PERIPHERALS);
             break;
