@@ -40,6 +40,7 @@
 //=======================================================================================================
 
 #include <stdint.h>
+#include <stdbool.h>
 #include <xc.h>
 
 //=======================================================================================================
@@ -124,10 +125,10 @@ void Tasks_1s(void);
 void Tasks_Background(void);
 
 
-static volatile uint16_t   scheduler_interrupt_leader_100us = 0;
-static volatile uint16_t   scheduler_interrupt_follower_100us = 0;
-static volatile uint8_t    scheduler_interrupt_realtime_counter_1ms = 0;
-
+static volatile uint16_t    scheduler_interrupt_leader_100us = 0;
+static volatile uint16_t    scheduler_interrupt_follower_100us = 0;
+static volatile uint8_t     scheduler_interrupt_realtime_counter_1ms = 0;
+static bool                 scheduler_ready_to_run = false;
 
 //=======================================================================================================
 //  @brief  Initializes Scheduler
@@ -163,13 +164,16 @@ void OS_Scheduler_Init(void)
 //=======================================================================================================
 void __attribute__((__interrupt__,no_auto_psv)) _T1Interrupt(void)
 {
-    scheduler_interrupt_leader_100us++; //increment our counter for the scheduler, no tick gets lost
     _T1IF = 0;                          //clear Timer1 interrupt flag
-    Tasks_Realtime_100us();
-    if (++scheduler_interrupt_realtime_counter_1ms >= 10)
+    if (scheduler_ready_to_run)
     {
-        Tasks_Realtime_1ms();
-        scheduler_interrupt_realtime_counter_1ms = 0;
+        scheduler_interrupt_leader_100us++; //increment our counter for the scheduler, no tick gets lost
+        Tasks_Realtime_100us();
+        if (++scheduler_interrupt_realtime_counter_1ms >= 10)
+        {
+            Tasks_Realtime_1ms();
+            scheduler_interrupt_realtime_counter_1ms = 0;
+        }
     }
 }
 
@@ -188,7 +192,8 @@ void OS_Scheduler_RunOnce(void)
     volatile static uint16_t scheduler_1s_timer = 0;        // local counter for 1s tasks
 
     //TODO: should we implement a Watchdog that gets triggered in one of the Task-Routines?
-
+    scheduler_ready_to_run = true;  // realtime functions are allowed to start too from now on
+    
     if (scheduler_interrupt_follower_100us != scheduler_interrupt_leader_100us)
     {
         scheduler_interrupt_follower_100us++;
@@ -236,4 +241,10 @@ void OS_Scheduler_RunForever(void)
     {
         OS_Scheduler_RunOnce();
     }
+}
+
+
+void OS_Scheduler_GetSystemTickValue(uint16_t* tickCopy)
+{
+    *tickCopy = scheduler_interrupt_leader_100us;   // as long this is a uint16_t value it is atomic and valid
 }

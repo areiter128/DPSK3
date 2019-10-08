@@ -47,6 +47,8 @@
 #include "misc/global.h"
 #include "misc/system.h"
 #include "app/app_test.h"
+#include "os/os_profiler.h"
+#include "misc/helpers.h"
 
 
 //=======================================================================================================
@@ -74,13 +76,22 @@
 
 volatile uint16_t time_counter_logger = 0;      // for the timing of the logger
 
+os_profile_tasktiming profile_timing;
+
+void Tasks_Init(void)
+{
+    OS_Profiler_Init(&profile_timing);
+}
+
 //=======================================================================================================
 //  @brief  Tasks_Realtime_100us gets called directly from the timer interrupt every 100µs
 //  @note   keep this routine as short as possible
 //=======================================================================================================
 void Tasks_Realtime_100us(void)
 {
-    
+    DBGPIN_1_TOGGLE; // Toggle DEBUG-PIN
+    Drv_PowerControllers_Task_Realtime_100us();
+    App_Fault_Handling_Task_Realtime_100us();
 }
 
 //=======================================================================================================
@@ -98,11 +109,8 @@ void Tasks_Realtime_1ms(void)
 //=======================================================================================================
 void Tasks_100us(void)
 {
-    DBGPIN_1_TOGGLE; // Toggle DEBUG-PIN
-
-    Drv_PowerControllers_Task_100us();
-    //exec_boos_pwr_control();
-    App_Fault_Handling_Task_100us();
+    // ttention: this function can have a significant amount of jitter, depending on all the other
+    // functions in Tasks_1m, Tasks_10ms, ....
 }
 
 //=======================================================================================================
@@ -115,7 +123,7 @@ void Tasks_1ms(void)
     app_test_millisecondcounter++;
 #endif
     
-    App_Fault_Handling_Task_1ms();
+//    App_Fault_Handling_Task_1ms();
     App_Proto24_Task_1ms();
     if(App_Proto24_IsNewDataAvailable())
     {
@@ -139,11 +147,21 @@ void Tasks_10ms(void)
 //=======================================================================================================
 void Tasks_100ms(void)
 {
+
     Global_UpdateBoardData();
 
 #ifndef TEST_ENABLED
     DBGLED_TOGGLE;              // Toggle debug LED
+
+    OS_Profiler_StartDurationMeasurement(&profile_timing);
+
     App_Hmi_Task_100ms();   // calling the display application that contains the main state machine
+
+    if (OS_Profiler_StopDurationMeasurement(&profile_timing))
+    {
+        //ok, we have a new duration high score ==> write it to the serial interface :-)
+        PrintSerial("Profile logger: %d ticks\n\r", profile_timing.time_task_duration_max);
+    }
     
     time_counter_logger++;
     if (time_counter_logger == 8)

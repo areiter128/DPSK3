@@ -33,6 +33,7 @@
       </logicalFolder>
       <logicalFolder name="f6" displayName="main" projectFiles="true">
         <itemPath>h/main/main.h</itemPath>
+        <itemPath>h/main/main_tasks.h</itemPath>
       </logicalFolder>
       <logicalFolder name="f5" displayName="misc" projectFiles="true">
         <itemPath>h/misc/global.h</itemPath>
@@ -43,6 +44,7 @@
       </logicalFolder>
       <logicalFolder name="f7" displayName="os" projectFiles="true">
         <itemPath>h/os/os_scheduler.h</itemPath>
+        <itemPath>h/os/os_profiler.h</itemPath>
       </logicalFolder>
     </logicalFolder>
     <logicalFolder name="LinkerScript"
@@ -90,6 +92,7 @@
       </logicalFolder>
       <logicalFolder name="f7" displayName="os" projectFiles="true">
         <itemPath>src/os/os_scheduler_100us.c</itemPath>
+        <itemPath>src/os/os_profiler.c</itemPath>
       </logicalFolder>
     </logicalFolder>
     <logicalFolder name="ExternalFiles"

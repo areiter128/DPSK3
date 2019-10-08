@@ -43,7 +43,7 @@ extern void Drv_PowerControllers_Init(void);
 // @brief   power controller task
 // @note    call this every 100 µs from your task loop
 //=======================================================================================================
-extern void Drv_PowerControllers_Task_100us(void);
+extern void Drv_PowerControllers_Task_Realtime_100us(void);
 
 
 //=======================================================================================================

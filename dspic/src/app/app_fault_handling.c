@@ -274,7 +274,7 @@ void App_Fault_Handling_CheckFaultBit(FAULTBIT_CONDITION_SETTINGS_t* faultdata, 
 //  @brief  this function does the fault handling every 100 µs
 //  @note   call this function in your main scheduler every 100 µs
 //=======================================================================================================
-void App_Fault_Handling_Task_100us(void)
+void App_Fault_Handling_Task_Realtime_100us(void)
 {
     uint16_t    value;
 #if FAULT_HANDLING_DEBUG == 1

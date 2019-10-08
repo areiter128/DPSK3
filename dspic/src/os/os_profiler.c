@@ -15,9 +15,9 @@
 //=======================================================================================================
 
 //=======================================================================================================
-// @file main_tasks.h
+// @file os_profiler.c
 //
-// @brief contains the main tasks that are called by the scheduler
+// @brief contains functions to measure the maximum timing of some tasks
 //
 // @version v1.0
 // @date 2019-08-29
@@ -25,18 +25,31 @@
 //
 //=======================================================================================================
 
+#include <string.h>
+#include "os/os_profiler.h"
+#include "os/os_scheduler.h"
 
-#ifndef _MAIN_TASKS_H_
-#define _MAIN_TASKS_H_
+void OS_Profiler_Init(os_profile_tasktiming* profile)
+{
+    memset(profile, 0, sizeof(os_profile_tasktiming));
+}
 
+void OS_Profiler_StartDurationMeasurement(os_profile_tasktiming* profile)
+{
+    OS_Scheduler_GetSystemTickValue(&(profile->time_start));
+}
 
-#ifdef __cplusplus  // Provide C++ Compatibility
-    extern "C" {
-#endif
-
-extern void Tasks_Init(void);
-
-#ifdef __cplusplus  // Provide C++ Compatibility
+bool OS_Profiler_StopDurationMeasurement(os_profile_tasktiming* profile)
+{
+    OS_Scheduler_GetSystemTickValue(&(profile->time_stop));
+    profile->time_task_duration = profile->time_stop - profile->time_start;
+    if (profile->time_task_duration_max < profile->time_task_duration)
+    {
+        profile->time_task_duration_max = profile->time_task_duration;
+        return true;
     }
-#endif
-#endif              // _DEV_MAIN_SCHEDULER_H_
+    else
+    {
+        return false;
+    }
+}

@@ -70,17 +70,12 @@ uint16_t App_Fault_Handling_GetFaults(void);
 //=======================================================================================================
 bool App_Fault_Handling_IsFaultSet(uint8_t faultnumber);
 
-//======================================================================================================================
-//  @brief  this function does the fault handling every 1 ms
-//  @note   call this function in your main scheduler every 1ms
-//======================================================================================================================
-void App_Fault_Handling_Task_1ms(void);
 
 //======================================================================================================================
 //  @brief  this function does the fault handling every 1 ms
 //  @note   call this function in your main scheduler every 1ms
 //======================================================================================================================
-void App_Fault_Handling_Task_100us(void);
+void App_Fault_Handling_Task_Realtime_100us(void);
 
 #ifdef __cplusplus  // Provide C++ Compatibility
     }

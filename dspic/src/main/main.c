@@ -39,6 +39,7 @@
 #include "app/app_logger.h"
 #include "app/app_fault_handling.h"
 #include "os/os_scheduler.h"
+#include "main/main_tasks.h"
 
 #ifdef TEST_ENABLED
 #include "app/app_test.h"
@@ -71,6 +72,7 @@ int main(void)
 #ifdef TEST_ENABLED
     App_Test();
 #else
+    Tasks_Init();
     OS_Scheduler_RunForever();
 #endif  // TEST_ENABLED
     return (0);

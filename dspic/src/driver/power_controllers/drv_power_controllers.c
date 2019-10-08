@@ -115,7 +115,7 @@ uint16_t GetDacBoost(void)
 // @brief   power controller task
 // @note    call this every 100 µs from your task loop
 //=======================================================================================================
-void Drv_PowerControllers_Task_100us(void)
+void Drv_PowerControllers_Task_Realtime_100us(void)
 {
     // Boost converter PWM generators are triggered by auxiliary PWM of the buck regulator,
     // therefore the boost PWM is the first to be enabled. They start running once the buck

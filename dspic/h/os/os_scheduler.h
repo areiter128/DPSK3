@@ -63,6 +63,7 @@ extern void OS_Scheduler_RunOnce(void);
 //=======================================================================================================
 extern void OS_Scheduler_RunForever(void);
 
+extern void OS_Scheduler_GetSystemTickValue(uint16_t* tickCopy);
 
 #ifdef __cplusplus  // Provide C++ Compatibility
     }
