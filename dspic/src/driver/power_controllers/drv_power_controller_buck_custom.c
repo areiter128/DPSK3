@@ -100,8 +100,8 @@ void Drv_PowerControllerBuck1_EnableControlLoop(void)
 void Drv_PowerControllerBuck1_DisableControlLoop(void)
 {
     c2p2z_buck.status.flags.enable = 0;  // Stop the control loop for buck
-    PG1IOCONLbits.OVRENH = 1;           // User override disabled for PWMxH Pin
-    PG1IOCONLbits.OVRENL = 1;           // User override disabled for PWMxL Pin
+    PG1IOCONLbits.OVRENH = 1;           // User override enabled for PWMxH Pin
+    PG1IOCONLbits.OVRENL = 1;           // User override enabled for PWMxL Pin
     //TODO: should we set some output pin for safety reasons???
 }
 

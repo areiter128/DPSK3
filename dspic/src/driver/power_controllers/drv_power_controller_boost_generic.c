@@ -217,8 +217,11 @@ void Drv_PowerControllerBoost_Task_100us(POWER_CONTROLLER_DATA_t* pPCData)
             break;
 
         case PCS_SHUTDOWN:   
+            
+            // Shutting down PWM and compensator
+            pPCData->ftkDisableControlLoop();
+            
             // Checking output voltage limits
-            pPCData->voltageRef_compensator = 0;
             Drv_PowerControllerBoost_MonitorVoltageLimits(pPCData);
             if (pPCData->ftkFaultDetected() == false)
                 boostPC_GotoState(pPCData, PCS_WAIT_FOR_POWER_IN_GOOD);
