@@ -195,6 +195,8 @@ void Drv_PowerControllerBuck_Task_100us(POWER_CONTROLLER_DATA_t* pPCData)
 
         case PCS_SHUTDOWN:   
             
+            pPCData->voltageRef_compensator = 0;
+            
             // Shutting down PWM and compensator
             pPCData->ftkDisableControlLoop();
         

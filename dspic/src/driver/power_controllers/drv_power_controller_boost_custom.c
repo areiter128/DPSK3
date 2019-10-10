@@ -120,6 +120,7 @@ void Drv_PowerControllerBoost1_SetOutputVoltageReference_mV(uint32_t newVoltRef_
 
 void Drv_PowerControllerBoost1_EnableControlLoop(void)
 {
+    c2p2z_boost_Reset(&c2p2z_boost);      // Clear error and control histories of the 2P2Z controller
     c2p2z_boost.status.flags.enable = 1;  // Start the control loop for boost
     PG2IOCONLbits.OVRENH = 0;           // User override enabled for PWMxH Pin
     PG2IOCONLbits.OVRENL = 0;           // User override disabled for PWMxL Pin

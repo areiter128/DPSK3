@@ -92,6 +92,7 @@ void Drv_PowerControllerBuck1_SetOutputVoltageReference_mV(uint32_t newVoltRef_m
 
 void Drv_PowerControllerBuck1_EnableControlLoop(void)
 {
+    c2p2z_buck_Reset(&c2p2z_buck);      // Clear error and control histories of the 2P2Z controller
     c2p2z_buck.status.flags.enable = 1;  // Start the control loop for buck
     PG1IOCONLbits.OVRENH = 0;           // User override disabled for PWMxH Pin
     PG1IOCONLbits.OVRENL = 0;           // User override disabled for PWMxL Pin
