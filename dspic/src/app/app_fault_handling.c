@@ -38,8 +38,8 @@
 typedef struct
 {
     volatile uint16_t trip_cnt_threshold;   // Fault counter threshold triggering fault exception
-    volatile uint16_t trip_cnt;             // Fault trip counter
     volatile uint16_t reset_cnt_threshold;  // Fault counter threshold resetting fault exception
+    volatile uint16_t trip_cnt;             // Fault trip counter
     volatile uint16_t reset_cnt;            // Fault reset counter
 }FAULTBIT_CONDITION_SETTINGS_t;             // don't use "__attribute__((packed))" with a compiler version less than 1.41
 
@@ -68,13 +68,13 @@ FAULTVALUE_CONDITION_SETTINGS_t  fault_handling_data_input_overvoltage   = {1400
 // condition to resolve: over  7.0V for 100 ms
 FAULTVALUE_CONDITION_SETTINGS_t  fault_handling_data_input_undervoltage  = {6000,  5, 7000, 1000};
 
-// ==> buck overvoltage fault triggered after 5 milliseconds
-// ==> buck overvoltage fault reset after 100 milliseconds
-FAULTBIT_CONDITION_SETTINGS_t fault_handling_data_buck_overvoltage = {5, 0, 100, 0};
+// ==> boost overvoltage fault triggered after 5 milliseconds
+// ==> boost overvoltage fault reset after 1000 milliseconds
+FAULTBIT_CONDITION_SETTINGS_t fault_handling_data_boost_overvoltage = {5, 1000, 0};
 
-// ==> buck undervoltage fault triggered after 5 milliseconds
-// ==> buck undervoltage fault reset after 100 milliseconds
-FAULTBIT_CONDITION_SETTINGS_t fault_handling_data_buck_undervoltage = {5, 0, 100, 0};
+// ==> boost undervoltage fault triggered after 5 milliseconds
+// ==> boost undervoltage fault reset after 1000 milliseconds
+FAULTBIT_CONDITION_SETTINGS_t fault_handling_data_boost_undervoltage = {5, 1000, 0};
 
 
 // buck max. current is 1A ==> 1000 mA
@@ -286,6 +286,10 @@ void App_Fault_Handling_Task_Realtime_100us(void)
     App_Fault_Handling_CheckFaultValue(&fault_handling_data_input_undervoltage, value, FAULT_SUPPLY_UNDERVOLTAGE);
     App_Fault_Handling_CheckFaultValue(&fault_handling_data_input_overvoltage, value, FAULT_SUPPLY_OVERVOLTAGE);
     
+    POWER_CONTROLLER_FLAGS_t boost1_statusBits = Drv_PowerControllerBoost1_GetStatusBits();
+    App_Fault_Handling_CheckFaultBit(&fault_handling_data_boost_overvoltage, boost1_statusBits.bits.overvoltage_fault, FAULT_BOOST_OVERVOLTAGE);
+    App_Fault_Handling_CheckFaultBit(&fault_handling_data_boost_undervoltage, boost1_statusBits.bits.undervoltage_fault, FAULT_BOOST_UNDERVOLTAGE);
+                
     //set or clear the general fault bit
     if (active_faults & ~(1<<FAULT_GENERAL)) //is one of the fault bits active?
         active_faults |= (1<<FAULT_GENERAL);
@@ -306,13 +310,25 @@ void App_Fault_Handling_Task_Realtime_100us(void)
     }
 #endif
 }
+
+
 //=======================================================================================================
 //  @brief  this function does the fault handling every 1 ms
 //  @note   call this function in your main scheduler every 1ms
 //=======================================================================================================
-void App_Fault_Handling_Task_1ms(void)
+void App_Fault_Handling_Task_100ms(void)
 {
-/*    uint16_t    value;
+    static uint16_t active_faults_old;
+
+    if (active_faults_old != active_faults)
+    {
+        active_faults_old = active_faults;
+//        PrintSerial("Boost fault: OverVoltageLimit: %d\n\r", pwrCtrlBoost1_Data.OverVoltageLimit);
+//        PrintSerial("Boost fault: UnderVoltageLimit: %d\n\r", pwrCtrlBoost1_Data.OverVoltageLimit);
+//        PrintSerial("Boost fault: OutputVoltage: %d\n\r", pwrCtrlBoost1_Data.voltageOutput);
+    }
+    
+    /*    uint16_t    value;
     
 
     //check buck overvoltage and undervoltage

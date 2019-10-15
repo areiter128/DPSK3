@@ -62,7 +62,7 @@ extern void OS_Scheduler_RunOnce(void);
 //          the resulting jitter therefore depends on the timing of the calls before
 //=======================================================================================================
 extern void OS_Scheduler_RunForever(void);
-
+//todo: comment header
 extern void OS_Scheduler_GetSystemTickValue(uint16_t* tickCopy);
 
 #ifdef __cplusplus  // Provide C++ Compatibility

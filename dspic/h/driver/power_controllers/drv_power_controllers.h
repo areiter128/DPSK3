@@ -60,9 +60,6 @@ extern uint32_t Drv_PowerControllers_GetInputVoltage_mV(void);
 
 
 
-
-
-
 #define BUCK1_VREF               3.3   // [V]; Voltage reference for boost converter
 #define BUCK1_SLEW_RATE          0.3 // Compensation ramp in [V/usec] (SLPxDAT is calculated below)
 #define BUCK1_VREF_RAMPUP_PERIOD 100e-3  // [s]; Vref ramp-up period for buck converter
@@ -252,8 +249,6 @@ extern volatile uint16_t Drv_PowerControllers_LaunchADC(void);
 
 
 //TODO: change names of that functions and move it to the proper place
-//double GetVoltageBoost(void);
-//double GetVoltageInput(void);
 uint16_t GetDacBuck(void);
 uint16_t GetDacBoost(void);
 

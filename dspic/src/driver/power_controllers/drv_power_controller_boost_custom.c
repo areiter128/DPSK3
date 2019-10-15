@@ -37,7 +37,6 @@
 #include "driver/power_controllers/c2p2z_boost.h"
 #include "app/app_fault_handling.h"
 
-
 //=======================================================================================================
 // local defines
 //=======================================================================================================
@@ -68,7 +67,7 @@ POWER_CONTROLLER_DATA_t pwrCtrlBoost1_Data;      // data instance for the boost 
 //=======================================================================================================
 // @brief   returns the Input Voltage in Volts as a double
 //=======================================================================================================
-double Drv_PowerControllerBoost1_GetInputVoltage()
+double Drv_PowerControllerBoost1_GetInputVoltage(void)
 {
     return (double)(((unsigned long)voltage_input_adc * BOOST1_ADC_REFERENCE) / (BOOST1_VIN_GAIN * BOOST1_ADC_RESOLUTION));
 }
@@ -76,9 +75,17 @@ double Drv_PowerControllerBoost1_GetInputVoltage()
 //=======================================================================================================
 // @brief   returns the Output Voltage in Volts as a double
 //=======================================================================================================
-double Drv_PowerControllerBoost1_GetOutputVoltage()
+double Drv_PowerControllerBoost1_GetOutputVoltage(void)
 {
     return (double)(((unsigned long)pwrCtrlBoost1_Data.voltageOutput * BOOST1_ADC_REFERENCE) / (BOOST1_FEEDBACK_GAIN * BOOST1_ADC_RESOLUTION));
+}
+
+//=======================================================================================================
+// @brief   returns the status bits
+//=======================================================================================================
+POWER_CONTROLLER_FLAGS_t Drv_PowerControllerBoost1_GetStatusBits(void)
+{
+    return pwrCtrlBoost1_Data.flags;
 }
 
 //=======================================================================================================
@@ -177,7 +184,8 @@ void Drv_PowerControllerBoost1_Init(bool autostart)
     pwrCtrlBoost1_Data.compMinOutput = BOOST_IN_PCMC_CL;
     
     pwrCtrlBoost1_Data.currentClamp_rampStep = BOOST_RP_CL_STEP; 
-    if(pwrCtrlBoost1_Data.currentClamp_rampStep == 0) {         // Protecting startup settings against 
+    if(pwrCtrlBoost1_Data.currentClamp_rampStep == 0)           // Protecting startup settings against 
+    {
         pwrCtrlBoost1_Data.currentClamp_rampStep = 1;           // ZERO settings
     }
         

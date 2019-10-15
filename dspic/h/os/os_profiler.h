@@ -33,6 +33,7 @@
 
 extern volatile uint16_t   scheduler_interrupt_leader_100us;
 
+
 typedef struct
 {
     uint16_t time_start;
@@ -46,9 +47,31 @@ typedef struct
 extern "C" {
 #endif  // __cplusplus
 
-void OS_Profiler_Init(os_profile_tasktiming* profile);
-void OS_Profiler_StartDurationMeasurement(os_profile_tasktiming* profile);
-bool OS_Profiler_StopDurationMeasurement(os_profile_tasktiming* profile);
+    
+//=======================================================================================================
+//  @brief  Function to initialize the profile data structure
+//  @note   before you use the data structure to measure the duration of some task, the structure need
+//          to be initialized
+//=======================================================================================================
+extern void OS_Profiler_Init(os_profile_tasktiming* profile);
+
+
+//=======================================================================================================
+//  @brief  this function starts the time measurement
+//  @note   call this function directly before you call the task from which you want to measure the duration
+//=======================================================================================================
+extern void OS_Profiler_StartDurationMeasurement(os_profile_tasktiming* profile);
+
+
+//=======================================================================================================
+//  @brief  this function stops the timing measurement and calculates the duration and duration_max
+//  @note   if the calculated duration is higher than the last duration_max it returns true
+//          you can use that return value to notify the user with a debug output about the new higher
+//          duration
+//=======================================================================================================
+extern bool OS_Profiler_StopDurationMeasurement(os_profile_tasktiming* profile);
+
+
 
 #ifdef	__cplusplus
 }

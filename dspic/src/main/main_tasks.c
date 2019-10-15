@@ -40,6 +40,7 @@
 #include <stdint.h>
 #include "driver/power_controllers/drv_power_controllers.h"
 #include "device/dev_button.h"
+#include "device/dev_terminal.h"
 #include "app/app_fault_handling.h"
 #include "app/app_proto24.h"
 #include "app/app_hmi.h"
@@ -73,10 +74,9 @@
 //        called functions before
 //=======================================================================================================
 
-
-volatile uint16_t time_counter_logger = 0;      // for the timing of the logger
-
 os_profile_tasktiming profile_timing;
+
+void Task_Terminal_Log(void);
 
 void Tasks_Init(void)
 {
@@ -109,7 +109,7 @@ void Tasks_Realtime_1ms(void)
 //=======================================================================================================
 void Tasks_100us(void)
 {
-    // ttention: this function can have a significant amount of jitter, depending on all the other
+    // Attention: this function can have a significant amount of jitter, depending on all the other
     // functions in Tasks_1m, Tasks_10ms, ....
 }
 
@@ -147,7 +147,6 @@ void Tasks_10ms(void)
 //=======================================================================================================
 void Tasks_100ms(void)
 {
-
     Global_UpdateBoardData();
 
 #ifndef TEST_ENABLED
@@ -155,21 +154,14 @@ void Tasks_100ms(void)
 
     OS_Profiler_StartDurationMeasurement(&profile_timing);
 
+    App_Logger_Task_100ms();
+
     App_Hmi_Task_100ms();   // calling the display application that contains the main state machine
 
     if (OS_Profiler_StopDurationMeasurement(&profile_timing))
     {
         //ok, we have a new duration high score ==> write it to the serial interface :-)
         PrintSerial("Profile logger: %d ticks\n\r", profile_timing.time_task_duration_max);
-    }
-    
-    time_counter_logger++;
-    if (time_counter_logger == 8)
-        App_Logger_LogData();
-    else if (time_counter_logger == 16)
-    {   
-        App_Logger_LogProto24();
-        time_counter_logger = 0;
     }
 #endif
 }

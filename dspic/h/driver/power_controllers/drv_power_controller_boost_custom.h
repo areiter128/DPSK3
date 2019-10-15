@@ -42,12 +42,17 @@ extern POWER_CONTROLLER_DATA_t pwrCtrlBoost1_Data;      // data instance for the
 //=======================================================================================================
 // @brief   returns the Input Voltage in Volts as a double
 //=======================================================================================================
-double Drv_PowerControllerBoost1_GetInputVoltage();
+double Drv_PowerControllerBoost1_GetInputVoltage(void);
 
 //=======================================================================================================
 // @brief   returns the Output Voltage in Volts as a double
 //=======================================================================================================
-double Drv_PowerControllerBoost1_GetOutputVoltage();
+double Drv_PowerControllerBoost1_GetOutputVoltage(void);
+
+//=======================================================================================================
+// @brief   returns the status bits
+//=======================================================================================================
+POWER_CONTROLLER_FLAGS_t Drv_PowerControllerBoost1_GetStatusBits(void);
 
 //=======================================================================================================
 // @brief   sets the Output Voltage Reference in Volts

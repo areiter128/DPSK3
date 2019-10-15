@@ -43,13 +43,15 @@
 #define FAULT_GENERAL                   0
 #define FAULT_SUPPLY_OVERVOLTAGE        1
 #define FAULT_SUPPLY_UNDERVOLTAGE       2
+
+#define FAULT_BOOST_OVERVOLTAGE         3
+#define FAULT_BOOST_UNDERVOLTAGE        4
+        
 /*
 #define FAULT_OVERTEMPERATURE           3
 #define FAULT_BUCK_OVERVOLTAGE          4
 #define FAULT_BUCK_UNDERVOLTAGE         5
 #define FAULT_BUCK_OVERCURRENT          6
-#define FAULT_BOOST_OVERVOLTAGE         7
-#define FAULT_BOOST_UNDERVOLTAGE        8
 #define FAULT_BOOST_OVERCURRENT         9
 */
 //======================================================================================================================
@@ -70,6 +72,11 @@ uint16_t App_Fault_Handling_GetFaults(void);
 //=======================================================================================================
 bool App_Fault_Handling_IsFaultSet(uint8_t faultnumber);
 
+//======================================================================================================================
+//  @brief  this function does the fault handling every 100 ms
+//  @note   call this function in your main scheduler every 100ms
+//======================================================================================================================
+void App_Fault_Handling_Task_100ms(void);
 
 //======================================================================================================================
 //  @brief  this function does the fault handling every 1 ms

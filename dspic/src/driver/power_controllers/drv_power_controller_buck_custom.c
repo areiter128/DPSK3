@@ -120,6 +120,7 @@ bool Drv_PowerControllerBuck1_FaultDetected(void)
     else
         return false;
 }
+
 //=======================================================================================================
 // @brief   Initializes the Buck Power Converter - Instance 1
 // @note    In this routine all the application specific custom functions are implemented
@@ -140,7 +141,8 @@ void Drv_PowerControllerBuck1_Init(bool autostart)
   */
             
     pwrCtrlBuck1_Data.voltageRef_rampStep = BUCK_RP_VREF_STEP;              // N adc values per 100µs
-    if(pwrCtrlBuck1_Data.voltageRef_rampStep == 0) {         // Protecting startup settings against 
+    if(pwrCtrlBuck1_Data.voltageRef_rampStep == 0)          // Protecting startup settings against 
+    {
         pwrCtrlBuck1_Data.voltageRef_rampStep = 1;           // ZERO settings
     }
 

@@ -25,8 +25,8 @@
 
 void App_Logger_Init(void);
 
-void App_Logger_LogData(void);
+void App_Logger_Task_100ms(void);
 
-void App_Logger_LogProto24(void);
+//void App_Logger_LogProto24(void);
 
 #endif  // _APP_LOGGER_H_
